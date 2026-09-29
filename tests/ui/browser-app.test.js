@@ -46,11 +46,11 @@ describe("animation browser app", () => {
     await load(api);
     await game.settings.set(MODULE_ID, "uiFavourites", ["jb2a.fire_bolt.purple"]);
     const app = api.ui.openBrowser();
-    app.state.query = "orange";
+    app.viewState.query = "orange";
     let context = await app._prepareContext({});
     expect(context.cards.map((c) => c.path)).toEqual(["jb2a.fire_bolt.orange"]);
-    app.state.query = "";
-    app.state.favourites = true;
+    app.viewState.query = "";
+    app.viewState.favourites = true;
     context = await app._prepareContext({});
     expect(context.cards.map((c) => [c.path, c.favourite])).toEqual([["jb2a.fire_bolt.purple", true]]);
   });

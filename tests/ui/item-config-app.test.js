@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { installFakeFoundry, uninstallFakeFoundry } from "./helpers/fake-foundry.js";
+import { installFakeFoundry, uninstallFakeFoundry, setFakeElement } from "./helpers/fake-foundry.js";
 
 function createAutomation({ stored = null } = {}) {
   let recipe = stored;
@@ -86,7 +86,7 @@ describe("item recipe editor app", () => {
         { name: "recipe.preset", value: "ranged" },
         { name: "recipe.animation", value: "jb2a.own" }
       ];
-      app.element = { addEventListener: vi.fn(), elements: fields };
+      setFakeElement(app, { addEventListener: vi.fn(), elements: fields });
       await app._prepareContext({});
       app._onFirstRender({}, {});
       app._onRender({}, {});
@@ -133,7 +133,7 @@ describe("item recipe editor app", () => {
         { name: "recipe.preset", value: "ranged" },
         { name: "recipe.animation", value: "jb2a.mine" }
       ];
-      app.element = { addEventListener: vi.fn(), elements: fields };
+      setFakeElement(app, { addEventListener: vi.fn(), elements: fields });
       await app._prepareContext({});
       app._onFirstRender({}, {});
       const seen = [];
@@ -157,7 +157,7 @@ describe("item recipe editor app", () => {
       const api = { automation: createAutomation() };
       await load(api);
       const app = api.ui.openItemConfig({ ...item, uuid: "Item.del" });
-      app.element = { addEventListener: vi.fn(), elements: [] };
+      setFakeElement(app, { addEventListener: vi.fn(), elements: [] });
       app._onFirstRender({}, {});
       const close = vi.spyOn(app, "close");
       hooks.find((h) => h.name === "deleteItem").fn({ uuid: "Item.del" });

@@ -69,7 +69,7 @@ export function getBrowserClass() {
     constructor({ onPick, path, ...options } = {}) {
       super(options);
       this.onPick = typeof onPick === "function" ? onPick : null;
-      this.state = { query: "", page: 0, selected: null, expanded: new Set(), favourites: false };
+      this.viewState = { query: "", page: 0, selected: null, expanded: new Set(), favourites: false };
       if (path) this.reveal(path);
     }
 
@@ -113,9 +113,9 @@ export function getBrowserClass() {
     reveal(path) {
       const parts = String(path).split(".");
       const branch = parts.length > 2 ? parts.slice(0, -1).join(".") : parts.join(".");
-      this.state.selected = branch;
-      this.state.expanded = expandTo(this.state.expanded, `${branch}.x`);
-      this.state.page = 0;
+      this.viewState.selected = branch;
+      this.viewState.expanded = expandTo(this.viewState.expanded, `${branch}.x`);
+      this.viewState.page = 0;
     }
 
     /** Cached `api.db.list`. */
@@ -133,10 +133,10 @@ export function getBrowserClass() {
       const db = api?.db;
       if (db?.ready && typeof db.ready.then === "function") await db.ready;
       Object.assign(context, {
-        query: this.state.query,
+        query: this.viewState.query,
         pickMode: !!this.onPick,
-        showFavourites: this.state.favourites,
-        favouritesClass: this.state.favourites ? "sva-toggle sva-active" : "sva-toggle",
+        showFavourites: this.viewState.favourites,
+        favouritesClass: this.viewState.favourites ? "sva-toggle sva-active" : "sva-toggle",
         provider: db?.provider ?? ""
       });
       if (!db || db.available === false || typeof db.list !== "function") {
@@ -146,29 +146,29 @@ export function getBrowserClass() {
       const list = this.#listChildren(db);
       context.rows = flattenTree(list, {
         root: this.#root,
-        expanded: this.state.expanded,
-        selected: this.state.selected
+        expanded: this.viewState.expanded,
+        selected: this.viewState.selected
       });
 
       const favourites = getFavourites();
-      const query = normalizeQuery(this.state.query);
+      const query = normalizeQuery(this.viewState.query);
       let page;
       if (query) {
-        page = searchPage(db, query, this.state.page, DEFAULT_PAGE_SIZE);
+        page = searchPage(db, query, this.viewState.page, DEFAULT_PAGE_SIZE);
         context.heading = t("SVA.UI.Browser.SearchResults", { query });
         context.emptyKey = "SVA.UI.Browser.NoResults";
-      } else if (this.state.favourites) {
+      } else if (this.viewState.favourites) {
         const entries = favouriteEntries(favourites, (p) => db.getEntry?.(p));
-        page = paginate(entries, this.state.page, DEFAULT_PAGE_SIZE);
+        page = paginate(entries, this.viewState.page, DEFAULT_PAGE_SIZE);
         context.heading = t("SVA.UI.Browser.Favourites");
         context.emptyKey = "SVA.UI.Browser.NoFavourites";
       } else {
-        const branch = this.state.selected ?? this.#root;
-        page = paginate(sortEntries(list(branch)), this.state.page, DEFAULT_PAGE_SIZE);
+        const branch = this.viewState.selected ?? this.#root;
+        page = paginate(sortEntries(list(branch)), this.viewState.page, DEFAULT_PAGE_SIZE);
         context.crumbs = breadcrumbs(branch);
         context.emptyKey = "SVA.UI.Browser.EmptyBranch";
       }
-      this.state.page = page.page;
+      this.viewState.page = page.page;
 
       context.cards = toCards(page.items, {
         favourites,
@@ -200,8 +200,8 @@ export function getBrowserClass() {
         input.addEventListener("input", () => {
           clearTimeout(this.#searchTimer);
           this.#searchTimer = setTimeout(() => {
-            this.state.query = input.value;
-            this.state.page = 0;
+            this.viewState.query = input.value;
+            this.viewState.page = 0;
             this.render({ parts: ["grid"] });
           }, SEARCH_DEBOUNCE_MS);
         });
@@ -340,15 +340,15 @@ export function getBrowserClass() {
     static #onToggleNode(_event, target) {
       const path = pathOf(target);
       if (!path) return;
-      this.state.expanded = toggleInSet(this.state.expanded, path);
+      this.viewState.expanded = toggleInSet(this.viewState.expanded, path);
       this.render({ parts: ["tree"] });
     }
 
     static #onSelectNode(_event, target) {
       const path = pathOf(target);
       if (path === null) return;
-      Object.assign(this.state, { selected: path || null, query: "", page: 0, favourites: false });
-      if (path) this.state.expanded = expandTo(this.state.expanded, `${path}.x`);
+      Object.assign(this.viewState, { selected: path || null, query: "", page: 0, favourites: false });
+      if (path) this.viewState.expanded = expandTo(this.viewState.expanded, `${path}.x`);
       this.render();
     }
 
@@ -389,22 +389,22 @@ export function getBrowserClass() {
     }
 
     static #onPagePrev() {
-      this.state.page = Math.max(0, this.state.page - 1);
+      this.viewState.page = Math.max(0, this.viewState.page - 1);
       this.render({ parts: ["grid"] });
     }
 
     static #onPageNext() {
-      this.state.page += 1;
+      this.viewState.page += 1;
       this.render({ parts: ["grid"] });
     }
 
     static #onShowFavourites() {
-      Object.assign(this.state, { favourites: !this.state.favourites, query: "", page: 0 });
+      Object.assign(this.viewState, { favourites: !this.viewState.favourites, query: "", page: 0 });
       this.render({ parts: ["header", "grid"] });
     }
 
     static #onClearSearch() {
-      Object.assign(this.state, { query: "", page: 0 });
+      Object.assign(this.viewState, { query: "", page: 0 });
       this.render({ parts: ["header", "grid"] });
     }
   };

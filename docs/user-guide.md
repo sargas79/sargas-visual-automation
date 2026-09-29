@@ -1,0 +1,174 @@
+# User guide
+
+Sargas Visual Automation (SVA) plays [JB2A](https://jb2a.com) animations in Foundry VTT and triggers them automatically from your game system. It replaces **Sequencer** and **Automated Animations**: you only need SVA and a JB2A module.
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [First steps](#first-steps)
+- [Automation](#automation)
+- [Configuring an item](#configuring-an-item)
+- [Rules manager](#rules-manager)
+- [Animation browser](#animation-browser)
+- [Example macros](#example-macros)
+- [Settings](#settings)
+- [Troubleshooting](#troubleshooting)
+- [Credits](#credits)
+
+## Requirements
+
+|             |                                                                                                                                                                                        |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundry VTT | **v14**                                                                                                                                                                                |
+| Game system | **Pathfinder 2e** for automation. Macros and the animation browser work in any system.                                                                                                 |
+| JB2A        | **Required.** Either [JB2A Patreon](https://www.patreon.com/JB2A) (`jb2a_patreon`, the full collection) or the free [JB2A](https://foundryvtt.com/packages/JB2A_DnD5e) (`JB2A_DnD5e`). |
+
+SVA ships **no animation files**. It reads the database of the JB2A module you have installed and plays its files. With the free module some animations (and some colours) are missing; SVA falls back to what exists and tells you in the console when a path is unavailable. If both JB2A modules are active, the Patreon one is used.
+
+You do **not** need Sequencer, Automated Animations, Tagger or libWrapper. If Automated Animations is also active, both modules will animate the same rolls: disable automation in one of them.
+
+## Installation
+
+1. In Foundry's setup screen: **Add-on Modules → Install Module**, paste the manifest URL and install:
+   ```
+   https://github.com/sargas79/sargas-visual-automation/releases/latest/download/module.json
+   ```
+2. Install a JB2A module (Patreon or free) the same way.
+3. In your world: **Game Settings → Manage Modules**, enable **Sargas Visual Automation** and your JB2A module, and save.
+4. Reload. The console shows a `Ready` line from Sargas Visual Automation. If JB2A is missing you get a warning notification.
+
+JB2A's own setting for a custom asset location (S3, a CDN or a renamed folder) is respected automatically.
+
+## First steps
+
+1. Place two tokens on a scene. Select one and target the other (`T` key).
+2. **PF2e**: make a Strike with the selected token. The weapon animation plays from your token to the target, on every player's screen.
+3. Open the **Animation browser** (see [below](#animation-browser)), search for "fire bolt", and click **Play on selected token**.
+4. Import the **SVA Example Macros** compendium and run **Arrows and Bolts**.
+
+## Automation
+
+When something happens in your game system (an attack, a spell cast, a saving throw, a template placed, an effect applied or removed, healing), the system adapter tells SVA, and SVA finds a **recipe** for the item and plays it.
+
+### How an item's animation is chosen
+
+SVA looks for a recipe in this order and uses the first one it finds:
+
+1. **Item**: a recipe configured on the item itself ([item configuration](#configuring-an-item)).
+2. **World rules**: rules you create in the [rules manager](#rules-manager).
+3. **System rule pack**: the defaults shipped with SVA for your game system (`rules/pf2e.json`: common spells, cantrips and every weapon group).
+4. **Generic fallback**: based on what the item is (melee, ranged or thrown attack, damage type, healing).
+
+If the item's **Disable automation** box is ticked, nothing plays for it, whatever the rules say.
+
+To see why an item plays what it plays, use **Which rule matches?** in the rules manager, or in the console:
+
+```js
+SVA.automation.explain(item);
+```
+
+### Recipes and presets
+
+A recipe picks a **preset** and a JB2A animation:
+
+| Preset     | Used for                                                          | Plays                                                                |
+| ---------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `melee`    | Melee strikes, unarmed and natural attacks                        | A swing from the attacker onto each target                           |
+| `ranged`   | Bows, crossbows, thrown weapons, spell attacks, rays, projectiles | A projectile from the source to each target, scaled to the distance  |
+| `onToken`  | Save spells, buffs, healing                                       | An effect on each target (or on the caster)                          |
+| `area`     | Bursts, cones, lines and emanations                               | An animation fitted to the placed template / area                    |
+| `aura`     | Effects and conditions that last                                  | A persistent looping effect on the token until the effect is removed |
+| `teleport` | Misty Step and similar                                            | A vanish at the start and an appear at the destination               |
+
+Recipes can add **stages** (`cast` on the caster, `projectile`, `impact`, `onSource`, `onTarget`) and **per-outcome overrides**: a different animation on a critical hit, a miss that lands beside the target, no impact on a failure, and so on.
+
+### Who triggers what
+
+- Only the client of the player who rolled runs the automation; the result is sent to every client, so each animation plays exactly once per screen.
+- Clients on a different scene don't see the animation.
+- Players below the world setting **minimum role to trigger** can't broadcast animations.
+
+## Configuring an item
+
+Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condition) and click the **Animation** control in the sheet header.
+
+1. **Preset**: pick one of the presets above.
+2. **Animation**: type a JB2A path or click the picker to choose one in the animation browser. Pick a **colour** variant if the animation has several.
+3. **Options**: scale, layer, delay, and the preset's own options.
+4. **Outcomes**: optional overrides for critical success, success, failure and critical failure.
+5. **Stages**: optional cast, projectile, impact, on-source and on-target animations.
+6. **Preview**: select a token and target others, then click Preview. Only you see the preview.
+7. **Save**. The next use of the item plays the new animation, no reload needed.
+
+Tick **Disable automation** to silence an item. Click **Reset** to remove the item's own recipe and go back to the rules.
+
+The recipe is stored in the item's flags, so it travels with the item when you copy it to another actor or export it to a compendium.
+
+## Rules manager
+
+**Game Settings → Configure Settings → Sargas Visual Automation → Rules manager** (GM only).
+
+A world rule matches items and gives them a recipe. Use rules to change the default animation of many items at once (all fire spells, all bows, one spell by its slug).
+
+| Field    | Meaning                                                                                                                                                                                                        |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Label    | Your name for the rule.                                                                                                                                                                                        |
+| Enabled  | Disabled rules are ignored.                                                                                                                                                                                    |
+| Priority | Higher wins when several world rules match.                                                                                                                                                                    |
+| Match    | Any combination of: **key** (PF2e slug, e.g. `electric-arc`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**. |
+| Recipe   | Same editor as the item configuration.                                                                                                                                                                         |
+
+- **Which rule matches?** Drop an item on the manager (or pick one) to see the winning recipe and every candidate.
+- **Export** saves all world rules to a JSON file; **Import** loads such a file (share rule sets between worlds). Rules round-trip without changes.
+- World rules always win over the system rule pack, and lose to an item's own recipe.
+
+## Animation browser
+
+Open it from the **Animation browser** button in the module settings (and in the item configuration's animation picker). With a macro: `SVA.ui.openBrowser()`.
+
+- Browse the JB2A tree on the left or **search** by name.
+- Thumbnails show every animation; **hover** one to preview the video.
+- **Copy path** copies the database path (`jb2a.fire_bolt.orange`) for macros and recipes.
+- **Play on selected token** plays it on the selected token (and to the target, for projectiles).
+- **Favourites** keep the animations you use most at the top.
+
+## Example macros
+
+The compendium **SVA Example Macros** contains 16 ready-to-use macros that show what the [macro API](api.md) can do: projectiles and thrown weapons, flasks and bombs, melee attacks, toggleable auras and shields, and a spike trap. Import them (right-click the compendium → Import All) and read each macro's header comment for what to select or target. They work without Sequencer.
+
+## Settings
+
+Settings live in **Game Settings → Configure Settings → Sargas Visual Automation**. The exact labels are shown with a hint in the settings panel.
+
+| Setting                 | Scope  | What it does                                                                                       |
+| ----------------------- | ------ | -------------------------------------------------------------------------------------------------- |
+| Automation enabled      | World  | Master switch for automatic animations. Macros keep working when it is off.                        |
+| System rule pack        | World  | Use the defaults shipped for your system (`rules/<system>.json`).                                  |
+| Minimum role to trigger | World  | Users below this role can't broadcast animations (automation or macros).                           |
+| Max concurrent effects  | Client | Upper limit of effects on screen at once, to protect slower machines.                              |
+| Disable effects         | Client | You see no SVA animations at all. Other players are unaffected.                                    |
+| Reduced motion          | Client | Skip non-essential effects (auras, ambient loops, screen effects); attacks and impacts still play. |
+| Volume                  | Client | Volume of SVA sounds on your machine.                                                              |
+| Condition markers       | World  | Show JB2A markers for conditions (PF2e).                                                           |
+| Debug logging           | Client | Detailed logs in the browser console (F12), including why a recipe matched.                        |
+
+## Troubleshooting
+
+| Symptom                                    | What to check                                                                                                                                                                                             |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "JB2A is not installed" warning            | Enable `jb2a_patreon` or `JB2A_DnD5e` in **Manage Modules** and reload. In the console, `SVA.db.provider` should not be `null`.                                                                           |
+| Nothing plays for anyone                   | **Automation enabled** is on; the item isn't disabled; `SVA.automation.explain(item)` returns a recipe; your role is at least **minimum role to trigger**; turn on **Debug logging** and look for errors. |
+| It plays for me but not for another player | That player turned on **Disable effects** or **Reduced motion**; or they are on another scene; or the effect was restricted with `forUsers`; or the token is hidden from them.                            |
+| An animation plays twice                   | Automated Animations (or another animation module) is also active. Disable automation in one of them.                                                                                                     |
+| "Path not found" in the console            | The path doesn't exist in your JB2A collection (common with the free module). Pick another one in the animation browser.                                                                                  |
+| Projectile is too short / too long         | The scene's grid distance and units are used to pick the distance variant. Check **Scene → Grid** (size, distance, units).                                                                                |
+| Persistent aura disappeared after reload   | A player created it while no GM was connected, so it couldn't be saved. Recreate it with a GM online.                                                                                                     |
+| Aura stays after the effect was removed    | End it with `SVA.effects.end({ name: "aura:<actorId>:<key>", sceneId: canvas.scene.id })`, or `SVA.effects.endAll({ sceneId: canvas.scene.id })`, and report it with the item's name.                     |
+| Stuttering with many effects               | Lower **Max concurrent effects**, or turn on **Reduced motion** on slow machines.                                                                                                                         |
+
+When you report a bug, include your Foundry, system, JB2A and SVA versions, the output of `SVA.automation.explain(item)` for the item, and the console log with **Debug logging** on: <https://github.com/sargas79/sargas-visual-automation/issues>.
+
+## Credits
+
+- Animations: **JB2A - Jules & Ben's Animated Assets** (<https://jb2a.com>), licensed [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). SVA does not include or redistribute any JB2A files; it plays the files of the JB2A module you install. Please support JB2A on [Patreon](https://www.patreon.com/JB2A).
+- The example macros are original SVA code written for the same use cases as JB2A's bundled Sequencer macros; they contain no JB2A code.
+- SVA's code is MIT licensed.

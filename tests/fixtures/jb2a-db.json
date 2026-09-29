@@ -1,0 +1,577 @@
+{
+  "_templates": {
+    "cone": [100, 0, 0],
+    "cone100": [100, 100, 100],
+    "cone100_02": [100, 50, 150],
+    "cone200": [200, 100, 100],
+    "large": [200, 0, 0],
+    "line100": [100, 50, 150],
+    "line200": [200, 200, 200],
+    "line200B": [200, 0, 300],
+    "melee": [200, 300, 300],
+    "melee_large": [200, 400, 400],
+    "ranged": [200, 200, 200],
+    "ray": [100, 0, 0],
+    "side_impact": [200, 100, 0]
+  },
+  "ambient_fog": {
+    "_metadata": {
+      "name": "Ambient Fog"
+    },
+    "001": {
+      "complete": {
+        "_markers": {
+          "loop": {
+            "start": 3000,
+            "end": 5958
+          }
+        },
+        "small": {
+          "blue": "modules/jb2a_patreon/Library/Generic/Fog/AmbientFog001_001_Complete_Blue_500x500.webm",
+          "white": "modules/jb2a_patreon/Library/Generic/Fog/AmbientFog001_001_Complete_White_500x500.webm"
+        },
+        "large": {
+          "blue": "modules/jb2a_patreon/Library/Generic/Fog/AmbientFog001_001_Complete_Blue_1200x1200.webm"
+        }
+      }
+    }
+  },
+  "magic_signs": {
+    "circle": {
+      "_metadata": {
+        "name": "Magic Signs - Circle"
+      },
+      "02": {
+        "abjuration": {
+          "complete": {
+            "_markers": {
+              "loop": {
+                "start": 3000,
+                "end": 8000
+              },
+              "forcedEnd": 8000
+            },
+            "dark_blue": "modules/jb2a_patreon/Library/Generic/Magic_Signs/AbjurationCircleComplete_02_Dark_Blue_800x800.webm"
+          }
+        }
+      }
+    }
+  },
+  "fire_bolt": {
+    "_metadata": {
+      "name": "Fire Bolt"
+    },
+    "_template": "ranged",
+    "orange": {
+      "05ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Orange_05ft_600x400.webm",
+      "15ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Orange_15ft_1000x400.webm",
+      "30ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Orange_30ft_1600x400.webm",
+      "60ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Orange_60ft_2800x400.webm",
+      "90ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Orange_90ft_4000x400.webm"
+    },
+    "blue": {
+      "05ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Blue_05ft_600x400.webm",
+      "15ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Blue_15ft_1000x400.webm",
+      "30ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Blue_30ft_1600x400.webm",
+      "60ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Blue_60ft_2800x400.webm",
+      "90ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Regular_Blue_90ft_4000x400.webm"
+    },
+    "dark_red": {
+      "05ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Dark_Red_05ft_600x400.webm",
+      "15ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Dark_Red_15ft_1000x400.webm",
+      "30ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Dark_Red_30ft_1600x400.webm",
+      "60ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Dark_Red_60ft_2800x400.webm",
+      "90ft": "modules/jb2a_patreon/Library/Cantrip/Fire_Bolt/FireBolt_01_Dark_Red_90ft_4000x400.webm"
+    }
+  },
+  "magic_missile": {
+    "_metadata": {
+      "name": "Magic Missile"
+    },
+    "_template": "ranged",
+    "blue": {
+      "05ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_05ft_01_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_05ft_02_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_05ft_03_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_05ft_04_600x400.webm"
+      ],
+      "15ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_15ft_01_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_15ft_02_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_15ft_03_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_15ft_04_1000x400.webm"
+      ],
+      "30ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_30ft_01_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_30ft_02_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_30ft_03_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_30ft_04_1600x400.webm"
+      ],
+      "60ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_60ft_01_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_60ft_02_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_60ft_03_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_60ft_04_2800x400.webm"
+      ],
+      "90ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_90ft_01_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_90ft_02_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_90ft_03_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Blue_90ft_04_4000x400.webm"
+      ]
+    },
+    "dark_red": {
+      "05ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_05ft_01_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_05ft_02_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_05ft_03_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_05ft_04_600x400.webm"
+      ],
+      "15ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_15ft_01_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_15ft_02_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_15ft_03_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_15ft_04_1000x400.webm"
+      ],
+      "30ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_30ft_01_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_30ft_02_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_30ft_03_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_30ft_04_1600x400.webm"
+      ],
+      "60ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_60ft_01_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_60ft_02_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_60ft_03_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_60ft_04_2800x400.webm"
+      ],
+      "90ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_90ft_01_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_90ft_02_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_90ft_03_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Dark_Red_90ft_04_4000x400.webm"
+      ]
+    },
+    "green": {
+      "05ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_05ft_01_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_05ft_02_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_05ft_03_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_05ft_04_600x400.webm"
+      ],
+      "15ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_15ft_01_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_15ft_02_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_15ft_03_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_15ft_04_1000x400.webm"
+      ],
+      "30ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_30ft_01_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_30ft_02_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_30ft_03_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_30ft_04_1600x400.webm"
+      ],
+      "60ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_60ft_01_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_60ft_02_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_60ft_03_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_60ft_04_2800x400.webm"
+      ],
+      "90ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_90ft_01_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_90ft_02_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_90ft_03_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Green_90ft_04_4000x400.webm"
+      ]
+    },
+    "grey": {
+      "05ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_05ft_01_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_05ft_02_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_05ft_03_600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_05ft_04_600x400.webm"
+      ],
+      "15ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_15ft_01_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_15ft_02_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_15ft_03_1000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_15ft_04_1000x400.webm"
+      ],
+      "30ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_30ft_01_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_30ft_02_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_30ft_03_1600x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_30ft_04_1600x400.webm"
+      ],
+      "60ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_60ft_01_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_60ft_02_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_60ft_03_2800x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_60ft_04_2800x400.webm"
+      ],
+      "90ft": [
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_90ft_01_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_90ft_02_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_90ft_03_4000x400.webm",
+        "modules/jb2a_patreon/Library/1st_Level/Magic_Missile/MagicMissile_01_Regular_Grey_90ft_04_4000x400.webm"
+      ]
+    }
+  },
+  "scorching_ray": {
+    "_metadata": {
+      "name": "Scorching Ray"
+    },
+    "_template": "ranged",
+    "01": {
+      "dark_red": {
+        "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Dark_Red_05ft_600x400.webm",
+        "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Dark_Red_15ft_1000x400.webm",
+        "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Dark_Red_30ft_1600x400.webm",
+        "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Dark_Red_60ft_2800x400.webm",
+        "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Dark_Red_90ft_4000x400.webm"
+      },
+      "blue": {
+        "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_05ft_600x400.webm",
+        "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_15ft_1000x400.webm",
+        "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_30ft_1600x400.webm",
+        "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_60ft_2800x400.webm",
+        "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_90ft_4000x400.webm"
+      },
+      "green": {
+        "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Green_05ft_600x400.webm",
+        "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Green_15ft_1000x400.webm",
+        "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Green_30ft_1600x400.webm",
+        "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Green_60ft_2800x400.webm",
+        "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Green_90ft_4000x400.webm"
+      },
+      "grey": {
+        "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Grey_05ft_600x400.webm",
+        "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Grey_15ft_1000x400.webm",
+        "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Grey_30ft_1600x400.webm",
+        "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Grey_60ft_2800x400.webm",
+        "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Grey_90ft_4000x400.webm"
+      }
+    },
+    "02": {
+      "blue": {
+        "05ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_05ft_01_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_05ft_02_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_05ft_03_600x400.webm"
+        ],
+        "15ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_15ft_01_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_15ft_02_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_15ft_03_1000x400.webm"
+        ],
+        "30ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_30ft_01_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_30ft_02_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_30ft_03_1600x400.webm"
+        ],
+        "60ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_60ft_01_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_60ft_02_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_60ft_03_2800x400.webm"
+        ],
+        "90ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_90ft_01_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_90ft_02_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_90ft_03_4000x400.webm"
+        ]
+      },
+      "green": {
+        "05ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_05ft_01_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_05ft_02_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_05ft_03_600x400.webm"
+        ],
+        "15ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_15ft_01_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_15ft_02_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_15ft_03_1000x400.webm"
+        ],
+        "30ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_30ft_01_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_30ft_02_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_30ft_03_1600x400.webm"
+        ],
+        "60ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_60ft_01_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_60ft_02_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_60ft_03_2800x400.webm"
+        ],
+        "90ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_90ft_01_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_90ft_02_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Green_90ft_03_4000x400.webm"
+        ]
+      },
+      "grey": {
+        "05ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_05ft_01_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_05ft_02_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_05ft_03_600x400.webm"
+        ],
+        "15ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_15ft_01_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_15ft_02_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_15ft_03_1000x400.webm"
+        ],
+        "30ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_30ft_01_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_30ft_02_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_30ft_03_1600x400.webm"
+        ],
+        "60ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_60ft_01_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_60ft_02_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_60ft_03_2800x400.webm"
+        ],
+        "90ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_90ft_01_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_90ft_02_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Grey_90ft_03_4000x400.webm"
+        ]
+      },
+      "pink": {
+        "05ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_05ft_01_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_05ft_02_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_05ft_03_600x400.webm"
+        ],
+        "15ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_15ft_01_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_15ft_02_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_15ft_03_1000x400.webm"
+        ],
+        "30ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_30ft_01_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_30ft_02_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_30ft_03_1600x400.webm"
+        ],
+        "60ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_60ft_01_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_60ft_02_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_60ft_03_2800x400.webm"
+        ],
+        "90ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_90ft_01_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_90ft_02_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Pink_90ft_03_4000x400.webm"
+        ]
+      }
+    },
+    "loop": {
+      "01": {
+        "dark_red": {
+          "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Dark_Red_05ft_600x400.webm",
+          "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Dark_Red_15ft_1000x400.webm",
+          "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Dark_Red_30ft_1600x400.webm",
+          "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Dark_Red_60ft_2800x400.webm",
+          "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Dark_Red_90ft_4000x400.webm"
+        },
+        "blue": {
+          "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Blue_05ft_600x400.webm",
+          "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Blue_15ft_1000x400.webm",
+          "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Blue_30ft_1600x400.webm",
+          "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Blue_60ft_2800x400.webm",
+          "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Blue_90ft_4000x400.webm"
+        },
+        "green": {
+          "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Green_05ft_600x400.webm",
+          "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Green_15ft_1000x400.webm",
+          "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Green_30ft_1600x400.webm",
+          "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Green_60ft_2800x400.webm",
+          "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Green_90ft_4000x400.webm"
+        },
+        "grey": {
+          "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Grey_05ft_600x400.webm",
+          "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Grey_15ft_1000x400.webm",
+          "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Grey_30ft_1600x400.webm",
+          "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Grey_60ft_2800x400.webm",
+          "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRayLoop_01_Regular_Grey_90ft_4000x400.webm"
+        }
+      }
+    },
+    "blue": {
+      "01": {
+        "05ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_05ft_600x400.webm",
+        "15ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_15ft_1000x400.webm",
+        "30ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_30ft_1600x400.webm",
+        "60ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_60ft_2800x400.webm",
+        "90ft": "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_01_Regular_Blue_90ft_4000x400.webm"
+      },
+      "02": {
+        "05ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_05ft_01_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_05ft_02_600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_05ft_03_600x400.webm"
+        ],
+        "15ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_15ft_01_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_15ft_02_1000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_15ft_03_1000x400.webm"
+        ],
+        "30ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_30ft_01_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_30ft_02_1600x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_30ft_03_1600x400.webm"
+        ],
+        "60ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_60ft_01_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_60ft_02_2800x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_60ft_03_2800x400.webm"
+        ],
+        "90ft": [
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_90ft_01_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_90ft_02_4000x400.webm",
+          "modules/jb2a_patreon/Library/2nd_Level/Scorching_Ray/ScorchingRay_02_Regular_Blue_90ft_03_4000x400.webm"
+        ]
+      }
+    }
+  },
+  "greatsword": {
+    "_metadata": {
+      "name": "Greatsword"
+    },
+    "melee": {
+      "_template": "melee",
+      "fire": {
+        "dark_purple": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Melee/GreatSword01_Fire_Dark_Purple_800x600.webm",
+        "black": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Melee/GreatSword01_Fire_Regular_Black_800x600.webm",
+        "blue": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Melee/GreatSword01_Fire_Regular_Blue_800x600.webm",
+        "green": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Melee/GreatSword01_Fire_Regular_Green_800x600.webm"
+      },
+      "standard": {
+        "white": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Melee/GreatSword01_01_Regular_White_800x600.webm"
+      }
+    },
+    "return": {
+      "_template": "ranged",
+      "15ft": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Ranged/GreatSword01_01_Regular_White_Return_15ft_1000x600.webm",
+      "30ft": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Ranged/GreatSword01_01_Regular_White_Return_30ft_1600x600.webm",
+      "60ft": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Ranged/GreatSword01_01_Regular_White_Return_60ft_2800x600.webm",
+      "90ft": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Ranged/GreatSword01_01_Regular_White_Return_90ft_4000x600.webm"
+    },
+    "throw": {
+      "_template": "ranged",
+      "15ft": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Ranged/GreatSword01_01_Regular_White_15ft_1000x600.webm",
+      "30ft": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Ranged/GreatSword01_01_Regular_White_30ft_1600x600.webm",
+      "60ft": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Ranged/GreatSword01_01_Regular_White_60ft_2800x600.webm",
+      "90ft": "modules/jb2a_patreon/Library/Generic/Weapon_Attacks/Ranged/GreatSword01_01_Regular_White_90ft_4000x600.webm"
+    }
+  },
+  "burrow": {
+    "out": {
+      "_metadata": {
+        "name": "Burrow - Out"
+      },
+      "01": {
+        "brown": [
+          "modules/jb2a_patreon/Library/Generic/Creature/BurrowOut01_01_Regular_Brown_600x600.webm",
+          "modules/jb2a_patreon/Library/Generic/Creature/BurrowOut01_02_Regular_Brown_600x600.webm"
+        ],
+        "still_frame": ["modules/jb2a_patreon/Library/Generic/Creature/BurrowOut01_600x600_StillFrame.webp"]
+      }
+    },
+    "ranged": {
+      "_metadata": {
+        "name": "Burrow - Ranged"
+      },
+      "_template": "ranged",
+      "01": {
+        "brown": {
+          "05ft": [
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_01_Regular_Brown_05ft_600x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_02_Regular_Brown_05ft_600x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_03_Regular_Brown_05ft_600x400.webm"
+          ],
+          "15ft": [
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_01_Regular_Brown_15ft_1000x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_02_Regular_Brown_15ft_1000x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_03_Regular_Brown_15ft_1000x400.webm"
+          ],
+          "30ft": [
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_01_Regular_Brown_30ft_1600x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_02_Regular_Brown_30ft_1600x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_03_Regular_Brown_30ft_1600x400.webm"
+          ],
+          "60ft": [
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_01_Regular_Brown_60ft_2800x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_02_Regular_Brown_60ft_2800x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_03_Regular_Brown_60ft_2800x400.webm"
+          ],
+          "90ft": [
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_01_Regular_Brown_90ft_4000x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_02_Regular_Brown_90ft_4000x400.webm",
+            "modules/jb2a_patreon/Library/Generic/Creature/BurrowRanged01_03_Regular_Brown_90ft_4000x400.webm"
+          ]
+        }
+      }
+    }
+  },
+  "breath_weapons": {
+    "fire": {
+      "cone": {
+        "_metadata": {
+          "name": "Breath Weapons - Cone"
+        },
+        "_template": "cone",
+        "multicolored": {
+          "01": [
+            "modules/jb2a_patreon/Library/Generic/Template/Cone/Breath_Weapon/BreathWeapon_Fire01_Regular_MultiColor01_30ft_Cone_Burst_600x600.webm",
+            "modules/jb2a_patreon/Library/Generic/Template/Cone/Breath_Weapon/BreathWeapon_Fire01_Regular_MultiColor02_30ft_Cone_Burst_600x600.webm",
+            "modules/jb2a_patreon/Library/Generic/Template/Cone/Breath_Weapon/BreathWeapon_Fire01_Regular_MultiColor03_30ft_Cone_Burst_600x600.webm",
+            "modules/jb2a_patreon/Library/Generic/Template/Cone/Breath_Weapon/BreathWeapon_Fire01_Regular_MultiColor04_30ft_Cone_Burst_600x600.webm"
+          ],
+          "02": [
+            "modules/jb2a_patreon/Library/Generic/Template/Cone/Breath_Weapon/BreathWeapon_Fire02_Regular_MultiColor01_30ft_Cone_Burst_600x600.webm",
+            "modules/jb2a_patreon/Library/Generic/Template/Cone/Breath_Weapon/BreathWeapon_Fire02_Regular_MultiColor02_30ft_Cone_Burst_600x600.webm",
+            "modules/jb2a_patreon/Library/Generic/Template/Cone/Breath_Weapon/BreathWeapon_Fire02_Regular_MultiColor03_30ft_Cone_Burst_600x600.webm",
+            "modules/jb2a_patreon/Library/Generic/Template/Cone/Breath_Weapon/BreathWeapon_Fire02_Regular_MultiColor04_30ft_Cone_Burst_600x600.webm"
+          ]
+        }
+      }
+    }
+  },
+  "template_cone_PF2e": {
+    "_metadata": {
+      "name": "Template - Cone PF2e"
+    },
+    "_template": "cone100",
+    "001": {
+      "001": {
+        "blue": {
+          "30ft": "modules/jb2a_patreon/Library/Generic/Template/Cone/001/TemplateConePF2e001_001_Blue_30ft_800x1000.webm"
+        },
+        "orangeyellow": {
+          "30ft": "modules/jb2a_patreon/Library/Generic/Template/Cone/001/TemplateConePF2e001_001_OrangeYellow_30ft_800x1000.webm"
+        }
+      }
+    }
+  },
+  "volley_of_projectiles_ConePF2e": {
+    "_metadata": {
+      "name": "Volley of Projectiles - Cone PF2e"
+    },
+    "_template": "cone100",
+    "arrow": {
+      "001": {
+        "001": {
+          "blue": {
+            "15ft": "modules/jb2a_patreon/Library/Generic/Template/Cone/Projectile/PF2e/VolleyProjectileArrow001_001_01_ConePF2e_Blue_15ft_500x600.webm",
+            "30ft": "modules/jb2a_patreon/Library/Generic/Template/Cone/Projectile/PF2e/VolleyProjectileArrow001_001_01_ConePF2e_Blue_30ft_800x1000.webm",
+            "60ft": "modules/jb2a_patreon/Library/Generic/Template/Cone/Projectile/PF2e/VolleyProjectileArrow001_001_01_ConePF2e_Blue_60ft_1400x1800.webm"
+          },
+          "greenpurple": {
+            "15ft": "modules/jb2a_patreon/Library/Generic/Template/Cone/Projectile/PF2e/VolleyProjectileArrow001_001_01_ConePF2e_GreenPurple_15ft_500x600.webm",
+            "30ft": "modules/jb2a_patreon/Library/Generic/Template/Cone/Projectile/PF2e/VolleyProjectileArrow001_001_01_ConePF2e_GreenPurple_30ft_800x1000.webm",
+            "60ft": "modules/jb2a_patreon/Library/Generic/Template/Cone/Projectile/PF2e/VolleyProjectileArrow001_001_01_ConePF2e_GreenPurple_60ft_1400x1800.webm"
+          }
+        }
+      }
+    }
+  }
+}

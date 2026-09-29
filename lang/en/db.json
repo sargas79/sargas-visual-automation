@@ -1,1 +1,8 @@
-{}
+{
+  "SVA": {
+    "Db": {
+      "Missing": "Sargas Visual Automation: no JB2A module is active. Enable the JB2A Patreon or free module to play animations.",
+      "LoadFailed": "Sargas Visual Automation: the JB2A animation database could not be read from {module}. Animations are unavailable."
+    }
+  }
+}

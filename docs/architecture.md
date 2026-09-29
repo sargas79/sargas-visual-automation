@@ -100,7 +100,7 @@ api.sequence()                         // → SequenceBuilder
      .scale(n).scaleToObject(n).size(w, h, {gridUnits}).rotate(deg).mirrorX().mirrorY().opacity(n).tint(hex)
      .fadeIn(ms, {ease}).fadeOut(ms, {ease}).scaleIn(v, ms, {ease}).scaleOut(v, ms, {ease})
      .duration(ms).playbackRate(r).startTime(ms).endTime(ms).delay(ms).layer(name).zIndex(n)
-     .missed(bool).returnTrip(bool).persist(bool).name(tag).forUsers(ids)
+     .missed(bool).returnTrip(bool).persist(bool).essential(bool).name(tag).forUsers(ids)
      .waitUntilFinished(offsetMs = 0)
   .wait(ms)
   .sound(file, { volume, delay })
@@ -203,7 +203,7 @@ These were added while the areas were built, and are part of the contract from n
   - `api.effects.store(sequence)` (called by `playSequence`).
   - `api.net.off`, `api.net.preload(files)`, `api.net.prefs`.
   - Ending a stored effect is driven by the scene flag update; `end`/`endAll` also broadcast `end` so unstored named effects end everywhere.
-  - Reduced motion skips `screen`-layer effects and drops `returnTrip`, `scaleIn` and `scaleOut`; persistent effects are always kept.
+  - Reduced motion (#66): persistent effects are always kept; `EffectDescriptor.essential: true` effects are kept unchanged and `essential: false` effects are skipped. Only effects that don't set `essential` use the fallback heuristic: skip `screen`-layer effects and drop `returnTrip`, `scaleIn` and `scaleOut`. Builder: `.essential(bool = true)` (`null` clears it). Automation presets mark the effects that convey the result (attack / projectile including misses, onToken, area, impact, onTarget) essential, and cast / onSource not.
 - **automation:**
   - World rules are stored as `{version: 1, rules: []}`.
   - `explain(item, opts)` returns a trace `{descriptors, disabled, result, candidates[{source, ruleId, label, priority, matched, reasons[]}], reasons}`, where `result` is the `resolveRecipe` shape.
@@ -220,5 +220,4 @@ These were added while the areas were built, and are part of the contract from n
 
 - An optional `AutomationEvent.id` (for example the chat message id), to replace the 1 s duplicate window.
 - `Rule.match.baseItem`.
-- An optional `essential` flag on effects, for reduced motion.
 - A static adapter `init()` hook, so adapters can register settings during `init` (PF2e currently registers on `ready`).

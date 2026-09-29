@@ -1,0 +1,14 @@
+{
+  "SVA": {
+    "Dnd5e": {
+      "HeaderButton": "Animation",
+      "ItemConfigUnavailable": "The item animation editor is not available.",
+      "Settings": {
+        "ConditionEvents": {
+          "Name": "D&D 5e: animate conditions",
+          "Hint": "Play animations when D&D 5e conditions (prone, stunned...) are added to or removed from a creature. Spell effects and concentration are always animated."
+        }
+      }
+    }
+  }
+}

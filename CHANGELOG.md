@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 - 2026-09-29
+
+### Fixed
+
+- Installing the module no longer opens Foundry's "Install Package Dependencies" dialog asking for the free `JB2A_DnD5e`. The manifest no longer lists JB2A as a recommended dependency; SVA detects the Patreon or free JB2A module at runtime and warns the GM if neither is active.
+- A flaky timing limit in the animation browser tests no longer fails CI.
+
 ## 0.2.0 - 2026-09-29
 
 > Still not tested in a live Foundry world: 560 unit and integration tests pass, but the `docs/testing.md` checklist has not been run.

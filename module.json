@@ -13,9 +13,7 @@
     "minimum": "14",
     "verified": "14"
   },
-  "esmodules": [
-    "src/main.js"
-  ],
+  "esmodules": ["src/main.js"],
   "languages": [
     {
       "lang": "en",

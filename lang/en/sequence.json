@@ -1,1 +1,7 @@
-{}
+{
+  "SVA": {
+    "Sequence": {
+      "NotAllowed": "Your role is not allowed to trigger animations in this world."
+    }
+  }
+}

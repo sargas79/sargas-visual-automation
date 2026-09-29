@@ -1,10 +1,38 @@
 /**
  * Persistent effects manager (scene flags): api.effects
- * Implemented in #17 - see docs/architecture.md for the contract.
- *
- * Lifecycle (called by src/main.js, all optional):
- *   init(api)   - Foundry "init": register settings, attach to the api object
- *   setup(api)  - Foundry "setup"
- *   ready(api)  - Foundry "ready" (may be async; areas run in order)
+ * Implemented in #17 - see docs/architecture.md for the contract and
+ * ./manager.js for the storage / ending / replay rules.
  */
-export function init(_api) {}
+import { log } from "../logger.js";
+import { createEffectsManager } from "./manager.js";
+
+export { createEffectsManager } from "./manager.js";
+
+/** @param {object} api */
+export function init(api) {
+  const manager = createEffectsManager(api);
+  api.effects = manager.effects;
+
+  api.net?.on("effectsWrite", (data) => manager.onWriteRequest(data));
+  api.net?.on("end", (data) => manager.endLocal(data ?? {}));
+
+  const guard =
+    (label, fn) =>
+    (...args) =>
+      Promise.resolve()
+        .then(() => fn(...args))
+        .catch((err) => log.error(`Persistent effects: ${label} failed`, err));
+
+  Hooks.on(
+    "canvasReady",
+    guard("replay", (board) => manager.replay(board?.scene))
+  );
+  Hooks.on(
+    "updateScene",
+    guard("scene update", (scene) => manager.onSceneUpdate(scene))
+  );
+  Hooks.on(
+    "deleteToken",
+    guard("token cleanup", (tokenDoc) => manager.onTokenDeleted(tokenDoc))
+  );
+}

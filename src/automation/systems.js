@@ -65,7 +65,9 @@ export function createSystemsRegistry(api) {
         return false;
       }
       classes.push(AdapterClass);
-      if (started && !active && isActiveClass(AdapterClass)) registry.activate();
+      if (started && !active && isActiveClass(AdapterClass) && registry.activate()) {
+        Promise.resolve(api.automation?.reloadRulePack?.()).catch((err) => log.error("Rule pack failed to load", err));
+      }
       return true;
     },
 

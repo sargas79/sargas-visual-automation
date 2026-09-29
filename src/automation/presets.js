@@ -302,7 +302,7 @@ const DEFINITIONS = {
   },
   onToken: {
     stages: ["cast", "onSource", "impact", "onTarget"],
-    triggers: [EVENT_TYPES.CAST, EVENT_TYPES.HEALING],
+    triggers: [EVENT_TYPES.CAST],
     options: {
       ...COMMON_OPTIONS,
       scale: { ...COMMON_OPTIONS.scale, default: 1.5 },

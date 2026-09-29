@@ -20,6 +20,8 @@ describe("module entry point", () => {
     await loadModule();
     Hooks.callAll("init");
     expect(globalThis.SVA).toBe(game.modules.get(MODULE_ID).api);
+    expect(globalThis.SVA.SystemAdapter).toBeTypeOf("function");
+    expect(globalThis.SVA.LAYERS.BELOW_TOKENS).toBe("belowTokens");
   });
 
   it("registers the debug setting on init", async () => {

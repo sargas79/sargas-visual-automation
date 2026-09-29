@@ -8,6 +8,7 @@ import { planCapacity } from "./pool.js";
  * @property {string} id
  * @property {object} descriptor     Normalized EffectDescriptor.
  * @property {Promise<void>} finished Resolves when the effect is removed for any reason.
+ * @property {number} [duration] Wall ms until the effect ends on its own (Infinity when persistent), once known.
  * @property {(opts?: {immediate?: boolean}) => Promise<void>} end
  */
 
@@ -144,6 +145,8 @@ export class EffectEngine {
         context: this.env.createContext()
       });
       record.sprite = sprite;
+      // Wall-clock length (ms, Infinity when persistent) - lets the sequence runner honour negative waitUntilFinished.
+      record.handle.duration = sprite.timeline?.total;
       await sprite.mount();
       if (record.cancelled) {
         this.#remove(record);

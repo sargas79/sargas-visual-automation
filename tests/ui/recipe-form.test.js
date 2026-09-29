@@ -166,4 +166,21 @@ describe("resolution summary", () => {
     ]);
     expect(summarizeResolution(null)).toMatchObject({ found: false, candidates: [] });
   });
+
+  it("accepts the api.automation.explain() trace shape", () => {
+    const s = summarizeResolution({
+      descriptors: {},
+      disabled: false,
+      reasons: ["world rule"],
+      result: { recipe: { preset: "melee", animation: "jb2a.sword" }, source: "world", ruleId: "w1", reason: "key" },
+      candidates: [
+        { source: "world", ruleId: "w1", label: "Sword", priority: 10, matched: true, reasons: ["key", "type"] },
+        { source: "fallback", ruleId: null, matched: false, reasons: ["no generic match"] }
+      ]
+    });
+    expect(s).toMatchObject({ found: true, source: "world", ruleId: "w1", preset: "melee" });
+    expect(s.candidates[0]).toMatchObject({ id: "w1", winner: true, reason: "key, type" });
+    expect(s.candidates[1]).toMatchObject({ matched: false, reason: "no generic match" });
+    expect(summarizeResolution({ result: null, candidates: [], reasons: [] })).toMatchObject({ found: false });
+  });
 });

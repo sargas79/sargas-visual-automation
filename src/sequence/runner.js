@@ -111,7 +111,7 @@ async function runEffect(step, sequence, { engine, userId, filterEffect }) {
   if (Number.isFinite(effect.duration)) {
     await Promise.race([handle?.finished, sleep((effect.delay ?? 0) + effect.duration + offset)]);
   } else {
-    // VERIFY: EffectHandle exposes no duration in the contract; fall back to the full length.
+    // EffectHandle.duration (wall ms) is set by the engine once the video length is known.
     const known = Number(handle?.duration);
     if (Number.isFinite(known) && known > 0) await Promise.race([handle.finished, sleep(known + offset)]);
     else await handle?.finished;

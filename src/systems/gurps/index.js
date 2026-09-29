@@ -98,6 +98,7 @@ export default class GurpsAdapter extends SystemAdapter {
 
   onCreateChatMessage(message, _options, userId) {
     // Only the client that created the message emits (GGA creates roll cards on the roller's client).
+    // VERIFY(gurps): chat-command rolls (/r [M:Sword]) are also created locally by ChatProcessors.
     if (!userId || userId !== game.user?.id) return;
     if (!this._markSeen(`msg:${message?.id}`)) return;
     let event;

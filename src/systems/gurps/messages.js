@@ -95,7 +95,11 @@ export function parseOtf(otf) {
   };
 }
 
-/** Every GGA action embedded in the content, in document order. */
+/**
+ * Every GGA action embedded in the content, in document order.
+ * VERIFY(gurps|v14): the stored content keeps GGA's `data-action` / `data-otf` attributes after Foundry's HTML
+ * cleaning (GGA's own click handlers depend on them); attribute quotes may be normalized, so both are accepted.
+ */
 export function actionsInContent(content) {
   const html = String(content ?? "");
   const actions = [];
@@ -119,7 +123,7 @@ export function actionsInContent(content) {
   return actions;
 }
 
-/** Outcome from the die-roll card, or null when the card has none. */
+/** Outcome from the die-roll card, or null when the card has none. VERIFY(gurps): class names of die-roll-chat-message.hbs. */
 export function outcomeFromContent(content) {
   const m = /class=(["'])(crit success|crit failure|failure|success)\1/i.exec(String(content ?? ""));
   return m ? OUTCOME_CLASSES[m[2].toLowerCase()] : null;
@@ -134,7 +138,10 @@ export function outcomeFromChatdata(data) {
   return null;
 }
 
-/** Name rolled against, from the roll formula flavor: "3d6[Broadsword]" → "Broadsword". */
+/**
+ * Name rolled against, from the roll formula flavor: "3d6[Broadsword]" → "Broadsword" (dieroll.js#_doRoll).
+ * VERIFY(v14): Roll#formula keeps term flavors.
+ */
 export function thingFromRolls(message) {
   for (const roll of message?.rolls ?? []) {
     const formula = typeof roll === "string" ? roll : (roll?.formula ?? roll?._formula);
@@ -258,6 +265,7 @@ export function eventFromMessage(message, { userId, lastAttack, animateFailedCas
   let outcome = outcomeFromContent(content);
   if (!outcome) outcome = outcomeFromChatdata(globalThis.GURPS?.lastTargetedRolls?.[actorId]) ?? OUTCOMES.NONE;
   // Blind rolls: don't leak the result through the animation.
+  // VERIFY(v14): ChatMessage#blind is set for GGA blind rolls (dieroll.js sets messageData.blind + blind message mode).
   if (message.blind) outcome = OUTCOMES.NONE;
   const failed = outcome === OUTCOMES.FAILURE || outcome === OUTCOMES.CRITICAL_FAILURE;
   if (!animateFailedCasts && failed && classified.type !== EVENT_TYPES.ATTACK) return null;

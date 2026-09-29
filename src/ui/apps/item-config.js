@@ -82,15 +82,16 @@ export function getItemConfigClass() {
       } catch (err) {
         log.error("Could not resolve the item recipe", err);
       }
-      if (this.draft === undefined) this.draft = cloneJson(stored) ?? cloneJson(resolution?.recipe) ?? null;
-      this.matched = resolution?.recipe ?? null;
+      const matched = resolution?.result !== undefined ? resolution.result?.recipe : resolution?.recipe;
+      if (this.draft === undefined) this.draft = cloneJson(stored) ?? cloneJson(matched) ?? null;
+      this.matched = matched ?? null;
 
       return Object.assign(context, {
         hasCustom: !!stored,
         noCustom: !stored,
         disabled: isItemDisabled(this.item),
         resolution: summarizeResolution(resolution),
-        canUseMatched: !!resolution?.recipe,
+        canUseMatched: !!matched,
         recipeFormHtml: await renderRecipeForm(this.draft, this.id)
       });
     }

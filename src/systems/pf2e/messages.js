@@ -129,6 +129,13 @@ function isBattleMedicine(ctx) {
   return values.some((v) => typeof v === "string" && /(^|:)battle-medicine$/.test(v));
 }
 
+function findActorItem(message, slug) {
+  const items = (message.actor ?? message.speakerActor)?.items;
+  if (!items) return null;
+  const list = typeof items.values === "function" ? [...items.values()] : Array.from(items);
+  return list.find((i) => (i.slug ?? i.system?.slug) === slug) ?? null;
+}
+
 /** Decide the event type for a message, or null to ignore it. */
 export function classify(message, item) {
   const flags = message.flags?.pf2e ?? {};
@@ -187,11 +194,13 @@ function isActualCast(origin) {
 export function eventFromMessage(message, { userId } = {}) {
   const flags = message?.flags?.pf2e;
   if (!flags) return null;
-  const item = resolveItem(message);
+  let item = resolveItem(message);
   const type = classify(message, item);
   if (!type) return null;
 
   const ctx = flags.context ?? {};
+  // Battle Medicine is a skill check without an origin item: use the actor's feat so item recipes apply.
+  if (!item && type === EVENT_TYPES.HEALING && isBattleMedicine(ctx)) item = findActorItem(message, "battle-medicine");
   const altUsage = ctx.altUsage ?? item?.altUsageType ?? null;
   const descriptors = item
     ? describeItem(item, { altUsage })

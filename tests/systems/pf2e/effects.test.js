@@ -41,7 +41,7 @@ describe("effects & conditions", () => {
     Hooks.callAll("createItem", bless, {}, "user1");
     Hooks.callAll("deleteItem", bless, {}, "user1");
     expect(emit.mock.calls.map((c) => c[0].type)).toEqual([EVENT_TYPES.EFFECT_APPLIED, EVENT_TYPES.EFFECT_REMOVED]);
-    expect(emit.mock.calls.map((c) => c[0].id)).toEqual([`${bless.id}:effectApplied`, `${bless.id}:effectRemoved`]);
+    expect(emit.mock.calls.map((c) => c[0].id)).toEqual([`${bless.uuid}:effectApplied`, `${bless.uuid}:effectRemoved`]);
   });
 
   it("conditions are animated unless the setting is off", async () => {

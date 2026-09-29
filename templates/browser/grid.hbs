@@ -26,10 +26,12 @@
         >
           {{#if isLeaf}}
             <div class="sva-card-media">
+              <span class="sva-card-placeholder" inert>
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span class="sva-card-placeholder-label">{{localize "SVA.UI.Browser.NoPreview"}}</span>
+              </span>
               {{#if thumbnail}}
                 <img src="{{thumbnail}}" loading="lazy" alt="" />
-              {{else}}
-                <i class="fa-solid fa-film sva-card-placeholder" inert></i>
               {{/if}}
             </div>
           {{else}}

@@ -126,7 +126,7 @@ A world rule matches items and gives them a recipe. Use rules to change the defa
 Open it from the **Animation browser** button in the module settings (and in the item configuration's animation picker). With a macro: `SVA.ui.openBrowser()`.
 
 - Browse the JB2A tree on the left or **search** by name.
-- Thumbnails show every animation; **hover** one to preview the video.
+- Thumbnails show every animation; **hover** one to preview the video. JB2A's own thumbnails are indexed the first time the browser is used after installing or updating JB2A (a few seconds, in the background, then cached in your browser). Animations without one get a preview frame captured from the video when they scroll into view; if that isn't possible (for example JB2A on S3 without CORS), a "No preview" placeholder is shown.
 - **Copy path** copies the database path (`jb2a.fire_bolt.orange`) for macros and recipes.
 - **Play on selected token** plays it on the selected token (and to the target, for projectiles).
 - **Favourites** keep the animations you use most at the top.

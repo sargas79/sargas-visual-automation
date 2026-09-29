@@ -55,6 +55,25 @@ describe("animation browser app", () => {
     expect(context.cards.map((c) => [c.path, c.favourite])).toEqual([["jb2a.fire_bolt.purple", true]]);
   });
 
+  it("uses captured frames for missing thumbnails and re-renders once the index is built", async () => {
+    let finish;
+    const db = createFakeDb();
+    db.resolve = (path) => ({ path, file: `modules/jb2a/${path}.webm`, thumbnail: null });
+    db.thumbnails = { status: "building", ready: new Promise((resolve) => (finish = resolve)) };
+    const api = { db };
+    await load(api);
+    const { frameCapture } = await import("../../src/ui/frame-capture.js");
+    await frameCapture().capture("jb2a.fire_bolt.orange", "modules/jb2a/x.webm"); // no DOM: cached as null
+    const app = api.ui.openBrowser({ path: "jb2a.fire_bolt.orange" });
+    const context = await app._prepareContext({});
+    expect(context.cards.find((c) => c.path === "jb2a.fire_bolt.orange").thumbnail).toBeNull();
+    const before = app.renderCalls.length;
+    await app._prepareContext({}); // still building: only one pending refresh
+    finish(true);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(app.renderCalls.slice(before)).toEqual([{ parts: ["grid"] }]);
+  });
+
   it("reports an unavailable database", async () => {
     const api = { db: { available: false } };
     await load(api);

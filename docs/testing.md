@@ -205,6 +205,8 @@ Roll everything from the **Player** client unless noted, with the named tokens s
 | ---- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | 9.1  | [ ] Open the **Animation browser** (`SVA.ui.openBrowser()` or its toolbar/settings button).     | Tree + search + thumbnail grid.                                                                 |
 | 9.2  | [ ] Search "fire bolt", hover a thumbnail.                                                      | Hover plays a video preview.                                                                    |
+| 9.2a | [ ] First browser use after installing JB2A: console "Indexed N JB2A thumbnails"; reload.       | N ≈ 6600 (Patreon 0.9.3); no new walk after the reload (cached).                                |
+| 9.2b | [ ] Browse `jb2a.template_circle` (many animations without a JB2A thumbnail).                   | Cards get a captured frame when visible; failures show "No preview".                            |
 | 9.3  | [ ] Find `jb2a.shield.01.complete.01.blue` in < 3 clicks, **Copy path**.                        | Clipboard contains the dot path.                                                                |
 | 9.4  | [ ] **Play on selected token**.                                                                 | Plays on the selected token.                                                                    |
 | 9.5  | [ ] Add and remove a favourite, reopen the window.                                              | Favourites persist.                                                                             |

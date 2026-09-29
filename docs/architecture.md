@@ -189,7 +189,8 @@ These were added while the areas were built, and are part of the contract from n
 
 - **API root:** `SVA.SystemAdapter`, `SVA.LAYERS`, `SVA.EVENT_TYPES`, `SVA.OUTCOMES`, `SVA.AREA_SHAPES`, `SVA.ATTACK_KINDS`. Third-party adapters extend `SVA.SystemAdapter`.
 - **db:**
-  - `api.db.findThumbnail(pathOrFile)` (async, probes candidate names). JB2A doesn't list thumbnails, so `thumbnail` is a best guess.
+  - `api.db.findThumbnail(pathOrFile)` (async): answers from the thumbnail index when it is ready, else probes candidate names.
+  - `api.db.thumbnails` (#67): `{status, ready, count, find(file), build({force}), clearCache()}`. JB2A doesn't list its thumbnails, so after the catalog loads the JB2A `Library` folder is walked once with the FilePicker (`data` or `s3`), cached in the browser's localStorage per JB2A version and install location, and videos are matched to thumbnails by normalized name (`src/db/thumbnail-index.js`). `thumbnail` comes from the index when it is ready (then `null` means none exists), otherwise it is the name guess. The animation browser captures a video frame for cards without a thumbnail and shows placeholder art when that fails too.
   - `CatalogEntry.label` and `CatalogEntry.distances` (on distance groups); `ResolvedFile.template.name`.
   - `resolve(path, {distance, gridDistance})`.
   - `search` returns distance groups rather than each `05ft`/`15ft`/… variant.

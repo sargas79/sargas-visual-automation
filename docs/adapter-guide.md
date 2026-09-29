@@ -69,11 +69,11 @@ Rules match items through two methods. Both must work for **any** item of your s
 
 A **stable identifier** that doesn't change with translation or renaming. Rule packs match on it (`match.key`).
 
-| System | Good key                                      |
-| ------ | --------------------------------------------- |
-| PF2e   | `item.system.slug` (`"electric-arc"`)         |
-| dnd5e  | `item.system.identifier` (`"fire-bolt"`)      |
-| GURPS  | a slug of the English name, or the library id |
+| System | Good key                                       |
+| ------ | ---------------------------------------------- |
+| PF2e   | `item.system.slug` (`"electric-arc"`)          |
+| dnd5e  | `item.system.identifier` (`"fire-bolt"`)       |
+| GURPS  | a slug of the attack/spell name (`"fireball"`) |
 
 The base class returns a slug of `item.name` (`"Fire Bolt"` → `"fire-bolt"`), so return `super.getItemKey(item)` when your field is empty.
 
@@ -406,13 +406,12 @@ Neither `src/automation`, `src/engine` nor `src/db` changed: that is the accepta
 
 ## Notes for GURPS
 
-GURPS Game Aid (`game.system.id === "gurps"`) is a different kind of system: most rolls go through its own roll pipeline and on-the-fly formulas ("OtF"), not item activities. Suggested approach:
+The real GURPS Game Aid adapter lives in [`src/systems/gurps/`](../src/systems/gurps/) (target: GGA v0.18.23, Foundry v13-v14). Read it next to the PF2e one: it shows how to support a system where attacks are **not items**.
 
-1. **Research first** (issue #47): find the hook or chat-message flags GURPS sets for attack rolls, defense rolls and spell casting, and whether the message links back to the equipment/spell. Log `createChatMessage` messages with Debug logging on and inspect their `flags`.
-2. **Items**: GURPS melee/ranged attacks live in the actor's data (`melee`, `ranged` lists) more than in items. `getItemKey` can slug the attack/spell name; `getItemDescriptors` sets `attackKind` from which list it came from, and `weaponGroup` from the weapon name (sword, axe, bow…).
-3. **Outcomes**: GURPS has critical success / success / failure / critical failure, which map one-to-one.
-4. **Defenses**: a successful active defense (dodge, parry, block) can be emitted as the target's `failure` outcome on the attack, so the recipe plays a miss.
-5. **Rule pack**: start with generic families (swords, bows, firearms, spells by college via `traits`) rather than per-item rules.
+- **Integration point**: GGA fires no roll hooks (only `gurpsinit`, `gurpsready`, `updateLastActorGURPS`) and sets no flags on roll cards, so [`messages.js`](../src/systems/gurps/messages.js) parses GGA's own chat cards in `createChatMessage`. Every targeted roll posts `die-roll-chat-message.hbs`, whose rolled OtF (`[@<actorId>@M:"Broadsword (Swing)"]`) GGA's `preCreateChatMessage` hook turns into `<span class='gurpslink' data-action='<base64 JSON>'>`. The adapter decodes that action (`type`, `name`, `isMelee`/`isRanged`, `isSpellOnly`, `sourceId`), falls back to `data-otf`, then to the `3d6[<name>]` roll flavor, and reads the outcome from the card's `crit success` / `success` / `failure` / `crit failure` span. Damage cards carry `flags.gurps.transfer` (`type: "damageItem"`).
+- **Events**: attack roll → `attack`; spell roll → `cast`, or `healing` for healing spells and First Aid (never both); damage roll → `damage`, described as the actor's last attack if it was rolled within two minutes. Parry, block and dodge are ignored: the contract has no defense event.
+- **Descriptors without items**: [`descriptors.js`](../src/systems/gurps/descriptors.js) builds `ItemDescriptors` from the actor's `system.melee` / `system.ranged` / `system.spells` / `system.skills` entries: `key` is the slug of the name, `attackKind` comes from the list (a ranged row whose mode says "Thrown" is `thrown`), `weaponGroup` from the weapon name, `damageTypes` from GURPS damage codes (`cut` → slashing, `imp`/`pi*` → piercing, `cr` → bludgeoning, `burn` → fire, `cor` → acid, `tox` → poison), and the raw codes, usage mode, spell college and class become `traits`. `itemUuid` is set when the entry comes from an Item (`fromItem` / `itemid`), so per-item recipes still work.
+- **Rule pack**: [`rules/gurps.json`](../rules/gurps.json) matches by `regex` on names, weapon groups and damage-code traits. Missile spells get two rules, one on `cast` (type `spell`) and one on `attack` (`attackKind: ranged`), because casting and throwing are two rolls.
 
 ## Checklist
 

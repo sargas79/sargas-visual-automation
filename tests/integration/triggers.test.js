@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import { defaultTriggers } from "../../src/automation/presets.js";
 
 const pack = JSON.parse(readFileSync(new URL("../../rules/pf2e.json", import.meta.url), "utf8"));
+const gurpsPack = JSON.parse(readFileSync(new URL("../../rules/gurps.json", import.meta.url), "utf8"));
 const SAME_ACTION = [
   ["cast", "healing"],
   ["cast", "attack"]
@@ -17,6 +18,17 @@ describe("one animation per action", () => {
     const offenders = pack.rules.filter((r) => {
       const t = r.recipe.triggers ?? defaultTriggers(r.recipe.preset);
       return SAME_ACTION.some(([a, b]) => t.includes(a) && t.includes(b));
+    });
+    expect(offenders.map((r) => r.id)).toEqual([]);
+  });
+
+  it("GURPS rules never listen to two events of the same action", () => {
+    // GURPS: an attack roll is followed by its damage roll. Missile spells are cast (CAST) and thrown (ATTACK) with
+    // two rolls; the pack animates them with two rules (charge on the caster, projectile), never one rule on both.
+    const gurpsSameAction = [...SAME_ACTION, ["attack", "damage"]];
+    const offenders = gurpsPack.rules.filter((r) => {
+      const t = r.recipe.triggers ?? defaultTriggers(r.recipe.preset);
+      return gurpsSameAction.some(([a, b]) => t.includes(a) && t.includes(b));
     });
     expect(offenders.map((r) => r.id)).toEqual([]);
   });

@@ -1,0 +1,10 @@
+{
+  "SVA": {
+    "Settings": {
+      "Debug": {
+        "Name": "Debug logging",
+        "Hint": "Print detailed Sargas Visual Automation logs to the browser console."
+      }
+    }
+  }
+}

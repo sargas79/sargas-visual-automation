@@ -21,7 +21,15 @@ export function createFoundryEnvironment(layers) {
     createContext: () => ({
       getToken,
       gridSize: () => canvas.grid?.size ?? 100,
-      layers
+      layers,
+      isGM: () => !!game.user?.isGM,
+      tokenVision: () => !!canvas.visibility?.tokenVision,
+      // CanvasVisibility#testVisibility(point, {tolerance}): tolerance in px around the point.
+      pointVisible: (point) =>
+        canvas.visibility?.testVisibility?.(point, { tolerance: (canvas.grid?.size ?? 100) / 2 }) ?? true,
+      // canvas.level is the viewed Level (v14 scene levels); elevation.base is its floor.
+      levelBase: () => canvas.level?.elevation?.base ?? 0,
+      toScreen: (point) => canvas.stage.worldTransform.apply(point)
     }),
     createSprite: (params) => new EffectSprite(params),
     measure(a, b) {

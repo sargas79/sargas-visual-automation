@@ -8,6 +8,8 @@
  *   ready(api)  - Foundry "ready" (may be async; areas run in order)
  */
 import { EffectEngine } from "./engine.js";
+import { createFoundryEnvironment } from "./environment.js";
+import { LayerManager } from "./layers.js";
 import { ENGINE_SETTINGS, getEngineSetting, registerEngineSettings } from "./settings.js";
 import { TextureCache } from "./texture-cache.js";
 import { foundryTextureBackend } from "./video-backend.js";
@@ -25,8 +27,14 @@ export function init(api) {
     backend: foundryTextureBackend,
     max: getEngineSetting(ENGINE_SETTINGS.CACHE_SIZE)
   });
-  engine = new EffectEngine({ api, textures });
+  const layers = new LayerManager();
+  engine = new EffectEngine({ api, textures, env: createFoundryEnvironment(layers) });
   api.engine = {
+    play: (effect) => engine.play(effect),
+    get: (id) => engine.get(id),
+    active: () => engine.active(),
+    end: (id, options) => engine.end(id, options),
+    endAll: (options) => engine.endAll(options),
     preload: (pathsOrFiles) => engine.preload(pathsOrFiles)
   };
 }

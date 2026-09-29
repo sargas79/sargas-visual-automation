@@ -7,6 +7,8 @@
  *   2. hands persistent effects to `api.effects.store` (scene flags, GM-written),
  *   3. runs the sequence locally.
  * With `broadcast: false` only step 3 happens (previews, replays).
+ * Users below the `netMinTriggerRole` world setting cannot play sequences at all;
+ * the runner applies this client's preferences (effects disabled, reduced motion, volume).
  */
 import { DESCRIPTOR_VERSION } from "../shared/descriptors.js";
 import { log } from "../logger.js";
@@ -27,11 +29,21 @@ function validate(descriptor) {
 
 /** Run a sequence on this client only. */
 export function runLocal(api, sequence) {
+  const prefs = api.net?.prefs;
   return runSequence(sequence, {
     engine: api.engine,
     userId: globalThis.game?.user?.id ?? null,
-    viewedSceneId: globalThis.canvas?.scene?.id ?? null
+    viewedSceneId: globalThis.canvas?.scene?.id ?? null,
+    filterEffect: prefs?.filterEffect ?? ((effect) => effect),
+    volume: prefs?.volume?.() ?? 1
   });
+}
+
+function notifyNotAllowed() {
+  const key = "SVA.Sequence.NotAllowed";
+  const i18n = globalThis.game?.i18n;
+  const message = i18n?.has?.(key) ? i18n.localize(key) : "You are not allowed to trigger animations.";
+  globalThis.ui?.notifications?.warn(message);
 }
 
 /** @param {object} api */
@@ -40,6 +52,11 @@ export function init(api) {
 
   api.playSequence = async (descriptor, { broadcast = true } = {}) => {
     validate(descriptor);
+    // #22: the world "minimum role to trigger" gates local and broadcast playback alike.
+    if (api.net?.prefs && !api.net.prefs.canTrigger()) {
+      notifyNotAllowed();
+      return;
+    }
     if (broadcast) {
       api.net?.emit("play", { sequence: descriptor });
       try {

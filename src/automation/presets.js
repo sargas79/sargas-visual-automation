@@ -7,6 +7,9 @@
  *   sound → cast (source, waits for it) → onSource (source) + main animation(s)
  *   → impact / onTarget on each affected target (after the main animation).
  * Multi-target presets stagger each target by `options.stagger` ms.
+ * Reduced motion (#66): effects that convey the result (attack / projectile,
+ * onToken, area, impact, onTarget) are `essential: true`; cast and onSource are
+ * `essential: false`.
  */
 import { AREA_SHAPES, EVENT_TYPES } from "../shared/events.js";
 import {
@@ -63,7 +66,8 @@ function sourceStage(recipe, id, sourceId, waitDefault) {
   const opts = stage.options ?? {};
   const effect = makeEffect(stage.animation, opts, {
     atLocation: tokenAnchor(sourceId),
-    scaleToObject: opts.scale ?? 1.5
+    scaleToObject: opts.scale ?? 1.5,
+    essential: false // decorative: skipped with reduced motion
   });
   return [effectStep(effect, waitDefault === undefined ? undefined : (opts.waitUntilFinished ?? waitDefault))];
 }
@@ -92,7 +96,8 @@ function targetSteps(recipe, tokenId, delay) {
         makeEffect(stage.animation, opts, {
           atLocation: tokenAnchor(tokenId),
           scaleToObject: opts.scale ?? scale,
-          delay
+          delay,
+          essential: true // conveys the result
         })
       )
     );
@@ -142,7 +147,7 @@ function buildAttack(ctx, { useProjectile, staggerDefault }) {
         : { atLocation: tokenAnchor(target.tokenId), scaleToObject: fileOpts.scale ?? 1 };
       if (missed && sourceId) extra.missed = true;
       if (useProjectile && fileOpts.returnTrip && sourceId) extra.returnTrip = true;
-      main.push(makeEffect(file, fileOpts, { ...extra, delay }));
+      main.push(makeEffect(file, fileOpts, { ...extra, delay, essential: true }));
     }
     if (!missed) post.push(...targetSteps(r, target.tokenId, delay));
   });
@@ -163,7 +168,12 @@ function buildOnToken(ctx) {
     const ropts = r.options ?? {};
     const delay = i * stagger;
     if (r.animation) {
-      const extra = { atLocation: tokenAnchor(target.tokenId), scaleToObject: ropts.scale ?? 1.5, delay };
+      const extra = {
+        atLocation: tokenAnchor(target.tokenId),
+        scaleToObject: ropts.scale ?? 1.5,
+        delay,
+        essential: true
+      };
       if (ropts.attach) extra.attachTo = { tokenId: target.tokenId };
       main.push(makeEffect(r.animation, ropts, extra));
     }
@@ -223,7 +233,7 @@ function buildArea(ctx) {
       if (anchor) extra = { atLocation: anchor, size: { width: side, height: side, gridUnits: true } };
     }
   }
-  const main = extra && recipe.animation ? [makeEffect(recipe.animation, opts, extra)] : [];
+  const main = extra && recipe.animation ? [makeEffect(recipe.animation, opts, { ...extra, essential: true })] : [];
   const stagger = opts.stagger ?? 50;
   const post = ctx.targets.flatMap((t, i) =>
     targetSteps(recipeForOutcome(ctx.recipe, t.outcome ?? event.outcome), t.tokenId, i * stagger)

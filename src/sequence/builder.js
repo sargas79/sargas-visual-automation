@@ -134,6 +134,10 @@ export class EffectBuilder {
   persist(value = true) {
     return this._set("persist", !!value);
   }
+  /** Reduced motion: true always keeps this effect, false skips it, null clears it (fallback heuristic). */
+  essential(value = true) {
+    return this._set("essential", value === null ? undefined : !!value);
+  }
   name(tag) {
     return this._set("name", tag);
   }

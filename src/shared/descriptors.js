@@ -55,6 +55,7 @@ export const LAYERS = Object.freeze({
  * @property {string} [name]             Tag used to find / end effects ("aura:<actorId>:<key>").
  * @property {string[]} [users]          Only these user ids see it (empty = everyone).
  * @property {string} [sceneId]          Defaults to the sequence scene.
+ * @property {boolean} [essential]      Reduced motion: true = always kept, false = skipped, unset = fallback heuristic (net/preferences.js).
  */
 
 /**

@@ -146,7 +146,7 @@ Settings live in **Game Settings → Configure Settings → Sargas Visual Automa
 | Minimum role to trigger | World  | Users below this role can't broadcast animations (automation or macros).                           |
 | Max concurrent effects  | Client | Upper limit of effects on screen at once, to protect slower machines.                              |
 | Disable effects         | Client | You see no SVA animations at all. Other players are unaffected.                                    |
-| Reduced motion          | Client | Skip non-essential effects (auras, ambient loops, screen effects); attacks and impacts still play. |
+| Reduced motion          | Client | Skip decorative effects (cast, screen effects); hits, misses, areas, impacts and auras still play. |
 | Volume                  | Client | Volume of SVA sounds on your machine.                                                              |
 | Condition markers       | World  | Show JB2A markers for conditions (PF2e).                                                           |
 | Debug logging           | Client | Detailed logs in the browser console (F12), including why a recipe matched.                        |

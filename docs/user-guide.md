@@ -70,14 +70,14 @@ SVA.automation.explain(item);
 
 A recipe picks a **preset** and a JB2A animation:
 
-| Preset     | Used for                                                          | Plays                                                                |
-| ---------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `melee`    | Melee strikes, unarmed and natural attacks                        | A swing from the attacker onto each target                           |
-| `ranged`   | Bows, crossbows, thrown weapons, spell attacks, rays, projectiles | A projectile from the source to each target, scaled to the distance  |
-| `onToken`  | Save spells, buffs, healing                                       | An effect on each target (or on the caster)                          |
-| `area`     | Bursts, cones, lines and emanations                               | An animation fitted to the placed template / area                    |
-| `aura`     | Effects and conditions that last                                  | A persistent looping effect on the token until the effect is removed |
-| `teleport` | Misty Step and similar                                            | A vanish at the start and an appear at the destination               |
+| Preset     | Used for                                                          | Plays                                                                                 |
+| ---------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `melee`    | Melee strikes, unarmed and natural attacks                        | A swing from the attacker onto each target                                            |
+| `ranged`   | Bows, crossbows, thrown weapons, spell attacks, rays, projectiles | A projectile from the source to each target, scaled to the distance                   |
+| `onToken`  | Save spells, buffs, healing                                       | An effect on each target (or on the caster)                                           |
+| `area`     | Bursts, cones, lines and emanations                               | An animation fitted to the placed template / area                                     |
+| `aura`     | Effects and conditions that last                                  | A persistent looping effect on the token until the effect is removed                  |
+| `teleport` | Misty Step, Translocate and similar                               | A vanish, the token moves to the destination (click it on the canvas), then an appear |
 
 Recipes can add **stages** (`cast` on the caster, `projectile`, `impact`, `onSource`, `onTarget`) and **per-outcome overrides**: a different animation on a critical hit, a miss that lands beside the target, no impact on a failure, and so on.
 

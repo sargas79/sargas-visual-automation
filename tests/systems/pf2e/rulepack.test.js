@@ -161,6 +161,21 @@ describe("rules/pf2e.json", () => {
     expect(resolve(unknownFire)?.id).toBe("fallback-fire-attack");
   });
 
+  it("teleport spells vanish, move and appear on CAST", () => {
+    for (const key of [
+      "translocate",
+      "dimension-door",
+      "abundant-step",
+      "dimensional-assault",
+      "dimensional-disappearance"
+    ]) {
+      const rule = pack.rules.find((r) => r.match.key === key);
+      expect(rule?.recipe, key).toMatchObject({ preset: "teleport", triggers: [EVENT_TYPES.CAST] });
+      expect(rule.recipe.animation, key).toMatch(/^jb2a\.misty_step\.01\./);
+      expect(rule.recipe.stages.onTarget.animation, key).toMatch(/^jb2a\.misty_step\.02\./);
+    }
+  });
+
   it("healing rules react to HEALING events", () => {
     for (const id of ["potion-healing", "battle-medicine", "spell-heal"]) {
       expect(pack.rules.find((r) => r.id === id).recipe.triggers).toContain(EVENT_TYPES.HEALING);

@@ -216,6 +216,7 @@ These were added while the areas were built, and are part of the contract from n
   - Adapters include at least `descriptors.key` on `effectRemoved`, because the item is usually already deleted.
   - Optional `AutomationEvent.id`: a stable id of the occurrence (PF2e: `<messageId>:<type>`, `<regionId>:<type>`, `<effectItemId>:<type>`), used for de-duplication.
   - `ItemDescriptors.baseItem` (PF2e weapons), matched by `Rule.match.baseItem` (specificity between `name` and `regex`).
+- **teleport:** the `teleport` preset moves the source token between the vanish and the appear (on the automation client): destination = `event.area.origin` → `options.destination` → a canvas click (`options.pickDestination`); `options.moveToken: false` keeps animation only. The GM updates the token with `animate: false`; players send `teleportMove` `{requestId, sceneId, tokenId, x, y}` over `api.net`, the active GM applies it when the sender owns the token and answers `teleportMoved` `{requestId, ok, reason?}` (types added through `api.net.on/emit`, protocol `v: 1` unchanged). `api.automation.teleport.{moveToken, pickCanvasPoint}`.
 - **systems:** optional `static init(api)` on `SystemAdapter`, called once per registered class during the automation area's `init` (immediately for classes registered later), active or not. Adapters register their settings there; PF2e registers `pf2eConditionEvents`.
 - **ui:** `api.ui.openSettings()`. Settings may declare `svaGroup` to choose their group in the SVA settings panel.
 

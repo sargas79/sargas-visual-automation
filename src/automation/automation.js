@@ -17,6 +17,7 @@ import { fallbackRecipe } from "./fallback.js";
 import { findRule } from "./matcher.js";
 import { PRESETS, auraName, defaultTriggers } from "./presets.js";
 import { checkRecipe, normalizeRecipe } from "./schema.js";
+import { createTeleport } from "./teleport.js";
 
 export const SETTING_ENABLED = "automationEnabled";
 /** Events without an `id`: identical events within this window are dropped (double hooks, re-renders). */
@@ -237,6 +238,8 @@ export function createAutomation(api, rules) {
     return true;
   }
 
+  const teleport = createTeleport(api, { playAll });
+
   const automation = {
     presets: PRESETS,
     compile,
@@ -276,6 +279,11 @@ export function createAutomation(api, rules) {
       }
       log.debug(`Recipe for "${event.descriptors?.name}" (${event.type}): ${resolved.reason}`);
       if (resolved.recipe.preset === "aura" && effectExists(auraName(event))) return false;
+      if (resolved.recipe.preset === "teleport") {
+        // Moves the token between the vanish and the appear; null = animation only (no canvas / moveToken off).
+        const moved = await teleport.run(resolved.recipe, event);
+        if (moved !== null) return moved;
+      }
 
       let sequences;
       try {
@@ -289,6 +297,9 @@ export function createAutomation(api, rules) {
 
     resolveRecipe,
     explain,
+
+    /** Teleport helpers: `moveToken({sceneId, tokenId, x, y})` (GM-authoritative) and `pickCanvasPoint()`. */
+    teleport: { moveToken: teleport.moveToken, pickCanvasPoint: teleport.pickCanvasPoint },
 
     /**
      * Play a recipe locally only (no broadcast, nothing persisted).

@@ -707,6 +707,11 @@
         "version": 1,
         "preset": "teleport",
         "animation": "jb2a.misty_step.01.blue",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.blue"
+          }
+        },
         "options": {},
         "triggers": ["cast"]
       }
@@ -723,7 +728,78 @@
       "recipe": {
         "version": 1,
         "preset": "teleport",
-        "animation": "jb2a.misty_step.02.blue",
+        "animation": "jb2a.misty_step.01.purple",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.purple"
+          }
+        },
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-abundant-step",
+      "label": "Abundant Step",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "abundant-step",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.yellow",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.yellow"
+          }
+        },
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-dimensional-assault",
+      "label": "Dimensional Assault",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "dimensional-assault",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.dark_purple",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.dark_purple"
+          }
+        },
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-dimensional-disappearance",
+      "label": "Dimensional Disappearance",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "dimensional-disappearance",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.dark_black",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.dark_black"
+          }
+        },
         "options": {},
         "triggers": ["cast"]
       }

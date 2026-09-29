@@ -18,7 +18,42 @@
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "lang/en/core.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en/db.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en/engine.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en/net.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en/sequence.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en/automation.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en/pf2e.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en/ui.json"
     }
   ],
   "relationships": {
@@ -41,5 +76,6 @@
   "bugs": "https://github.com/sargas79/sargas-visual-automation/issues",
   "readme": "https://github.com/sargas79/sargas-visual-automation#readme",
   "manifest": "https://github.com/sargas79/sargas-visual-automation/releases/latest/download/module.json",
-  "download": ""
+  "download": "",
+  "styles": ["styles/sva.css"]
 }

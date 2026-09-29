@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000001",
+  "_key": "!macros!svaExample000001",
+  "name": "Spike Trap (10 ft)",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/trap.svg",
+  "command": "/**\n * SVA example: Spike Trap (10 ft)\n * Springs a spike trap on one or more tiles; run it again to re-arm the trap.\n *\n * Setup: place a Tile (any image, for example the hidden spike-trap still frame of JB2A)\n * the size of the trap. Then EITHER select the tile(s) before running this macro,\n * OR tag them once so the macro finds them without selection (run in the console with the tile selected):\n *   canvas.tiles.controlled[0].document.setFlag(\"world\", \"svaTag\", \"spike-trap\")\n * Tokens standing on the trap when it springs get a blood splash.\n *\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer or Tagger needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst TAG = \"spike-trap\";\nconst FILES = {\n  spring: \"jb2a.spike_trap.10x10ft.top.no_base.normal.01\",\n  deployed: \"jb2a.spike_trap.10x10ft.top.no_base.still_frame.deployed\",\n  rearm: \"jb2a.spike_trap.10x10ft.top.no_base.rearming.01\",\n  blood: \"jb2a.liquid.splash.red\"\n};\n\nconst tiles = canvas.tiles.controlled.length\n  ? canvas.tiles.controlled\n  : canvas.tiles.placeables.filter((t) => t.document.getFlag(\"world\", \"svaTag\") === TAG);\nif (!tiles.length) return ui.notifications.warn(\"Select a trap tile, or tag one with the 'spike-trap' flag.\");\n\nconst sceneId = canvas.scene.id;\nawait SVA.net.preload(Object.values(FILES));\n\nfor (const tile of tiles) {\n  const { x, y, width, height } = tile.document;\n  const center = { x: x + width / 2, y: y + height / 2 };\n  const stateName = `${TAG}:${tile.id}`;\n  const isDeployed = SVA.effects.list({ sceneId, name: stateName }).length > 0;\n  const seq = SVA.sequence();\n\n  if (isDeployed) {\n    // Re-arm: play the retracting spikes, then drop the stored \"deployed\" frame underneath.\n    seq.effect().file(FILES.rearm).atLocation(center).size(width, height).layer(\"belowTokens\").zIndex(2);\n    seq.wait(500);\n    await seq.play();\n    await SVA.effects.end({ name: stateName, sceneId });\n    continue;\n  }\n\n  // Splash whoever stands on the tile as the spikes come out (delayed, does not block the sequence).\n  const victims = canvas.tokens.placeables.filter((t) => {\n    const c = t.center;\n    return c.x >= x && c.x <= x + width && c.y >= y && c.y <= y + height;\n  });\n  for (const victim of victims) {\n    seq\n      .effect()\n      .file(FILES.blood)\n      .atLocation(victim)\n      .scaleToObject(1.4)\n      .rotate(Math.random() * 360)\n      .delay(350);\n  }\n  // Spring the trap, then keep the deployed spikes on the tile until the next run.\n  seq\n    .effect()\n    .file(FILES.spring)\n    .atLocation(center)\n    .size(width, height)\n    .layer(\"belowTokens\")\n    .zIndex(2)\n    .fadeOut(300)\n    .waitUntilFinished(-2600);\n  seq\n    .effect()\n    .file(FILES.deployed)\n    .atLocation(center)\n    .size(width, height)\n    .layer(\"belowTokens\")\n    .zIndex(1)\n    .fadeIn(200)\n    .persist(true)\n    .name(stateName);\n  await seq.play();\n}\n",
+  "folder": null,
+  "sort": 100000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000011",
+  "_key": "!macros!svaExample000011",
+  "name": "Molten Earth Shield Toggle",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/fire.svg",
+  "command": "/**\n * SVA example: Molten Earth Shield Toggle\n * An elemental shield (molten earth by default) wrapped around each selected token, drawn in two\n * layers so it surrounds the token. Also works with the fire, ice and eldritch web themes.\n * Run again to fade it out.\n *\n * Usage: select tokens, run. Change THEME / COLOR below.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\n// Theme -> colours available in JB2A:\n//   molten_earth: orange, dark_orange      fire: orange, blue, purple, dark_green, dark_purple\n//   ice: blue, purple                      eldritch_web: dark_green, dark_purple\nconst THEME = \"molten_earth\";\nconst COLOR = \"orange\";\nconst VARIANT = \"01\"; // 01 or 03 exist for both layers\nconst SCALE = 1.6;\nconst FADE_MS = 1000;\n\nconst tokens = canvas.tokens.controlled;\nif (!tokens.length) return ui.notifications.warn(\"Select at least one token.\");\nconst below = `jb2a.shield_themed.below.${THEME}.${VARIANT}.${COLOR}`;\nconst above = `jb2a.shield_themed.above.${THEME}.${VARIANT}.${COLOR}`;\nif (!SVA.db.has(below) || !SVA.db.has(above)) return ui.notifications.warn(`No JB2A ${THEME} shield in ${COLOR}.`);\nconst sceneId = canvas.scene.id;\n\nfor (const tok of tokens) {\n  const name = `sva-${THEME}-shield:${tok.id}`;\n  if (SVA.effects.list({ sceneId, name }).length) {\n    await SVA.effects.end({ name, sceneId });\n    continue;\n  }\n  const seq = SVA.sequence();\n  seq\n    .effect()\n    .file(below)\n    .attachTo(tok.id)\n    .scaleToObject(SCALE)\n    .layer(\"belowTokens\")\n    .fadeIn(FADE_MS, { ease: \"easeOutCubic\" })\n    .fadeOut(FADE_MS, { ease: \"easeOutCubic\" })\n    .persist(true)\n    .name(name);\n  seq\n    .effect()\n    .file(above)\n    .attachTo(tok.id)\n    .scaleToObject(SCALE)\n    .fadeIn(FADE_MS, { ease: \"easeOutCubic\" })\n    .fadeOut(FADE_MS, { ease: \"easeOutCubic\" })\n    .persist(true)\n    .name(name);\n  await seq.play();\n}\n",
+  "folder": null,
+  "sort": 1100000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000008",
+  "_key": "!macros!svaExample000008",
+  "name": "Magic Circle Toggle",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/aura.svg",
+  "command": "/**\n * SVA example: Magic Circle Toggle\n * Draws a spell-school magic circle under each selected token. The circle keeps looping (and is\n * saved in the scene) until you run the macro again; it then plays its closing animation.\n *\n * Usage: select tokens, run. Change SCHOOL and COLOR below.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\n// abjuration, conjuration, divination, enchantment, evocation, illusion, necromancy, transmutation\nconst SCHOOL = \"evocation\";\n// blue, green, pink, purple, red, yellow, or dark_ + one of those (dark_red, dark_blue...)\nconst COLOR = \"red\";\nconst SCALE = 2;\n\nconst tokens = canvas.tokens.controlled;\nif (!tokens.length) return ui.notifications.warn(\"Select at least one token.\");\nconst sceneId = canvas.scene.id;\nconst file = `jb2a.magic_signs.circle.02.${SCHOOL}.complete.${COLOR}`;\nif (!SVA.db.has(file)) return ui.notifications.warn(`No JB2A animation at ${file}.`);\n\nfor (const tok of tokens) {\n  const name = `sva-magic-circle:${tok.id}`;\n  if (SVA.effects.list({ sceneId, name }).length) {\n    // The \"complete\" file has intro, loop and outro: ending it plays the outro.\n    await SVA.effects.end({ name, sceneId });\n    continue;\n  }\n  const seq = SVA.sequence();\n  seq.effect().file(file).attachTo(tok.id).scaleToObject(SCALE).layer(\"belowTokens\").persist(true).name(name);\n  await seq.play();\n}\n",
+  "folder": null,
+  "sort": 800000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

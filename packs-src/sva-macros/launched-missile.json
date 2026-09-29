@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000003",
+  "_key": "!macros!svaExample000003",
+  "name": "Launched Missile",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/explosion.svg",
+  "command": "/**\n * SVA example: Launched Missile\n * The selected token fires a missile at every target: launch smoke, missile, explosion and a\n * scorched crack on the ground that fades away.\n *\n * Usage: select the launcher, target one or more tokens, run.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst FILES = {\n  launchSmoke: \"jb2a.smoke.puff.side.02.white\",\n  missile: \"jb2a.throwable.launch.missile.01.blue\",\n  blast: \"jb2a.explosion.08.dark_orange\",\n  crater: \"jb2a.impact.ground_crack.orange\"\n};\n\nconst launcher = canvas.tokens.controlled[0] ?? token;\nconst targets = [...game.user.targets];\nif (!launcher) return ui.notifications.warn(\"Select the launching token.\");\nif (!targets.length) return ui.notifications.warn(\"Target at least one token.\");\n\nawait SVA.net.preload(Object.values(FILES));\nconst sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));\n\nconst runs = [];\nfor (const target of targets) {\n  const seq = SVA.sequence();\n  // Back-blast: the smoke points away from the target.\n  seq.effect().file(FILES.launchSmoke).atLocation(launcher).rotateTowards(target).rotate(180).scale(0.5);\n  seq.effect().file(FILES.missile).atLocation(launcher).stretchTo(target).waitUntilFinished(-150);\n  seq.effect().file(FILES.blast).atLocation(target).scaleToObject(2);\n  seq\n    .effect()\n    .file(FILES.crater)\n    .atLocation(target)\n    .layer(\"belowTokens\")\n    .scaleToObject(1.6)\n    .scaleIn(0.2, 150, { ease: \"easeOutCubic\" })\n    .duration(4500)\n    .fadeOut(3000, { ease: \"easeInQuad\" });\n  runs.push(seq.play());\n  await sleep(600 + Math.random() * 400); // salvo feel when several targets are hit\n}\nawait Promise.all(runs);\n",
+  "folder": null,
+  "sort": 300000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

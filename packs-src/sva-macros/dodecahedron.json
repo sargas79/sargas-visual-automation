@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000014",
+  "_key": "!macros!svaExample000014",
+  "name": "Dodecahedron Toggle",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/dice-target.svg",
+  "command": "/**\n * SVA example: Dodecahedron Toggle\n * A rotating arcane dodecahedron encloses each selected token (back layer under the token, front\n * layer over it). Run again to fade it out.\n *\n * Usage: select tokens, run. Change STYLE below.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\n// \"star.blueyellow\", \"rune.blueyellow\", \"rune.dark_greenpurple\", \"skull.dark_greenpurple\"\nconst STYLE = \"star.blueyellow\";\nconst [SHAPE, COLOR] = STYLE.split(\".\");\nconst SCALE = 1.6;\nconst FADE_MS = 500;\n\nconst tokens = canvas.tokens.controlled;\nif (!tokens.length) return ui.notifications.warn(\"Select at least one token.\");\nconst sceneId = canvas.scene.id;\n\nfor (const tok of tokens) {\n  const name = `sva-dodecahedron:${tok.id}`;\n  if (SVA.effects.list({ sceneId, name }).length) {\n    await SVA.effects.end({ name, sceneId });\n    continue;\n  }\n  const seq = SVA.sequence();\n  for (const half of [\"below\", \"above\"]) {\n    seq\n      .effect()\n      .file(`jb2a.dodecahedron.${SHAPE}.${half}.${COLOR}`)\n      .attachTo(tok.id)\n      .scaleToObject(SCALE)\n      .layer(half === \"below\" ? \"belowTokens\" : \"aboveTokens\")\n      .fadeIn(FADE_MS, { ease: \"easeOutCubic\" })\n      .fadeOut(FADE_MS, { ease: \"easeOutCubic\" })\n      .persist(true)\n      .name(name);\n  }\n  await seq.play();\n}\n",
+  "folder": null,
+  "sort": 1400000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

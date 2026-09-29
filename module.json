@@ -56,6 +56,19 @@
       "path": "lang/en/ui.json"
     }
   ],
+  "packs": [
+    {
+      "name": "sva-macros",
+      "label": "SVA Example Macros",
+      "path": "packs/sva-macros",
+      "type": "Macro",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
   "relationships": {
     "recommends": [
       {

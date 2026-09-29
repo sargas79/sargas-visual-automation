@@ -10,7 +10,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "npm run build:packs && vite build",
+    "build:packs": "node tools/build-packs.mjs",
     "watch": "vite build --watch --mode development",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@foundryvtt/foundryvtt-cli": "^3.0.4",
     "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.12.0",

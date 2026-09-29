@@ -11,6 +11,9 @@ export function installFakeFoundry() {
       this.rendered = false;
       this.renderCalls = [];
     }
+    get id() {
+      return this.options.id;
+    }
     get title() {
       return this.constructor.DEFAULT_OPTIONS?.window?.title ?? "";
     }

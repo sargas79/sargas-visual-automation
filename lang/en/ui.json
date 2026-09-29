@@ -31,6 +31,83 @@
           "Name": "Animation browser favourites",
           "Hint": "Database paths starred in the animation browser."
         }
+      },
+      "Recipe": {
+        "Preset": "Preset",
+        "Animation": "Animation",
+        "AnimationHint": "JB2A database path (a partial path picks a random variant). Use the film button to browse.",
+        "Browse": "Browse animations",
+        "Options": "Preset options",
+        "NoSchema": "This preset has no configurable options.",
+        "OptionsExtra": "Additional options (JSON)",
+        "OptionsExtraHint": "Advanced: options not listed above, as a JSON object.",
+        "OptionsJson": "Options (JSON object, optional)",
+        "StagesTitle": "Stages",
+        "StagesHint": "Override the animation of individual stages. Leave empty to use the preset default.",
+        "Stages": {
+          "cast": "Cast",
+          "projectile": "Projectile",
+          "impact": "Impact",
+          "onSource": "On source",
+          "onTarget": "On target"
+        },
+        "OutcomesTitle": "Per-outcome overrides",
+        "OutcomesHint": "Use a different animation or options depending on the degree of success. Empty = same as above.",
+        "Outcomes": {
+          "criticalSuccess": "Critical success",
+          "success": "Success",
+          "failure": "Failure",
+          "criticalFailure": "Critical failure"
+        },
+        "SoundTitle": "Sound",
+        "SoundFile": "Sound file",
+        "SoundVolume": "Volume (0-1)",
+        "SoundDelay": "Delay (ms)",
+        "TriggersTitle": "Triggers",
+        "TriggersHint": "Events that play this recipe. None checked = the preset default.",
+        "Triggers": {
+          "attack": "Attack",
+          "damage": "Damage",
+          "cast": "Cast",
+          "save": "Saving throw",
+          "healing": "Healing",
+          "areaPlaced": "Area placed",
+          "effectApplied": "Effect applied"
+        },
+        "Invalid": "The recipe has errors: {errors}"
+      },
+      "Source": {
+        "item": "Item recipe",
+        "world": "World rule",
+        "system": "System rule pack",
+        "fallback": "Generic fallback",
+        "none": "No recipe"
+      },
+      "ItemConfig": {
+        "Title": "Animation",
+        "TitleFor": "Animation: {name}",
+        "Disabled": "Disable automation",
+        "DisabledOn": "Automation disabled for this item.",
+        "DisabledOff": "Automation enabled for this item.",
+        "CurrentMatch": "Currently used",
+        "NoMatch": "No recipe matches this item.",
+        "HasCustom": "This item has its own recipe, which overrides world and system rules.",
+        "NoCustom": "No item recipe yet: the editor starts from the matched recipe. Saving creates an item recipe.",
+        "UseMatched": "Reset editor to the matched recipe",
+        "Preview": "Preview",
+        "PreviewHint": "Play locally from the selected token (or the item actor token) to your targets.",
+        "Clear": "Remove item recipe",
+        "ClearTitle": "Remove item recipe",
+        "ClearConfirm": "Remove the custom animation recipe of {name}? World and system rules apply again.",
+        "Save": "Save",
+        "Saved": "Saved the animation of {name}.",
+        "SaveFailed": "Could not save the recipe. See the console for details.",
+        "NoAutomation": "The automation core is not available.",
+        "NoSourceToken": "Select a token (or place a token of the item owner) to preview from.",
+        "PreviewFailed": "Preview failed. See the console for details."
+      },
+      "Rules": {
+        "Candidates": "Candidate rules"
       }
     }
   }

@@ -234,3 +234,146 @@
   flex: 0 0 auto;
   width: 2rem;
 }
+
+/* ---------- Recipe form + item recipe editor (#37) ---------- */
+
+.sva-item-config .window-content {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sva-gap);
+  overflow: hidden;
+}
+
+.sva-item-config .sva-item-config-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--sva-gap);
+}
+
+.sva-item-config .sva-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.sva-app .sva-item-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sva-gap);
+  padding-bottom: var(--sva-gap);
+  border-bottom: 1px solid var(--sva-border);
+}
+
+.sva-app .sva-item-img {
+  width: 40px;
+  height: 40px;
+  border: none;
+  object-fit: contain;
+}
+
+.sva-app .sva-item-title {
+  flex: 1;
+}
+
+.sva-app .sva-item-title h2 {
+  margin: 0;
+  border: none;
+}
+
+.sva-app .sva-disable-toggle {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.sva-app .sva-match {
+  margin-bottom: var(--sva-gap);
+  padding: var(--sva-gap);
+  border: 1px solid var(--sva-border);
+  border-radius: 4px;
+  background: var(--sva-surface);
+}
+
+.sva-app .sva-match h3 {
+  margin: 0 0 0.25rem;
+  border: none;
+  font-size: var(--font-size-14, 0.875rem);
+}
+
+.sva-app .sva-match p {
+  margin: 0.2rem 0;
+}
+
+.sva-app .sva-inline-button {
+  width: auto;
+}
+
+.sva-app .sva-candidates {
+  margin: 0.25rem 0;
+  padding-left: 1.2rem;
+}
+
+.sva-app .sva-candidate.sva-matched {
+  font-weight: bold;
+}
+
+.sva-app .sva-candidate.sva-winner {
+  color: var(--sva-accent);
+  font-weight: bold;
+}
+
+.sva-app .sva-recipe-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sva-app .sva-path-field button {
+  flex: 0 0 auto;
+  width: 2rem;
+}
+
+.sva-app .sva-json {
+  width: 100%;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.sva-app .sva-section {
+  padding: 0.25rem 0;
+  border-top: 1px solid var(--sva-border);
+}
+
+.sva-app .sva-section summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.sva-app .sva-subrecipe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0.35rem 0;
+}
+
+.sva-app .sva-subrecipe-label {
+  font-weight: bold;
+}
+
+.sva-app .sva-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.15rem 0.5rem;
+}
+
+.sva-app .sva-footer {
+  display: flex;
+  gap: var(--sva-gap);
+  padding-top: var(--sva-gap);
+}
+
+.sva-app .sva-footer button {
+  flex: 1;
+}

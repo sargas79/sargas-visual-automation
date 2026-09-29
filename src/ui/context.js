@@ -109,6 +109,13 @@ export async function resolveUuid(uuid) {
   return uuid && fn ? fn(uuid) : null;
 }
 
+/** Render a module template to an HTML string (used for shared sub-forms). */
+export async function renderModuleTemplate(name, data) {
+  const render = globalThis.foundry?.applications?.handlebars?.renderTemplate ?? globalThis.renderTemplate;
+  if (!render) return "";
+  return render(templatePath(name), data);
+}
+
 /** Escape a string for HTML output. */
 export function escapeHtml(value) {
   return String(value ?? "")

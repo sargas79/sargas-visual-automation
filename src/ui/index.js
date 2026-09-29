@@ -3,10 +3,12 @@
  * See docs/architecture.md for the contract.
  *
  *   api.ui.openBrowser({ onPick, path })   animation browser (#36)
+ *   api.ui.openItemConfig(item)            per-item recipe editor (#37)
  */
 import { MODULE_ID } from "../constants.js";
 import { setApi } from "./context.js";
 import { FAVOURITES_SETTING, openBrowser } from "./apps/browser.js";
+import { openItemConfig } from "./apps/item-config.js";
 
 export const UI_SETTINGS = {
   FAVOURITES: FAVOURITES_SETTING
@@ -29,6 +31,7 @@ export function init(api) {
   setApi(api);
   registerSettings();
   api.ui = {
-    openBrowser
+    openBrowser,
+    openItemConfig
   };
 }

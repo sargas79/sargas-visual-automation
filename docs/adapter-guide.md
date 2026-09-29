@@ -87,6 +87,7 @@ Returns `ItemDescriptors` (see `src/shared/events.js`). Start from `super.getIte
 | `traits`      | string[]                       | Lower-case tags rules can match: `"fire"`, `"cantrip"`, `"thrown"`, `"finesse"`, spell school…                                                                                 |
 | `attackKind`  | `ATTACK_KINDS` value or `null` | `melee`, `ranged` or `thrown`. Decides between the `melee` and `ranged` fallback presets.                                                                                      |
 | `weaponGroup` | string or `null`               | Normalized group/base weapon (`"sword"`, `"bow"`, `"axe"`, `"hammer"`, `"dagger"`…). Use the **same vocabulary as PF2e** where it exists so fallbacks and rules can be shared. |
+| `baseItem`    | string or `null`               | Base weapon/item this is a variant of (`"longsword"` for a +1 Striking Longsword or a named magic longsword). Rules match it with `match.baseItem`.                            |
 | `range`       | number or `null`               | In scene distance units.                                                                                                                                                       |
 | `area`        | `{ shape, size }` or `null`    | `shape` from `AREA_SHAPES` (`burst`, `cone`, `line`, `emanation`, `square`); `size` in scene units (radius for bursts/emanations, length for cones/lines).                     |
 | `damageTypes` | string[]                       | Lower-case (`"fire"`, `"cold"`, `"piercing"`). The generic fallback uses these to colour animations.                                                                           |
@@ -177,8 +178,8 @@ Create `rules/<system-id>.json`. The adapter's `rulePackUrl` (default `modules/s
 }
 ```
 
-- `match` fields combine with AND: `key`, `name` (exact), `regex` (on the name), `type`, `traits` (all required), `attackKind`, `weaponGroup`.
-- Prefer `key` matches for specific spells and `weaponGroup`/`traits` matches for families. Give specific rules a higher `priority`.
+- `match` fields combine with AND: `key`, `name` (exact), `regex` (on the name), `type`, `traits` (all required), `attackKind`, `weaponGroup`, `baseItem`.
+- Prefer `key` matches for specific spells, `baseItem` for base weapons (it covers every variant) and `weaponGroup`/`traits` matches for families. Give specific rules a higher `priority`.
 - Use **real JB2A database paths** (check them in the animation browser) and prefer paths that exist in the free JB2A module too. For 5e, JB2A has 5e cone variants (`template_cone_5e`); for PF2e, `template_cone_PF2e`.
 - Recipe fields (`preset`, `animation`, `options`, `stages`, `outcomes`, `sound`, `triggers`) are documented in [api.md](api.md#svaautomation-and-svasystems) and `docs/architecture.md`.
 

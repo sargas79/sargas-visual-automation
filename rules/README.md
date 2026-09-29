@@ -20,7 +20,7 @@ Rule packs are merged with world rules. A world rule with the **same `id`** as a
 Within a tier, rules run in this order:
 
 1. Higher `priority` first.
-2. Then the more specific rule. Specificity is ranked `key` > `name` > `regex` > `weaponGroup`/`traits` > `attackKind`/`type`.
+2. Then the more specific rule. Specificity is ranked `key` > `name` > `baseItem` > `regex` > `weaponGroup`/`traits` > `attackKind`/`type`.
 3. Then file order.
 
 To debug resolution, `api.automation.explain(item, { eventType })` lists every candidate rule and why it did or didn't match.
@@ -67,15 +67,16 @@ To debug resolution, `api.automation.explain(item, { eventType })` lists every c
 
 Matching is case-insensitive and uses the adapter's `ItemDescriptors` (see `src/shared/events.js`).
 
-| Criterion     | Value                                   | Matches when                                                                         |
-| ------------- | --------------------------------------- | ------------------------------------------------------------------------------------ |
-| `key`         | string or list                          | The item key (PF2e slug, 5e identifier, ...) is any of them.                         |
-| `name`        | string or list                          | The item name equals any of them.                                                    |
-| `regex`       | `"pattern"` or `{ "pattern", "flags" }` | The item name matches (default flags `"i"`).                                         |
-| `type`        | string or list                          | `weapon`, `spell`, `action`, `consumable`, `effect`, `condition`, `feat` or `other`. |
-| `traits`      | string or list                          | The item has **all** the listed traits.                                              |
-| `attackKind`  | string or list                          | `melee`, `ranged` or `thrown`.                                                       |
-| `weaponGroup` | string or list                          | Normalized group, such as `sword`, `bow` or `axe`.                                   |
+| Criterion     | Value                                   | Matches when                                                                                         |
+| ------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `key`         | string or list                          | The item key (PF2e slug, 5e identifier, ...) is any of them.                                         |
+| `name`        | string or list                          | The item name equals any of them.                                                                    |
+| `regex`       | `"pattern"` or `{ "pattern", "flags" }` | The item name matches (default flags `"i"`).                                                         |
+| `type`        | string or list                          | `weapon`, `spell`, `action`, `consumable`, `effect`, `condition`, `feat` or `other`.                 |
+| `traits`      | string or list                          | The item has **all** the listed traits.                                                              |
+| `attackKind`  | string or list                          | `melee`, `ranged` or `thrown`.                                                                       |
+| `weaponGroup` | string or list                          | Normalized group, such as `sword`, `bow` or `axe`.                                                   |
+| `baseItem`    | string or list                          | The base weapon/item, such as `longsword`: matches every variant (+1 Striking, named magic weapons). |
 
 ### Recipe
 

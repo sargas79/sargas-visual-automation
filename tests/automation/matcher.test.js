@@ -31,6 +31,14 @@ describe("matchRule", () => {
     expect(m({ weaponGroup: "bow" }).matched).toBe(false);
   });
 
+  it("matches the base item of every variant", () => {
+    const d = { name: "+1 Striking Longsword", key: "holy-avenger", type: "weapon", baseItem: "longsword" };
+    expect(matchRule({ match: { baseItem: "LONGSWORD" } }, d).matched).toBe(true);
+    expect(matchRule({ match: { baseItem: ["dagger", "longsword"] } }, d).matched).toBe(true);
+    expect(matchRule({ match: { baseItem: "dagger" } }, d).matched).toBe(false);
+    expect(matchRule({ match: { baseItem: "longsword" } }, { ...d, baseItem: null }).matched).toBe(false);
+  });
+
   it("requires every criterion and never matches an empty rule", () => {
     expect(m({ type: "spell", attackKind: "melee" }).matched).toBe(false);
     expect(m({}).matched).toBe(false);
@@ -52,6 +60,16 @@ describe("rule ordering", () => {
     ];
     expect(orderRules(rules).map((r) => r.id)).toEqual(["high", "key", "type"]);
     expect(findRule(rules, descriptors).winner.rule.id).toBe("high");
+  });
+
+  it("ranks baseItem between name and regex", () => {
+    const rules = [
+      { id: "group", match: { weaponGroup: "sword" } },
+      { id: "regex", match: { regex: "sword" } },
+      { id: "base", match: { baseItem: "longsword" } },
+      { id: "name", match: { name: "Longsword" } }
+    ];
+    expect(orderRules(rules).map((r) => r.id)).toEqual(["name", "base", "regex", "group"]);
   });
 });
 

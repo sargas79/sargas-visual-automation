@@ -143,6 +143,7 @@
         "MatchTraits": "Traits (all, comma separated)",
         "MatchAttackKind": "Attack kind",
         "MatchWeaponGroup": "Weapon group",
+        "MatchBaseItem": "Base item",
         "Cancel": "Cancel",
         "Save": "Save rule",
         "SelectHint": "Select a rule to edit it, or add a new one.",

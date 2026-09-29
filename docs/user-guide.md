@@ -109,13 +109,13 @@ The recipe is stored in the item's flags, so it travels with the item when you c
 
 A world rule matches items and gives them a recipe. Use rules to change the default animation of many items at once (all fire spells, all bows, one spell by its slug).
 
-| Field    | Meaning                                                                                                                                                                                                        |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Label    | Your name for the rule.                                                                                                                                                                                        |
-| Enabled  | Disabled rules are ignored.                                                                                                                                                                                    |
-| Priority | Higher wins when several world rules match.                                                                                                                                                                    |
-| Match    | Any combination of: **key** (PF2e slug, e.g. `electric-arc`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**. |
-| Recipe   | Same editor as the item configuration.                                                                                                                                                                         |
+| Field    | Meaning                                                                                                                                                                                                                                                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Label    | Your name for the rule.                                                                                                                                                                                                                                                   |
+| Enabled  | Disabled rules are ignored.                                                                                                                                                                                                                                               |
+| Priority | Higher wins when several world rules match.                                                                                                                                                                                                                               |
+| Match    | Any combination of: **key** (PF2e slug, e.g. `electric-arc`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**, **base item** (e.g. `longsword`: every longsword variant). |
+| Recipe   | Same editor as the item configuration.                                                                                                                                                                                                                                    |
 
 - **Which rule matches?** Drop an item on the manager (or pick one) to see the winning recipe and every candidate.
 - **Export** saves all world rules to a JSON file; **Import** loads such a file (share rule sets between worlds). Rules round-trip without changes.

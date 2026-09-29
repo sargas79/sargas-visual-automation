@@ -57,6 +57,7 @@ export class SystemAdapter {
       traits: [],
       attackKind: null,
       weaponGroup: null,
+      baseItem: null,
       range: null,
       area: null,
       damageTypes: [],

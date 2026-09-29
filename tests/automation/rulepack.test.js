@@ -105,7 +105,7 @@ describe("rules/ documentation", () => {
     expect(Object.keys(defs.stages.properties)).toEqual([...STAGE_IDS]);
     expect(defs.recipe.properties.triggers.items.enum.sort()).toEqual(Object.values(EVENT_TYPES).sort());
     expect(Object.keys(defs.match.properties).sort()).toEqual(
-      ["attackKind", "key", "name", "regex", "traits", "type", "weaponGroup"].sort()
+      ["attackKind", "baseItem", "key", "name", "regex", "traits", "type", "weaponGroup"].sort()
     );
   });
 

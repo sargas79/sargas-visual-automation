@@ -57,6 +57,7 @@ export default class TemplateAdapter extends SystemAdapter {
       traits: [],
       attackKind: null, // ATTACK_KINDS.MELEE | ATTACK_KINDS.RANGED | ATTACK_KINDS.THROWN
       weaponGroup: null,
+      baseItem: null, // base weapon/item this is a variant of, e.g. "longsword"
       range: null,
       area: null, // { shape: AREA_SHAPES.BURST, size: 20 }
       damageTypes: [],

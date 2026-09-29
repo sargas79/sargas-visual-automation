@@ -155,7 +155,7 @@ Recipe = {
   sound?: { file, volume, delay },
   triggers?: ["attack", "damage", "cast", "save", "healing", "areaPlaced", "effectApplied"] // default per preset
 }
-Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, traits?, attackKind?, weaponGroup? }, recipe }
+Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, traits?, attackKind?, weaponGroup?, baseItem? }, recipe }
 RulePack (rules/<system>.json) = { system, version: 1, rules: Rule[] }
 ```
 
@@ -214,11 +214,10 @@ These were added while the areas were built, and are part of the contract from n
   - `area.origin` is the centre for burst/emanation/square and the apex for cone/line; `area.angle` (degrees) for cones.
   - Adapters include at least `descriptors.key` on `effectRemoved`, because the item is usually already deleted.
   - Optional `AutomationEvent.id`: a stable id of the occurrence (PF2e: `<messageId>:<type>`, `<regionId>:<type>`, `<effectItemId>:<type>`), used for de-duplication.
-  - `ItemDescriptors.baseItem` (PF2e weapons).
+  - `ItemDescriptors.baseItem` (PF2e weapons), matched by `Rule.match.baseItem` (specificity between `name` and `regex`).
 - **ui:** `api.ui.openSettings()`. Settings may declare `svaGroup` to choose their group in the SVA settings panel.
 
 ### Open follow-ups
 
-- `Rule.match.baseItem`.
 - An optional `essential` flag on effects, for reduced motion.
 - A static adapter `init()` hook, so adapters can register settings during `init` (PF2e currently registers on `ready`).

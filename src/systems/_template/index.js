@@ -75,6 +75,7 @@ export default class TemplateAdapter extends SystemAdapter {
     if (!item) return;
     const descriptors = this.getItemDescriptors(item);
     this.ctx.emit({
+      id: `${message.id}:${EVENT_TYPES.ATTACK}`, // stable occurrence id: the core never plays the same id twice
       type: EVENT_TYPES.ATTACK,
       source: { tokenId: message.speaker?.token ?? null, actorId: message.speaker?.actor ?? null },
       targets: [...game.user.targets].map((t) => ({ tokenId: t.id, outcome: OUTCOMES.SUCCESS })),

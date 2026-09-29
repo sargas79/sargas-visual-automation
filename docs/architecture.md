@@ -209,16 +209,16 @@ These were added while the areas were built, and are part of the contract from n
   - `explain(item, opts)` returns a trace `{descriptors, disabled, result, candidates[{source, ruleId, label, priority, matched, reasons[]}], reasons}`, where `result` is the `resolveRecipe` shape.
   - `setItemRecipe(item, null)` clears the item recipe; `rules.importJSON` accepts a string or an object; `rules.exportJSON` returns a string.
   - Extras: `api.automation.schema`, `reloadRulePack`, `isItemDisabled`, `rules.all/systemRules/setSystemRules`.
-  - Duplicate events are dropped within 1 s.
+  - Duplicate events: an event with an `id` is dropped when that id was already handled (the last 500 ids are remembered); an event without an `id` is dropped when an identical one arrived within 1 s.
 - **events:**
   - `area.origin` is the centre for burst/emanation/square and the apex for cone/line; `area.angle` (degrees) for cones.
   - Adapters include at least `descriptors.key` on `effectRemoved`, because the item is usually already deleted.
+  - Optional `AutomationEvent.id`: a stable id of the occurrence (PF2e: `<messageId>:<type>`, `<regionId>:<type>`, `<effectItemId>:<type>`), used for de-duplication.
   - `ItemDescriptors.baseItem` (PF2e weapons).
 - **ui:** `api.ui.openSettings()`. Settings may declare `svaGroup` to choose their group in the SVA settings panel.
 
 ### Open follow-ups
 
-- An optional `AutomationEvent.id` (for example the chat message id), to replace the 1 s duplicate window.
 - `Rule.match.baseItem`.
 - An optional `essential` flag on effects, for reduced motion.
 - A static adapter `init()` hook, so adapters can register settings during `init` (PF2e currently registers on `ready`).

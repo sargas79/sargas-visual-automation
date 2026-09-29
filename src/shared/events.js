@@ -56,6 +56,9 @@ export const ATTACK_KINDS = Object.freeze({
 
 /**
  * @typedef {object} AutomationEvent
+ * @property {string|null} [id]         Stable id of the occurrence (e.g. "<chatMessageId>:attack"). When present the core
+ *                                      drops any later event with the same id; without it, identical events within a
+ *                                      short time window are dropped instead.
  * @property {string} type              One of EVENT_TYPES.
  * @property {string} systemId          Adapter id that produced it.
  * @property {{tokenId: string|null, actorId: string|null}|null} source
@@ -76,6 +79,7 @@ export function createAutomationEvent(partial) {
     throw new Error(`Unknown automation event type: ${partial?.type}`);
   }
   return {
+    id: null,
     systemId: null,
     source: null,
     targets: [],

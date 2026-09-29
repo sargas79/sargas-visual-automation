@@ -50,6 +50,35 @@ describe("handle()", () => {
     expect(api.playSequence).toHaveBeenCalledTimes(2);
   });
 
+  it("dedupes by event id regardless of timing, and lets distinct ids through", async () => {
+    vi.useFakeTimers();
+    try {
+      const { api } = bootAutomation({ items: [sword()] });
+      // Two genuine strikes in quick succession (different chat messages) both play.
+      expect(await api.automation.handle(attack({ id: "msg1:attack" }))).toBe(true);
+      expect(await api.automation.handle(attack({ id: "msg2:attack" }))).toBe(true);
+      // The same message never plays twice, even long after the time window.
+      vi.advanceTimersByTime(60_000);
+      expect(await api.automation.handle(attack({ id: "msg1:attack" }))).toBe(false);
+      expect(api.playSequence).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("falls back to the time window for events without an id", async () => {
+    vi.useFakeTimers();
+    try {
+      const { api } = bootAutomation({ items: [sword()] });
+      expect(await api.automation.handle(attack())).toBe(true);
+      expect(await api.automation.handle(attack())).toBe(false);
+      vi.advanceTimersByTime(1500);
+      expect(await api.automation.handle(attack())).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("respects the automationEnabled setting", async () => {
     const { api } = bootAutomation({ items: [sword()] });
     await game.settings.set(MODULE_ID, "automationEnabled", false);

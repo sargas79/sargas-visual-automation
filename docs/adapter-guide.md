@@ -96,17 +96,18 @@ Returns `ItemDescriptors` (see `src/shared/events.js`). Start from `super.getIte
 
 Watch your system's hooks and call `this.ctx.emit(partialEvent)`. `createAutomationEvent` in `events.js` shows the defaults; you only need to set what you know.
 
-| Field         | Set it to                                                                                                                                    |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`        | One of `EVENT_TYPES`: `attack`, `damage`, `cast`, `save`, `healing`, `areaPlaced`, `effectApplied`, `effectRemoved`.                         |
-| `source`      | `{ tokenId, actorId }` of whoever acts (a token on the current scene if possible).                                                           |
-| `targets`     | `[{ tokenId, outcome? }]`. Per-target outcome when the system has one (attacks vs AC, saves per target).                                     |
-| `outcome`     | Overall `OUTCOMES` value: `criticalSuccess`, `success`, `failure`, `criticalFailure`, `none` (no roll).                                      |
-| `itemUuid`    | The item's UUID.                                                                                                                             |
-| `descriptors` | `this.getItemDescriptors(item)`. Fill it even though the core could look it up: the event must be self-contained.                            |
-| `area`        | For `areaPlaced` (and optionally area spells): `{ shape, origin: {x, y} (canvas px), direction (deg), distance, width?, documentUuid? }`.    |
-| `effectUuid`  | For `effectApplied` / `effectRemoved`: the effect's UUID.                                                                                    |
-| `userId`      | The user whose client produced the event. **Only that client runs automation**, and it broadcasts the result, so every animation plays once. |
+| Field         | Set it to                                                                                                                                          |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | Optional but recommended: a stable id of the occurrence, e.g. `` `${message.id}:${type}` ``. The core drops events whose `id` was already handled. |
+| `type`        | One of `EVENT_TYPES`: `attack`, `damage`, `cast`, `save`, `healing`, `areaPlaced`, `effectApplied`, `effectRemoved`.                               |
+| `source`      | `{ tokenId, actorId }` of whoever acts (a token on the current scene if possible).                                                                 |
+| `targets`     | `[{ tokenId, outcome? }]`. Per-target outcome when the system has one (attacks vs AC, saves per target).                                           |
+| `outcome`     | Overall `OUTCOMES` value: `criticalSuccess`, `success`, `failure`, `criticalFailure`, `none` (no roll).                                            |
+| `itemUuid`    | The item's UUID.                                                                                                                                   |
+| `descriptors` | `this.getItemDescriptors(item)`. Fill it even though the core could look it up: the event must be self-contained.                                  |
+| `area`        | For `areaPlaced` (and optionally area spells): `{ shape, origin: {x, y} (canvas px), direction (deg), distance, width?, documentUuid? }`.          |
+| `effectUuid`  | For `effectApplied` / `effectRemoved`: the effect's UUID.                                                                                          |
+| `userId`      | The user whose client produced the event. **Only that client runs automation**, and it broadcasts the result, so every animation plays once.       |
 
 ### Outcomes
 
@@ -128,6 +129,7 @@ Most systems fire hooks on every client (`createChatMessage`, `createItem`…). 
 - For rolls and chat cards: only when `message.author.id === game.user.id` (the roller).
 - For document changes (effects applied/removed, templates placed): only on the client that made the change (the `userId` argument of `create*`/`delete*` hooks), or on the active GM when the change came from the server.
 - Don't emit the same roll twice: if a system posts an attack card and then updates it with the result, emit on the update that has the result, once. The core also drops exact duplicates, but don't rely on it.
+- Give each event an `id` that identifies the occurrence, for example `` `${message.id}:${type}` `` or `` `${item.id}:effectApplied` ``. The core never plays two events with the same `id`, and two events with different ids always both play (two quick identical strikes). Without an `id`, identical events within 1 s are dropped.
 
 ### Which events to emit
 

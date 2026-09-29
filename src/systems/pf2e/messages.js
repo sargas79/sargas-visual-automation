@@ -251,6 +251,8 @@ export function eventFromMessage(message, { userId } = {}) {
   }
 
   return {
+    // One message → at most one event, so message id + type identifies it (a reroll is a new message).
+    id: message.id ? `${message.id}:${type}` : null,
     type,
     source,
     targets,

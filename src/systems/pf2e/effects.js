@@ -42,6 +42,7 @@ export function eventFromEffectItem(item, type, { userId, conditions = true } = 
       : { tokenId: tokenIds[0] ?? null, actorId: actor.id ?? null };
 
   return {
+    id: item.id ? `${item.id}:${type}` : null,
     type,
     source,
     targets,

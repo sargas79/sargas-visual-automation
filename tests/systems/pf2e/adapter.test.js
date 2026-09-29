@@ -120,6 +120,22 @@ describe("createChatMessage → events", () => {
     });
   });
 
+  it("sets the event id from the chat message id and event type", () => {
+    const { emit, hero, goblin, sword } = env;
+    const make = () =>
+      mockMessage({
+        actor: hero,
+        item: sword,
+        context: checkContext("attack-roll", { actor: hero, target: goblin }),
+        rolls: [checkRoll()]
+      });
+    const first = make();
+    const second = make();
+    Hooks.callAll("createChatMessage", first, {}, "user1");
+    Hooks.callAll("createChatMessage", second, {}, "user1");
+    expect(emit.mock.calls.map((c) => c[0].id)).toEqual([`${first.id}:attack`, `${second.id}:attack`]);
+  });
+
   it("only the originating user emits", () => {
     const { emit, hero, sword } = env;
     const msg = mockMessage({ actor: hero, item: sword, context: checkContext("attack-roll", { actor: hero }) });

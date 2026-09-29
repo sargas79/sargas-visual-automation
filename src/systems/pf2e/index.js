@@ -6,6 +6,7 @@
 import { SystemAdapter } from "../../shared/adapter.js";
 import { describeItem, itemKey } from "./descriptors.js";
 import { eventFromMessage } from "./messages.js";
+import { eventFromRegion, eventFromTemplate, removalFromRegion } from "./areas.js";
 import { registerSheetControls } from "./sheet.js";
 
 /** How many handled ids to remember for de-duplication. */
@@ -26,6 +27,15 @@ export default class Pf2eAdapter extends SystemAdapter {
   register() {
     if (this._hooks.length) return;
     this._on("createChatMessage", (message, options, userId) => this.onCreateChatMessage(message, options, userId));
+    // v14: PF2e places spell areas as Regions (item/helpers.ts#placeRegionFromItem)
+    this._on("createRegion", (doc, options, userId) => this.onCreateArea(doc, options, userId, eventFromRegion));
+    this._on("deleteRegion", (doc, options, userId) => {
+      if (this._isOwnAction(userId)) this._emit(removalFromRegion(doc, { userId }));
+    });
+    // Legacy / third-party MeasuredTemplates carrying PF2e origin flags
+    this._on("createMeasuredTemplate", (doc, options, userId) =>
+      this.onCreateArea(doc, options, userId, eventFromTemplate)
+    );
     this._unregisterSheet = registerSheetControls(this.ctx?.api);
   }
 
@@ -69,6 +79,12 @@ export default class Pf2eAdapter extends SystemAdapter {
     if (!this._isOwnAction(userId)) return;
     if (!this._markSeen(`msg:${message?.id}`)) return;
     this._emit(eventFromMessage(message, { userId }));
+  }
+
+  onCreateArea(doc, _options, userId, build) {
+    if (!this._isOwnAction(userId)) return;
+    if (!this._markSeen(`area:${doc?.uuid ?? doc?.id}`)) return;
+    this._emit(build(doc, { userId }));
   }
 
   getItemKey(item) {

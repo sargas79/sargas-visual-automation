@@ -1,1 +1,14 @@
-{}
+{
+  "SVA": {
+    "Pf2e": {
+      "HeaderButton": "Animation",
+      "ItemConfigUnavailable": "The item animation editor is not available.",
+      "Settings": {
+        "ConditionEvents": {
+          "Name": "PF2e: animate conditions",
+          "Hint": "Play animations when PF2e conditions (frightened, prone...) are added to or removed from a creature. Effects are always animated."
+        }
+      }
+    }
+  }
+}

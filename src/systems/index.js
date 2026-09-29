@@ -4,4 +4,6 @@
  * To add a system: create src/systems/<system-id>/ extending
  * src/shared/adapter.js#SystemAdapter and add it to this list.
  */
-export const BUILTIN_ADAPTERS = [];
+import Pf2eAdapter from "./pf2e/index.js";
+
+export const BUILTIN_ADAPTERS = [Pf2eAdapter];

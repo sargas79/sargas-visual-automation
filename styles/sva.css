@@ -377,3 +377,107 @@
 .sva-app .sva-footer button {
   flex: 1;
 }
+
+/* ---------- Rules manager (#38) ---------- */
+
+.sva-rules-manager .window-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--sva-gap);
+  padding: var(--sva-gap);
+  overflow: hidden;
+}
+
+.sva-rules-manager .sva-rules-panel,
+.sva-rules-manager .sva-rule-editor {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--sva-gap);
+}
+
+.sva-rules-manager .sva-rule-editor {
+  padding-left: var(--sva-gap);
+  border-left: 1px solid var(--sva-border);
+}
+
+.sva-rules-manager .sva-rule-form {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.sva-rules-manager .sva-rule-form h3 {
+  margin-top: 0;
+}
+
+.sva-app .sva-toolbar {
+  display: flex;
+  gap: var(--sva-gap);
+}
+
+.sva-app .sva-toolbar button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.sva-rules-manager .sva-rules-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.sva-rules-manager .sva-rules-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+}
+
+.sva-rules-manager .sva-rules-table th,
+.sva-rules-manager .sva-rules-table td {
+  padding: 0.2rem 0.3rem;
+  border-bottom: 1px solid var(--sva-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.sva-rules-manager .sva-rules-table a {
+  cursor: pointer;
+}
+
+.sva-rules-manager .sva-rule-disabled {
+  opacity: 0.55;
+}
+
+.sva-rules-manager .sva-row-actions {
+  white-space: nowrap;
+}
+
+.sva-app .sva-small {
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.sva-rules-manager .sva-tester h3 {
+  margin: 0 0 0.25rem;
+}
+
+.sva-rules-manager .sva-drop-zone {
+  padding: 0.75rem;
+  border: 2px dashed var(--sva-border);
+  border-radius: 6px;
+  color: var(--sva-muted);
+  text-align: center;
+}
+
+.sva-rules-manager .sva-drop-zone.sva-drag-over {
+  border-color: var(--sva-accent);
+  color: var(--sva-accent);
+}
+
+.sva-rules-manager .sva-test-img {
+  width: 24px;
+  height: 24px;
+  border: none;
+  vertical-align: middle;
+}

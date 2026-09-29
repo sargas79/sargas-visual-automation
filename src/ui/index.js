@@ -4,11 +4,13 @@
  *
  *   api.ui.openBrowser({ onPick, path })   animation browser (#36)
  *   api.ui.openItemConfig(item)            per-item recipe editor (#37)
+ *   api.ui.openRulesManager()              world rules manager (#38)
  */
 import { MODULE_ID } from "../constants.js";
 import { setApi } from "./context.js";
 import { FAVOURITES_SETTING, openBrowser } from "./apps/browser.js";
 import { openItemConfig } from "./apps/item-config.js";
+import { openRulesManager } from "./apps/rules-manager.js";
 
 export const UI_SETTINGS = {
   FAVOURITES: FAVOURITES_SETTING
@@ -32,6 +34,7 @@ export function init(api) {
   registerSettings();
   api.ui = {
     openBrowser,
-    openItemConfig
+    openItemConfig,
+    openRulesManager
   };
 }

@@ -25,6 +25,8 @@ export const VIDEO_EPSILON = 17;
  * @property {number} total       Wall ms until the effect ends on its own (Infinity when persistent).
  * @property {boolean} repeat     Restart at playStart when playEnd is reached (forced long duration, persist).
  * @property {boolean} persist
+ * @property {number} legs        2 for a stretched `returnTrip` (out, then back to the source), else 1.
+ * @property {number} legDuration Wall ms of one leg (= total / legs).
  */
 
 /**
@@ -36,17 +38,35 @@ export function computeTimeline(effect, videoDuration) {
   const rate = effect.playbackRate > 0 ? effect.playbackRate : 1;
   const persist = !!effect.persist;
   const forced = effect.duration > 0 ? effect.duration : null;
+  const legs = effect.returnTrip && effect.stretchTo && !persist ? 2 : 1;
   const isStatic = !(videoDuration > 0) || !Number.isFinite(videoDuration);
   if (isStatic) {
-    const total = persist ? Infinity : (forced ?? DEFAULT_IMAGE_DURATION);
-    return { isStatic, rate, playStart: 0, playEnd: 0, segment: total, total, repeat: false, persist };
+    const leg = persist ? Infinity : (forced ?? DEFAULT_IMAGE_DURATION);
+    return {
+      isStatic,
+      rate,
+      playStart: 0,
+      playEnd: 0,
+      segment: leg,
+      total: leg * legs,
+      repeat: false,
+      persist,
+      legs,
+      legDuration: leg
+    };
   }
   const playStart = clamp(effect.startTime ?? 0, 0, videoDuration);
   const playEnd = clamp(videoDuration - (effect.endTime ?? 0), playStart, videoDuration);
   const segment = (playEnd - playStart) / rate;
-  const total = persist ? Infinity : (forced ?? segment);
-  const repeat = persist || total > segment + VIDEO_EPSILON;
-  return { isStatic, rate, playStart, playEnd, segment, total, repeat, persist };
+  const leg = persist ? Infinity : (forced ?? segment);
+  const repeat = persist || leg > segment + VIDEO_EPSILON;
+  return { isStatic, rate, playStart, playEnd, segment, total: leg * legs, repeat, persist, legs, legDuration: leg };
+}
+
+/** Which leg (0 = out, 1 = return) is playing at `elapsed`. */
+export function legAt(timeline, elapsed) {
+  if (timeline.legs < 2 || !(timeline.legDuration > 0)) return 0;
+  return Math.min(timeline.legs - 1, Math.floor(elapsed / timeline.legDuration));
 }
 
 /**

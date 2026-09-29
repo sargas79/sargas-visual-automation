@@ -24,7 +24,7 @@ export async function resolveFile(api, file, { distance } = {}) {
   const db = api?.db;
   if (!db?.resolve) return null;
   if (db.ready && typeof db.ready.then === "function") await db.ready;
-  return db.resolve(file, distance === undefined ? {} : { distance }) ?? null;
+  return db.resolve(file, Number.isFinite(distance) ? { distance } : {}) ?? null;
 }
 
 /** Most files a single branch path expands to when preloading (e.g. every distance variant of a projectile). */

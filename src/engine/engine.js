@@ -22,6 +22,7 @@ import { resolveFile, resolvePreloadList } from "./files.js";
  * @property {(fn: (dtMs: number) => void) => void} addTicker
  * @property {(fn: (dtMs: number) => void) => void} removeTicker
  * @property {(ms: number) => Promise<void>} [wait]
+ * @property {(a: object, b: object) => number|null} [measure]  Distance between two anchors in scene units.
  */
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -126,9 +127,14 @@ export class EffectEngine {
     return record.handle;
   }
 
-  /** Resolve the file and get a texture instance. */
+  /** Resolve the file (closest distance variant when stretched) and get a texture instance. */
   async #prepare(descriptor) {
-    const resolved = await resolveFile(this.api, descriptor.file);
+    let distance;
+    if (descriptor.stretchTo) {
+      const from = descriptor.atLocation ?? { tokenId: descriptor.attachTo?.tokenId };
+      distance = this.env.measure?.(from, descriptor.stretchTo) ?? undefined;
+    }
+    const resolved = await resolveFile(this.api, descriptor.file, { distance });
     if (!resolved?.file) throw new Error(`Unknown animation "${descriptor.file}"`);
     const instance = await this.textures.acquire(resolved.file);
     return { resolved, instance };

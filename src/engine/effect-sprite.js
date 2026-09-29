@@ -9,7 +9,8 @@
  */
 import { log } from "../logger.js";
 import { angleTo, computeScale, parseTint, resolveAnchor, templateOf, toRadians } from "./math.js";
-import { computeTimeline, DEFAULT_END_FADE, endRequestedAt, sampleEnvelope, videoStep } from "./timeline.js";
+import { computeStretch, missedOffset, seededRandom } from "./stretch.js";
+import { computeTimeline, DEFAULT_END_FADE, endRequestedAt, legAt, sampleEnvelope, videoStep } from "./timeline.js";
 
 /**
  * Canvas accessors the sprite needs; the engine builds it from `canvas`.
@@ -44,6 +45,8 @@ export class EffectSprite {
     this.fadeOut = descriptor.fadeOut;
     this.ending = false;
     this.display = null;
+    this.leg = 0;
+    this.missOffset = null;
     // Database files follow the JB2A grid convention; direct URLs are drawn at their native size.
     this.template = resolved?.template || resolved?.path ? templateOf(resolved) : null;
   }
@@ -52,9 +55,13 @@ export class EffectSprite {
     return this.instance.video;
   }
 
+  #anchorPoint(anchor) {
+    return resolveAnchor(anchor, (id) => tokenCenter(this.ctx.getToken(id)));
+  }
+
   /** Current canvas point of the effect, or null when its token is gone. */
   position() {
-    return resolveAnchor(this.descriptor.atLocation, (id) => tokenCenter(this.ctx.getToken(id)));
+    return this.#anchorPoint(this.descriptor.atLocation);
   }
 
   async mount() {
@@ -80,6 +87,15 @@ export class EffectSprite {
     if (!this.display || this.display.destroyed) return false;
     this.elapsed += dt;
     if (this.elapsed >= this.endAt) return false;
+    const leg = legAt(this.timeline, this.elapsed);
+    if (leg !== this.leg) {
+      // Return trip: replay the clip from the target back to the source.
+      this.leg = leg;
+      if (this.video) {
+        this.video.currentTime = this.timeline.playStart / 1000;
+        if (this.video.paused) this.video.play().catch(() => {});
+      }
+    }
     this.#stepVideo();
     return this.refresh();
   }
@@ -111,6 +127,7 @@ export class EffectSprite {
       scaleIn: d.scaleIn,
       scaleOut: d.scaleOut
     });
+    if (d.stretchTo) return this.#refreshStretch(pos, env);
     const token = d.atLocation?.tokenId ? this.ctx.getToken(d.atLocation.tokenId) : null;
     const scale = computeScale({
       texture: this.instance,
@@ -125,12 +142,56 @@ export class EffectSprite {
     });
     let rotation = toRadians(d.rotation);
     if (d.rotateTowards) {
-      const target = resolveAnchor(d.rotateTowards, (id) => tokenCenter(this.ctx.getToken(id)));
+      const target = this.#anchorPoint(d.rotateTowards);
       if (target) rotation += angleTo(pos, target);
     }
     display.position.set(pos.x, pos.y);
     display.rotation = rotation;
     display.scale.set(scale.x * env.scale, scale.y * env.scale);
+    display.alpha = (d.opacity ?? 1) * env.alpha;
+    return true;
+  }
+
+  /** Point the stretched effect flies to (the target, or beside it when missed). */
+  #stretchTarget(source) {
+    const d = this.descriptor;
+    const target = this.#anchorPoint(d.stretchTo);
+    if (!target) return null;
+    if (!d.missed) return target;
+    if (!this.missOffset) {
+      const token = d.stretchTo.tokenId ? this.ctx.getToken(d.stretchTo.tokenId) : null;
+      const gridSizePx = this.ctx.gridSize();
+      this.missOffset = missedOffset({
+        source,
+        target,
+        radius: token ? Math.max(token.w, token.h) / 2 : gridSizePx / 2,
+        gridSizePx,
+        rng: seededRandom(d.id)
+      });
+    }
+    return { x: target.x + this.missOffset.x, y: target.y + this.missOffset.y };
+  }
+
+  /** Stretch from source to target (swapped on the return leg). See ./stretch.js for the math. */
+  #refreshStretch(pos, env) {
+    const d = this.descriptor;
+    const target = this.#stretchTarget(pos);
+    if (!target) return false;
+    const [from, to] = this.leg === 1 ? [target, pos] : [pos, target];
+    const s = computeStretch({
+      source: from,
+      target: to,
+      texture: this.instance,
+      template: this.template,
+      gridSizePx: this.ctx.gridSize(),
+      scale: d.scale,
+      mirrorY: d.mirrorY
+    });
+    const display = this.display;
+    display.anchor.set(s.anchorX, s.anchorY);
+    display.position.set(from.x, from.y);
+    display.rotation = s.rotation + toRadians(d.rotation);
+    display.scale.set(s.scaleX, s.scaleY * env.scale);
     display.alpha = (d.opacity ?? 1) * env.alpha;
     return true;
   }

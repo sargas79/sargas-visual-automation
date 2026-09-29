@@ -1,1 +1,37 @@
-{}
+{
+  "SVA": {
+    "UI": {
+      "Browser": {
+        "Title": "JB2A Animation Browser",
+        "PickTitle": "Pick an Animation",
+        "Tree": "Animation categories",
+        "SearchPlaceholder": "Search animations (e.g. fire bolt orange)",
+        "ClearSearch": "Clear search",
+        "SearchResults": "Results for \"{query}\"",
+        "NoResults": "No animation matches this search.",
+        "Favourites": "Favourites",
+        "NoFavourites": "No favourites yet. Use the star on an animation to add it.",
+        "EmptyBranch": "This category is empty.",
+        "Unavailable": "The JB2A database is not available. Enable the JB2A module (free or Patreon).",
+        "PickMode": "Picker",
+        "Pick": "Use this animation",
+        "Play": "Play on selected tokens (Shift: show to everyone)",
+        "PlayHint": "Hover to preview · double-click to play or pick",
+        "CopyPath": "Copy database path",
+        "Copied": "Copied {path}",
+        "ToggleFavourite": "Toggle favourite",
+        "Page": "Page {page}",
+        "PageOf": "Page {page} of {pages}",
+        "NoTokens": "Select (control) at least one token to play the animation on.",
+        "NoSequence": "The sequence player is not available.",
+        "PlayFailed": "Could not play {path}. See the console for details."
+      },
+      "Settings": {
+        "Favourites": {
+          "Name": "Animation browser favourites",
+          "Hint": "Database paths starred in the animation browser."
+        }
+      }
+    }
+  }
+}

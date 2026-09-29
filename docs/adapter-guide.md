@@ -2,7 +2,7 @@
 
 SVA's automation core knows nothing about any game system. A **system adapter** is the small piece of code that watches one system (PF2e, D&D 5e, GURPS…), turns what happens there into **normalized automation events**, and describes items in system-agnostic terms. Everything else (rule matching, recipes, sequences, sockets, persistence, rendering, UI) is shared.
 
-This guide takes you from nothing to a working adapter. It uses D&D 5e as the running example, and ends with notes for GURPS.
+This guide takes you from nothing to a working adapter. It uses D&D 5e as the running example (the finished adapter is in [`src/systems/dnd5e/`](../src/systems/dnd5e/); PF2e's is in [`src/systems/pf2e/`](../src/systems/pf2e/)), and ends with notes for GURPS.
 
 - [How the pieces fit](#how-the-pieces-fit)
 - [Step 1: create the adapter](#step-1-create-the-adapter)
@@ -69,11 +69,11 @@ Rules match items through two methods. Both must work for **any** item of your s
 
 A **stable identifier** that doesn't change with translation or renaming. Rule packs match on it (`match.key`).
 
-| System | Good key                                      |
-| ------ | --------------------------------------------- |
-| PF2e   | `item.system.slug` (`"electric-arc"`)         |
-| dnd5e  | `item.system.identifier` (`"fire-bolt"`)      |
-| GURPS  | a slug of the English name, or the library id |
+| System | Good key                                       |
+| ------ | ---------------------------------------------- |
+| PF2e   | `item.system.slug` (`"electric-arc"`)          |
+| dnd5e  | `item.system.identifier` (`"fire-bolt"`)       |
+| GURPS  | a slug of the attack/spell name (`"fireball"`) |
 
 The base class returns a slug of `item.name` (`"Fire Bolt"` → `"fire-bolt"`), so return `super.getItemKey(item)` when your field is empty.
 
@@ -210,8 +210,10 @@ Only one adapter is active per world: the first registered class whose `isActive
 Users configure per-item animations through `SVA.ui.openItemConfig(item)`. Your adapter adds a way to open it from the system's item sheet, for example a header control, in `register()`:
 
 ```js
-// VERIFY for your system: the sheet class and the header-controls hook name differ per system and Foundry version.
-this.#on("getHeaderControlsItemSheet5e", (sheet, controls) => {
+// ApplicationV2 fires getHeaderControls<ClassName> for every class in the sheet's inheritance chain, so
+// "getHeaderControlsDocumentSheetV2" reaches every V2 item sheet (dnd5e's ItemSheet5e included).
+this.#on("getHeaderControlsDocumentSheetV2", (sheet, controls) => {
+  if (sheet.document?.documentName !== "Item") return;
   controls.push({
     icon: "fa-solid fa-wand-sparkles",
     label: "Animation",
@@ -220,6 +222,8 @@ this.#on("getHeaderControlsItemSheet5e", (sheet, controls) => {
   });
 });
 ```
+
+See `src/systems/dnd5e/sheet.js` (V2) and `src/systems/pf2e/sheet.js` (V1 `getItemSheetHeaderButtons` + V2) for complete versions.
 
 Keep this optional: automation must work even if the sheet button is missing.
 
@@ -261,9 +265,20 @@ A dummy adapter that drives the core is in `tests/automation/helpers/dummy-adapt
 
 ## Worked example: a minimal D&D 5e adapter
 
-This is a complete, minimal adapter: it animates weapon and spell **attacks** and marks every other activity as a `cast`. It is deliberately small; a real adapter adds damage, saves, areas, effects and healing the same way.
+> **The real D&D 5e adapter ships with SVA in [`src/systems/dnd5e/`](../src/systems/dnd5e/)** (dnd5e 6.x on Foundry v14, verified against dnd5e `release-6.0.5`). Read it next to this guide; every file cites the dnd5e source files it relies on:
+>
+> | File             | What it does                                                                                                                                                          |
+> | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+> | `index.js`       | `Dnd5eAdapter`: hooks, only-the-creating-user filter, id de-duplication, `static init` (the `dnd5eConditionEvents` setting)                                           |
+> | `messages.js`    | Typed chat messages → events: `usage` → cast, `attack` → attack (hit/miss/crit vs each target's AC), `damage` → damage or healing, `healing` → healing, `save` → save |
+> | `areas.js`       | Template **Regions** (dnd5e 6 creates Regions, not MeasuredTemplates, on v14) → `areaPlaced`; deleted regions → `effectRemoved`                                       |
+> | `effects.js`     | ActiveEffects → `effectApplied` / `effectRemoved`; concentration carries the concentrated spell's descriptors                                                         |
+> | `descriptors.js` | `system.identifier` keys, base weapons (`DND5E.weaponIds`) → PF2e weapon groups, attack modes, activity templates, damage / healing types                             |
+> | `sheet.js`       | "Animation" header control (`getHeaderControlsDocumentSheetV2`, dnd5e 6 sheets are ApplicationV2)                                                                     |
+>
+> Its rule pack is [`rules/dnd5e.json`](../rules/dnd5e.json) and its tests are in `tests/systems/dnd5e/`. It listens to `createChatMessage` rather than `dnd5e.rollAttackV2` because the typed messages carry a stable id, the stored targets with their AC and the creating user; `dnd5e.postUseActivity` is only used for activities used without a chat card.
 
-> The dnd5e hook names and data paths below are for dnd5e 5.x (activities) and must be checked against the installed system version: they are marked `VERIFY`.
+The sketch below is a deliberately small version of the same idea: it animates weapon and spell **attacks** and marks every other activity as a `cast`. It is kept as a minimal illustration of the contract, not as a reference for dnd5e data paths (for those, read the real adapter).
 
 `src/systems/dnd5e/index.js`:
 
@@ -402,17 +417,18 @@ Then:
 4. Write the unit tests (Step 7) and a `testing.md` section.
 5. In a dnd5e world, check `SVA.systems.active.id === "dnd5e"`, attack with a longbow, and verify `SVA.automation.explain(item)`.
 
+All five steps are done for the shipped adapter: `rules/dnd5e.json`, `src/systems/index.js`, `lang/en/dnd5e.json`, `tests/systems/dnd5e/` and [testing.md § 11](testing.md#11-dd-5e-adapter).
+
 Neither `src/automation`, `src/engine` nor `src/db` changed: that is the acceptance test for a new adapter.
 
 ## Notes for GURPS
 
-GURPS Game Aid (`game.system.id === "gurps"`) is a different kind of system: most rolls go through its own roll pipeline and on-the-fly formulas ("OtF"), not item activities. Suggested approach:
+The real GURPS Game Aid adapter lives in [`src/systems/gurps/`](../src/systems/gurps/) (target: GGA v0.18.23, Foundry v13-v14). Read it next to the PF2e one: it shows how to support a system where attacks are **not items**.
 
-1. **Research first** (issue #47): find the hook or chat-message flags GURPS sets for attack rolls, defense rolls and spell casting, and whether the message links back to the equipment/spell. Log `createChatMessage` messages with Debug logging on and inspect their `flags`.
-2. **Items**: GURPS melee/ranged attacks live in the actor's data (`melee`, `ranged` lists) more than in items. `getItemKey` can slug the attack/spell name; `getItemDescriptors` sets `attackKind` from which list it came from, and `weaponGroup` from the weapon name (sword, axe, bow…).
-3. **Outcomes**: GURPS has critical success / success / failure / critical failure, which map one-to-one.
-4. **Defenses**: a successful active defense (dodge, parry, block) can be emitted as the target's `failure` outcome on the attack, so the recipe plays a miss.
-5. **Rule pack**: start with generic families (swords, bows, firearms, spells by college via `traits`) rather than per-item rules.
+- **Integration point**: GGA fires no roll hooks (only `gurpsinit`, `gurpsready`, `updateLastActorGURPS`) and sets no flags on roll cards, so [`messages.js`](../src/systems/gurps/messages.js) parses GGA's own chat cards in `createChatMessage`. Every targeted roll posts `die-roll-chat-message.hbs`, whose rolled OtF (`[@<actorId>@M:"Broadsword (Swing)"]`) GGA's `preCreateChatMessage` hook turns into `<span class='gurpslink' data-action='<base64 JSON>'>`. The adapter decodes that action (`type`, `name`, `isMelee`/`isRanged`, `isSpellOnly`, `sourceId`), falls back to `data-otf`, then to the `3d6[<name>]` roll flavor, and reads the outcome from the card's `crit success` / `success` / `failure` / `crit failure` span. Damage cards carry `flags.gurps.transfer` (`type: "damageItem"`).
+- **Events**: attack roll → `attack`; spell roll → `cast`, or `healing` for healing spells and First Aid (never both); damage roll → `damage`, described as the actor's last attack if it was rolled within two minutes. Parry, block and dodge are ignored: the contract has no defense event.
+- **Descriptors without items**: [`descriptors.js`](../src/systems/gurps/descriptors.js) builds `ItemDescriptors` from the actor's `system.melee` / `system.ranged` / `system.spells` / `system.skills` entries: `key` is the slug of the name, `attackKind` comes from the list (a ranged row whose mode says "Thrown" is `thrown`), `weaponGroup` from the weapon name, `damageTypes` from GURPS damage codes (`cut` → slashing, `imp`/`pi*` → piercing, `cr` → bludgeoning, `burn` → fire, `cor` → acid, `tox` → poison), and the raw codes, usage mode, spell college and class become `traits`. `itemUuid` is set when the entry comes from an Item (`fromItem` / `itemid`), so per-item recipes still work.
+- **Rule pack**: [`rules/gurps.json`](../rules/gurps.json) matches by `regex` on names, weapon groups and damage-code traits. Missile spells get two rules, one on `cast` (type `spell`) and one on `attack` (`attackKind: ranged`), because casting and throwing are two rolls.
 
 ## Checklist
 

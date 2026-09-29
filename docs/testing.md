@@ -1,4 +1,4 @@
-# Manual QA checklist (Foundry v14 + PF2e + JB2A)
+# Manual QA checklist (Foundry v14 + PF2e / GURPS + JB2A)
 
 Unit tests (`npm test`) cover everything that can run without Foundry. This checklist covers what can only be checked in a real Foundry v14 world: rendering, sockets, flags, PF2e hooks and the UI. Run it before every release and paste the [results table](#results-table-template) into the release PR.
 
@@ -205,25 +205,38 @@ Roll everything from the **Player** client unless noted, with the named tokens s
 
 ## 9. UI
 
-| #    | Check                                                                                           | Expected result                                                                                 |
-| ---- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| 9.1  | [ ] Open the **Animation browser** (`SVA.ui.openBrowser()` or its toolbar/settings button).     | Tree + search + thumbnail grid.                                                                 |
-| 9.2  | [ ] Search "fire bolt", hover a thumbnail.                                                      | Hover plays a video preview.                                                                    |
-| 9.2a | [ ] First browser use after installing JB2A: console "Indexed N JB2A thumbnails"; reload.       | N ≈ 6600 (Patreon 0.9.3); no new walk after the reload (cached).                                |
-| 9.2b | [ ] Browse `jb2a.template_circle` (many animations without a JB2A thumbnail).                   | Cards get a captured frame when visible; failures show "No preview".                            |
-| 9.3  | [ ] Find `jb2a.shield.01.complete.01.blue` in < 3 clicks, **Copy path**.                        | Clipboard contains the dot path.                                                                |
-| 9.4  | [ ] **Play on selected token**.                                                                 | Plays on the selected token.                                                                    |
-| 9.5  | [ ] Add and remove a favourite, reopen the window.                                              | Favourites persist.                                                                             |
-| 9.6  | [ ] Open a PF2e item sheet (longsword): header control **Animation**.                           | Opens the item config.                                                                          |
-| 9.7  | [ ] Pick a preset, a JB2A path (via the browser picker), a colour, per-outcome overrides; save. | Next Strike uses the new animation **without reload**.                                          |
-| 9.8  | [ ] **Preview** button with a token selected and one targeted.                                  | Plays locally only.                                                                             |
-| 9.8a | [ ] Item config open on two clients (GM + Player owner); save a new animation on one.           | The other editor reloads it; with unsaved edits it shows the Reload / Keep notice.              |
-| 9.8b | [ ] Sound section: click the file button next to **Sound file**, pick an audio file.            | Foundry file browser (audio only); the path lands in the field.                                 |
-| 9.9  | [ ] **Rules manager**: add, edit, disable, delete a world rule.                                 | Changes apply immediately.                                                                      |
-| 9.10 | [ ] Rules manager "which rule matches" for an item.                                             | Same answer as `SVA.automation.explain(item)`.                                                  |
-| 9.11 | [ ] **Export** rules, delete them all, **Import** the file.                                     | Rules are identical after the round-trip.                                                       |
-| 9.12 | [ ] **Settings** submenu.                                                                       | Performance, permissions, client preferences and system-pack toggles; every setting has a hint. |
-| 9.13 | [ ] Check the UI with the Player client.                                                        | Player cannot edit world rules or world settings.                                               |
+| #    | Check                                                                                                                         | Expected result                                                                                                |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 9.1  | [ ] Open the **Animation browser** (`SVA.ui.openBrowser()` or its toolbar/settings button).                                   | Tree + search + thumbnail grid.                                                                                |
+| 9.2  | [ ] Search "fire bolt", hover a thumbnail.                                                                                    | Hover plays a video preview.                                                                                   |
+| 9.2a | [ ] First browser use after installing JB2A: console "Indexed N JB2A thumbnails"; reload.                                     | N ≈ 6600 (Patreon 0.9.3); no new walk after the reload (cached).                                               |
+| 9.2b | [ ] Browse `jb2a.template_circle` (many animations without a JB2A thumbnail).                                                 | Cards get a captured frame when visible; failures show "No preview".                                           |
+| 9.3  | [ ] Find `jb2a.shield.01.complete.01.blue` in < 3 clicks, **Copy path**.                                                      | Clipboard contains the dot path.                                                                               |
+| 9.4  | [ ] **Play on selected token**.                                                                                               | Plays on the selected token.                                                                                   |
+| 9.5  | [ ] Add and remove a favourite, reopen the window.                                                                            | Favourites persist.                                                                                            |
+| 9.6  | [ ] Open a PF2e item sheet (longsword): header control **Animation**.                                                         | Opens the item config.                                                                                         |
+| 9.7  | [ ] Pick a preset, a JB2A path (via the browser picker), a colour, per-outcome overrides; save.                               | Next Strike uses the new animation **without reload**.                                                         |
+| 9.8  | [ ] **Preview** button with a token selected and one targeted.                                                                | Plays locally only.                                                                                            |
+| 9.8a | [ ] Item config open on two clients (GM + Player owner); save a new animation on one.                                         | The other editor reloads it; with unsaved edits it shows the Reload / Keep notice.                             |
+| 9.8b | [ ] Sound section: click the file button next to **Sound file**, pick an audio file.                                          | Foundry file browser (audio only); the path lands in the field.                                                |
+| 9.9  | [ ] **Rules manager**: add, edit, disable, delete a world rule.                                                               | Changes apply immediately.                                                                                     |
+| 9.10 | [ ] Rules manager "which rule matches" for an item.                                                                           | Same answer as `SVA.automation.explain(item)`.                                                                 |
+| 9.11 | [ ] **Export** rules, delete them all, **Import** the file.                                                                   | Rules are identical after the round-trip.                                                                      |
+| 9.12 | [ ] **Settings** submenu.                                                                                                     | Performance, permissions, client preferences and system-pack toggles; every setting has a hint.                |
+| 9.13 | [ ] Check the UI with the Player client.                                                                                      | Player cannot edit world rules or world settings.                                                              |
+| 9.14 | [ ] Right-click the **Caster** token: **Animation overview** button on the token HUD.                                         | Overview opens without the sheet; every spell listed with thumbnail, path, preset, source, trigger.            |
+| 9.15 | [ ] Open the Caster's character sheet: header control **Animations**.                                                         | Same overview window (focused, not duplicated).                                                                |
+| 9.16 | [ ] Select the Fighter token, token controls → **Animation overview of the selected token**.                                  | Overview of the Fighter: strikes under "Strikes and weapons" with the same source as `SVA.automation.explain`. |
+| 9.17 | [ ] No token selected, same button.                                                                                           | Warning "Select (control) a token…".                                                                           |
+| 9.18 | [ ] Search "fire", then filter "Without animation".                                                                           | List narrows while typing (input keeps focus); filter combines with the search.                                |
+| 9.19 | [ ] Select the Caster, target the Beast, **Preview** on Ray of Frost.                                                         | Plays locally from the Caster to the Beast; the Player client sees nothing.                                    |
+| 9.20 | [ ] **Change** on Electric Arc, pick `jb2a.ray_of_frost` in the browser; cast Electric Arc.                                   | Row shows source "Item recipe" and the new path; the cast plays the new animation (same preset).               |
+| 9.21 | [ ] **Change** on an item with "No recipe" (e.g. Bless).                                                                      | An on-token item recipe with the picked animation is created.                                                  |
+| 9.22 | [ ] **Reset** Electric Arc, **Disable** then **Enable** Ray of Frost.                                                         | Source goes back to the rule; disabled row is dimmed and doesn't animate; enable restores it.                  |
+| 9.23 | [ ] Overview open; edit a world rule in the Rules manager / add a spell to the Caster / change the item on the Player client. | Overview refreshes by itself each time.                                                                        |
+| 9.24 | [ ] Unlinked NPC token (Beast): open the overview from its HUD, change a strike.                                              | Only that token's actor changes; the prototype actor is untouched.                                             |
+| 9.25 | [ ] Player client, owned Caster: HUD button shows; on the Beast (not owned) it doesn't.                                       | Player can change/disable own items only.                                                                      |
+| 9.26 | [ ] Settings: turn off **Animation overview button on the token HUD**.                                                        | The HUD button disappears on that client.                                                                      |
 
 ## 10. Example macros compendium
 
@@ -248,6 +261,70 @@ Open the compendium **SVA Example Macros** and import all macros. For each macro
 | 10.15 | [ ] Energy Strands Toggle                                | Two layers; toggles off.                                                                           |
 | 10.16 | [ ] Weapon Throw and Return                              | Dagger thrown to each target and returns to the thrower.                                           |
 | 10.17 | [ ] Run all of the above **with Sequencer uninstalled**. | Everything works. No `Sequencer is not defined` errors.                                            |
+
+## 11. D&D 5e adapter
+
+Run this section in a separate world `sva-qa-5e` with the **dnd5e** system (6.x for Foundry v14; note the version), the same **QA Grid** scene, the same two clients and Sequencer / Automated Animations disabled. Take items from the SRD 2024 compendiums (`Spells (SRD)`, `Equipment (SRD)`) so their identifiers match `rules/dnd5e.json`.
+
+- **Fighter** (player): Longsword, Longbow, Dagger, Javelin, Unarmed Strike, Potion of Healing.
+- **Caster** (player): Fire Bolt, Eldritch Blast, Sacred Flame, Magic Missile, Guiding Bolt, Cure Wounds, Healing Word, Bless, Shield, Burning Hands, Thunderwave, Misty Step, Shatter, Fireball, Lightning Bolt, Spirit Guardians.
+- **Beast** (NPC, GM only): a creature with Bite and Claws (e.g. Wolf, Brown Bear).
+- **Target A / B / C** (NPCs, GM only) 1, 6 and 18 squares east of Fighter; give Target A **AC 12** and Target B **AC 20**.
+
+| #     | Check                                                                                                    | Expected result                                                                                                             |
+| ----- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| 11.1  | [ ] Console: `SVA.systems.active?.id`; module settings show **D&D 5e: animate conditions**.              | `"dnd5e"`; the setting exists (and is absent in the PF2e world).                                                            |
+| 11.2  | [ ] Fighter **Longsword** attack vs Target A (hit), vs Target B (miss), and until a natural 20.          | Sword swing onto Target A; a miss beside Target B; the crit variant on the natural 20. A natural 1 always misses.           |
+| 11.3  | [ ] **Longbow** vs Target B (6 squares), hit then miss.                                                  | Arrow from Fighter to Target B; the miss lands beside it.                                                                   |
+| 11.4  | [ ] **Dagger** with attack mode **Thrown**, then **One-Handed**.                                         | Thrown dagger to the target; then a melee dagger animation.                                                                 |
+| 11.5  | [ ] **Javelin** thrown, **Unarmed Strike**, a **+1 Longsword** or **Sun Blade**.                         | Javelin throw; unarmed strike; the variant uses the longsword animation (`baseItem`).                                       |
+| 11.6  | [ ] GM: Beast **Bite** and **Claws** vs Fighter.                                                         | Bite and claw animations.                                                                                                   |
+| 11.7  | [ ] Roll **damage** after each hit.                                                                      | No second swing (weapon rules only trigger on `attack`). Exactly one event per chat card (Debug logging).                   |
+| 11.8  | [ ] Attack with Targets A **and** B targeted (roll 15).                                                  | One swing per target: hit on A (AC 12), miss on B (AC 20).                                                                  |
+| 11.9  | [ ] **Fire Bolt**, **Eldritch Blast**, **Guiding Bolt** vs Target B: hit and miss.                       | Projectile per attack roll, miss lands beside. Only one animation per cast (the usage card does not animate attack spells). |
+| 11.10 | [ ] **Magic Missile** with Targets A, B, C targeted; **Sacred Flame** on Target A.                       | 3 missiles on use; Sacred Flame on Target A on use (before the save).                                                       |
+| 11.11 | [ ] Target A rolls the **Sacred Flame** save from the card (GM client).                                  | One `save` event from the GM client (Debug logging), target = Target A, outcome success/failure vs the DC.                  |
+| 11.12 | [ ] **Fireball**: place the template (a Region on v14) over Targets A and B.                             | Projectile to the center, explosion sized to the 20 ft radius; impacts on the tokens inside.                                |
+| 11.13 | [ ] **Burning Hands** (cone) in 4 directions; **Thunderwave** (cube); **Lightning Bolt** (line).         | Cone aligned with the template each time; square sized to 15 ft; line along the template, full length.                      |
+| 11.14 | [ ] **Cure Wounds** and **Healing Word** on Fighter; Fighter drinks a **Potion of Healing** (no target). | Healing animation on Fighter, once (on the healing roll, not on the usage card).                                            |
+| 11.15 | [ ] **Bless** on Fighter and Target C, then apply its effect from the card to both.                      | Bless intro on both on use; a persistent "Blessed" aura on each creature once the effect is applied.                        |
+| 11.16 | [ ] End **Bless** concentration (delete the Concentrating effect).                                       | dnd5e removes the Blessed effects; both auras end on both clients.                                                          |
+| 11.17 | [ ] **Spirit Guardians**: cast (concentration), reload both clients, then end concentration.             | Spirit ring aura on Caster sized to 15 ft, restored after reload, ended with concentration.                                 |
+| 11.18 | [ ] **Shield** (reaction) with a target selected.                                                        | Shield plays on Caster, not on the target.                                                                                  |
+| 11.19 | [ ] **Misty Step**: click a free square; then again from the Player client with the GM connected.        | Vanish, token jumps to the clicked square, appear there. Don't press dnd5e's own Teleport button as well.                   |
+| 11.20 | [ ] Toggle **Prone** / **Frightened** on Target A with the conditions setting on, then off.              | Frightened marker only while the setting is on; Prone has no rule (nothing plays, no error).                                |
+| 11.21 | [ ] Open a weapon, a spell and a potion sheet.                                                           | An **Animation** header control opens the item configuration.                                                               |
+| 11.22 | [ ] `SVA.automation.explain(fromUuidSync("<Fireball uuid>"), { eventType: "areaPlaced" })`               | Winner `spell-fireball` from the system rule pack.                                                                          |
+
+## 12. GURPS adapter
+
+Run in a separate world `sva-qa-gurps` with the **GURPS 4e Game Aid** system (`gurps`, note the version), the same **QA Grid** scene and two clients. Check `SVA.systems.active?.id` is `"gurps"`.
+
+Actors (owned by the player unless noted), each with a token:
+
+- **Knight**: Broadsword (Swing and Thrust rows), Large Knife (melee and a Thrown ranged row), Composite Bow, Punch/Kick, First Aid skill.
+- **Wizard**: spells Fireball (and its ranged attack row, as imported from GCS), Explosive Fireball, Lightning, Ice Dart, Minor Healing, Shield, Blink, Create Fire, Light, Darkness.
+- **Gunner**: Pistol and Rifle rows.
+- **Targets A, B** (GM only), 1 and 6 squares away.
+
+| #     | Check                                                                                           | Expected result                                                                                     |
+| ----- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 12.1  | [ ] Knight targets A, clicks the **Broadsword (Swing)** level: success, failure, critical.      | Sword swing onto A; the failure lands beside A; the critical plays the same swing (no extra rule).  |
+| 12.2  | [ ] Roll the **Punch**, **Kick** and **Large Knife** (melee) rows.                              | Fist, kick and dagger animations.                                                                   |
+| 12.3  | [ ] Knight targets B: **Composite Bow**, then **Large Knife (Thrown)**.                         | Arrow, then a thrown dagger, from Knight to B.                                                      |
+| 12.4  | [ ] Gunner targets B: **Pistol**, **Rifle**.                                                    | Bullet animations.                                                                                  |
+| 12.5  | [ ] Chat: `/r [M:Broadsword]` with Knight selected, then as GM `/r [@<knightId>@M:Broadsword]`. | Same as 12.1, from Knight's token both times.                                                       |
+| 12.6  | [ ] Ctrl-click (blind roll) an attack as the player.                                            | The animation plays; it does not reveal hit/miss (plays as a hit).                                  |
+| 12.7  | [ ] After 12.1, click the **damage** link in the attack card.                                   | Nothing plays by default (no duplicate swing). With debug logging, a `damage` event for Broadsword. |
+| 12.8  | [ ] Wizard targets B, rolls the **Fireball** spell (`Sp:Fireball`).                             | Fire charge-up on the Wizard only.                                                                  |
+| 12.9  | [ ] Wizard rolls the **Fireball** ranged attack row vs B; then **Explosive Fireball**.          | Fire bolt to B; explosive: fire beam and explosion.                                                 |
+| 12.10 | [ ] **Lightning**, **Ice Dart** attack rows vs B.                                               | Lightning bolt; ice shard.                                                                          |
+| 12.11 | [ ] **Minor Healing** with no target, then targeting A; **First Aid** targeting A.              | Healing on the Wizard, then on A; First Aid heals A. Only one animation per roll.                   |
+| 12.12 | [ ] **Shield**, **Blink** (click a destination), **Create Fire**, **Light**, **Darkness**.      | Shield on target/caster; Blink vanishes and reappears at the clicked square; fire, light, darkness. |
+| 12.13 | [ ] Fail a spell roll with the world setting **GURPS: failed casts** on, then off.              | On: the spell animation plays. Off: nothing.                                                        |
+| 12.14 | [ ] Roll **Parry**, **Block** and **Dodge**, and a plain skill (Stealth).                       | Nothing plays, no errors.                                                                           |
+| 12.15 | [ ] Open a Broadsword **equipment item** sheet: header **Animation** → set a recipe → roll it.  | The item recipe plays instead of the rule pack's.                                                   |
+| 12.16 | [ ] Two clients: the player rolls 12.1.                                                         | Plays once on each client.                                                                          |
 
 ## Results table template
 
@@ -282,6 +359,8 @@ Copy this into the release PR and fill it in. Use `PASS`, `FAIL (#issue)` or `N/
 | 8.3 PF2e effects, healing, multi |           |               |       |
 | 9. UI                            |           |               |       |
 | 10. Example macros               |           |               |       |
+| 11. D&D 5e adapter (dnd5e x.y.z) |           |               |       |
+| 12. GURPS adapter                |           |               |       |
 
 **Failures:** list issue numbers.
 **Blockers for release:** yes / no.

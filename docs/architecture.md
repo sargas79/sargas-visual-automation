@@ -174,6 +174,7 @@ ApplicationV2 + `HandlebarsApplicationMixin`, templates in `templates/`, CSS in 
 api.ui.openBrowser({ onPick }); // animation browser; onPick(path) for pickers
 api.ui.openItemConfig(item); // per-item recipe editor (uses api.automation.*)
 api.ui.openRulesManager();
+api.ui.openActorOverview(actor); // every item's animation for one actor (#74)
 ```
 
 Settings submenu entries are registered in `ui` `init`.
@@ -220,6 +221,7 @@ These were added while the areas were built, and are part of the contract from n
 - **teleport:** the `teleport` preset moves the source token between the vanish and the appear (on the automation client): destination = `event.area.origin` → `options.destination` → a canvas click (`options.pickDestination`); `options.moveToken: false` keeps animation only. The GM updates the token with `animate: false`; players send `teleportMove` `{requestId, sceneId, tokenId, x, y}` over `api.net`, the active GM applies it when the sender owns the token and answers `teleportMoved` `{requestId, ok, reason?}` (types added through `api.net.on/emit`, protocol `v: 1` unchanged). `api.automation.teleport.{moveToken, pickCanvasPoint}`.
 - **systems:** optional `static init(api)` on `SystemAdapter`, called once per registered class during the automation area's `init` (immediately for classes registered later), active or not. Adapters register their settings there; PF2e registers `pf2eConditionEvents`.
 - **ui:** `api.ui.openSettings()`. Settings may declare `svaGroup` to choose their group in the SVA settings panel.
+- **ui (#74):** `api.ui.openActorOverview(actor)`: every item of an actor with the animation it resolves to (`api.automation.explain`; when that finds nothing, the event types the item's descriptors suggest are probed so fallback recipes show too), its source and triggers, with Preview / Change (browser picker → item recipe keeping the resolved preset/options/stages) / Edit / Reset / Disable. Entry points live in `src/ui/entry-points.js` (system-agnostic): token HUD button (`renderTokenHUD`, client setting `uiTokenHud`), actor sheet header control (`getActorSheetHeaderButtons` for V1, `getHeaderControlsActorSheetV2` for V2) and a token-controls button for the controlled token. Foundry has no generic hook for item context menus on actor sheets; adapters may add one that calls `api.ui.openActorOverview`.
 
 ### Open follow-ups
 

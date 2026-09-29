@@ -33,9 +33,56 @@
           "Hint": "Database paths starred in the animation browser."
         },
         "SceneControl": {
-          "Name": "Animation browser button",
-          "Hint": "Show a button in the token controls (left toolbar) that opens the JB2A animation browser."
+          "Name": "Animation buttons in the token controls",
+          "Hint": "Show buttons in the token controls (left toolbar) that open the JB2A animation browser and the animation overview of the selected token."
+        },
+        "TokenHud": {
+          "Name": "Animation overview button on the token HUD",
+          "Hint": "Show a button on the token HUD (right-click a token) that opens the animation overview of that token's actor."
         }
+      },
+      "Overview": {
+        "Title": "Animations",
+        "TitleFor": "Animations: {name}",
+        "Open": "Animation overview",
+        "HeaderButton": "Animations",
+        "SceneControl": "Animation overview of the selected token",
+        "SelectToken": "Select (control) a token to see its animations.",
+        "NoActor": "No actor to show animations for.",
+        "Counts": "{total} items · {animated} animated · {none} without animation · {disabled} disabled",
+        "SearchPlaceholder": "Search items, animations, presets…",
+        "Filter": "Show",
+        "Filters": {
+          "all": "All items",
+          "animated": "With animation",
+          "none": "Without animation",
+          "item": "Own item recipe",
+          "disabled": "Disabled"
+        },
+        "ShowAll": "Include other items",
+        "ShowAllHint": "Also list items that usually never animate (equipment, loot, class features…).",
+        "Empty": "No item matches.",
+        "Groups": {
+          "spell": "Spells",
+          "weapon": "Strikes and weapons",
+          "action": "Actions",
+          "feat": "Feats and abilities",
+          "consumable": "Consumables",
+          "effect": "Effects",
+          "condition": "Conditions",
+          "other": "Other items"
+        },
+        "Disabled": "Disabled",
+        "Missing": "This path is not in the JB2A database (other JB2A edition?).",
+        "Preview": "Preview: play locally from this actor's selected token to your targets",
+        "Change": "Change the animation (opens the browser; saved as this item's recipe)",
+        "Edit": "Edit the full recipe",
+        "Reset": "Remove this item's own recipe (rules apply again)",
+        "Disable": "Disable automation for this item",
+        "Enable": "Enable automation for this item",
+        "Changed": "{name} now uses {path}.",
+        "NothingToPreview": "{name} has no animation to preview.",
+        "NoSourceToken": "Place or select a token of {name} to preview from."
       },
       "Recipe": {
         "Preset": "Preset",

@@ -5,5 +5,7 @@
  * src/shared/adapter.js#SystemAdapter and add it to this list.
  */
 import Pf2eAdapter from "./pf2e/index.js";
+import GurpsAdapter from "./gurps/index.js";
+import Dnd5eAdapter from "./dnd5e/index.js";
 
-export const BUILTIN_ADAPTERS = [Pf2eAdapter];
+export const BUILTIN_ADAPTERS = [Pf2eAdapter, Dnd5eAdapter, GurpsAdapter];

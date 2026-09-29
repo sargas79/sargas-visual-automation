@@ -6,11 +6,11 @@ A [Foundry VTT](https://foundryvtt.com) module that plays and automates [JB2A](h
 
 ## Requirements
 
-|             |                                                                                                                                             |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Foundry VTT | **v14**                                                                                                                                     |
-| Game system | **Pathfinder 2e**. The core is system-agnostic, and D&D 5e and GURPS adapters are planned                                                   |
-| Animations  | [JB2A Patreon](https://www.patreon.com/JB2A) (`jb2a_patreon`) or the free [JB2A](https://foundryvtt.com/packages/JB2A_DnD5e) (`JB2A_DnD5e`) |
+|             |                                                                                                                                                      |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundry VTT | **v14**                                                                                                                                              |
+| Game system | **Pathfinder 2e**, **D&D 5e** (dnd5e 6.x) and **GURPS 4e Game Aid** (`gurps`). The core is system-agnostic, so more systems can be added as adapters |
+| Animations  | [JB2A Patreon](https://www.patreon.com/JB2A) (`jb2a_patreon`) or the free [JB2A](https://foundryvtt.com/packages/JB2A_DnD5e) (`JB2A_DnD5e`)          |
 
 ## Installation
 
@@ -38,7 +38,7 @@ JB2A module (assets + database)
 db/          catalog of every animation + metadata (sizes, loop points, ranged padding)
 engine/      PIXI playback on the canvas, synced to all clients (net/)
 automation/  system-agnostic rules: item → animation recipe
-systems/     adapters that turn system events (PF2e strikes, spells…) into generic events
+systems/     adapters that turn system events (PF2e strikes, dnd5e activities, GURPS rolls…) into generic events
 ui/          animation browser, item-sheet tab, rules manager
 ```
 

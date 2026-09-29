@@ -6,21 +6,26 @@
  *   api.ui.openItemConfig(item)            per-item recipe editor (#37)
  *   api.ui.openRulesManager()              world rules manager (#38)
  *   api.ui.openSettings()                  grouped settings panel (#39)
+ *   api.ui.openActorOverview(actor)        every item's animation for one actor (#74)
  *
- * Settings submenus and the scene-control button are registered in init.
+ * Settings submenus, the scene-control buttons and the overview entry points
+ * (token HUD, actor sheet header) are registered in init.
  */
 import { MODULE_ID } from "../constants.js";
 import { log } from "../logger.js";
 import { setApi } from "./context.js";
+import { openActorOverview } from "./apps/actor-overview.js";
 import { FAVOURITES_SETTING, openBrowser } from "./apps/browser.js";
 import { openItemConfig } from "./apps/item-config.js";
 import { openRulesManager } from "./apps/rules-manager.js";
 import { createMenuLauncher, getSettingsPanelClass, openSettingsPanel } from "./apps/settings-panel.js";
+import { TOKEN_HUD_SETTING, openForControlled, registerOverviewEntryPoints } from "./entry-points.js";
 import { addSceneControlTool } from "./models/settings-model.js";
 
 export const UI_SETTINGS = {
   FAVOURITES: FAVOURITES_SETTING,
-  SCENE_CONTROL: "uiSceneControl"
+  SCENE_CONTROL: "uiSceneControl",
+  TOKEN_HUD: TOKEN_HUD_SETTING
 };
 
 export const UI_MENUS = {
@@ -47,6 +52,14 @@ function registerSettings(settings) {
     default: true,
     // VERIFY(v14): re-render the scene controls so the tool appears/disappears.
     onChange: () => globalThis.ui?.controls?.render?.({ reset: true })
+  });
+  settings.register(MODULE_ID, UI_SETTINGS.TOKEN_HUD, {
+    name: "SVA.UI.Settings.TokenHud.Name",
+    hint: "SVA.UI.Settings.TokenHud.Hint",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true
   });
 }
 
@@ -79,7 +92,7 @@ function sceneControlEnabled() {
   }
 }
 
-/** Hook handler: add an "Animation browser" button to the token controls. */
+/** Hook handler: add the "Animation browser" and "Animation overview" buttons to the token controls. */
 export function onGetSceneControlButtons(controls) {
   if (!sceneControlEnabled()) return;
   addSceneControlTool(controls, "tokens", {
@@ -91,6 +104,14 @@ export function onGetSceneControlButtons(controls) {
     // VERIFY(v14): button tools fire onChange(event, active) when clicked.
     onChange: () => openBrowser()
   });
+  addSceneControlTool(controls, "tokens", {
+    name: "svaOverview",
+    title: "SVA.UI.Overview.SceneControl",
+    icon: "fa-solid fa-wand-magic-sparkles",
+    button: true,
+    visible: true,
+    onChange: () => openForControlled(openActorOverview)
+  });
 }
 
 export function init(api) {
@@ -99,7 +120,8 @@ export function init(api) {
     openBrowser,
     openItemConfig,
     openRulesManager,
-    openSettings: openSettingsPanel
+    openSettings: openSettingsPanel,
+    openActorOverview
   };
   const settings = globalThis.game?.settings;
   if (settings?.register) {
@@ -111,4 +133,5 @@ export function init(api) {
     }
   }
   globalThis.Hooks?.on?.("getSceneControlButtons", onGetSceneControlButtons);
+  registerOverviewEntryPoints((actor) => api.ui.openActorOverview(actor));
 }

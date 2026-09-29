@@ -1,1 +1,58 @@
-{}
+{
+  "SVA": {
+    "Automation": {
+      "Settings": {
+        "Enabled": {
+          "Name": "Enable automation",
+          "Hint": "Play animations automatically for attacks, spells, areas and effects reported by the game system."
+        },
+        "Rules": {
+          "Name": "Automation rules"
+        }
+      },
+      "Presets": {
+        "melee": "Melee attack",
+        "ranged": "Ranged attack / projectile",
+        "onToken": "On token",
+        "area": "Area",
+        "aura": "Aura (persistent)",
+        "teleport": "Teleport"
+      },
+      "Stages": {
+        "cast": "Cast (on source, before)",
+        "projectile": "Projectile",
+        "impact": "Impact (on target)",
+        "onSource": "On source",
+        "onTarget": "On target"
+      },
+      "Options": {
+        "scale": "Scale",
+        "layer": "Layer",
+        "tint": "Tint",
+        "opacity": "Opacity",
+        "playbackRate": "Playback rate",
+        "delay": "Delay (ms)",
+        "fadeIn": "Fade in (ms)",
+        "fadeOut": "Fade out (ms)",
+        "stagger": "Delay between targets (ms)",
+        "impactOffset": "Impact timing offset (ms)",
+        "returnTrip": "Return to the attacker",
+        "target": "Play on",
+        "attach": "Follow the token",
+        "shape": "Area shape",
+        "size": "Area size",
+        "radius": "Aura radius",
+        "arrivalDelay": "Arrival delay (ms)"
+      },
+      "Sources": {
+        "item": "Item",
+        "world": "World rule",
+        "system": "System rule pack",
+        "fallback": "Generic fallback"
+      },
+      "RulePack": {
+        "LoadFailed": "Could not load the automation rule pack for {system}."
+      }
+    }
+  }
+}

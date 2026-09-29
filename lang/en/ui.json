@@ -42,6 +42,8 @@
         "Animation": "Animation",
         "AnimationHint": "JB2A database path (a partial path picks a random variant). Use the film button to browse.",
         "Browse": "Browse animations",
+        "BrowseSound": "Browse sound files",
+        "NoFilePicker": "The Foundry file browser is not available.",
         "Options": "Preset options",
         "NoSchema": "This preset has no configurable options.",
         "OptionsExtra": "Additional options (JSON)",
@@ -109,7 +111,10 @@
         "SaveFailed": "Could not save the recipe. See the console for details.",
         "NoAutomation": "The automation core is not available.",
         "NoSourceToken": "Select a token (or place a token of the item owner) to preview from.",
-        "PreviewFailed": "Preview failed. See the console for details."
+        "PreviewFailed": "Preview failed. See the console for details.",
+        "Changed": "This item was changed elsewhere. Reload it (your unsaved edits are lost) or keep editing (saving overwrites the other change)?",
+        "Reload": "Reload",
+        "KeepEdits": "Keep my edits"
       },
       "Rules": {
         "Candidates": "Candidate rules",

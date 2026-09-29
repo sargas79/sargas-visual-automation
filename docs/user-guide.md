@@ -95,9 +95,11 @@ Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condi
 2. **Animation**: type a JB2A path or click the picker to choose one in the animation browser. Pick a **colour** variant if the animation has several.
 3. **Options**: scale, layer, delay, and the preset's own options.
 4. **Outcomes**: optional overrides for critical success, success, failure and critical failure.
-5. **Stages**: optional cast, projectile, impact, on-source and on-target animations.
+5. **Stages**: optional cast, projectile, impact, on-source and on-target animations. Under **Sound**, the file button opens Foundry's file browser to pick an audio file.
 6. **Preview**: select a token and target others, then click Preview. Only you see the preview.
 7. **Save**. The next use of the item plays the new animation, no reload needed.
+
+If the item is changed elsewhere while the window is open (another user, a macro), the editor reloads it. When you have unsaved edits it keeps them and asks instead: **Reload** discards your edits, **Keep my edits** lets you save over the other change.
 
 Tick **Disable automation** to silence an item. Click **Reset** to remove the item's own recipe and go back to the rules.
 

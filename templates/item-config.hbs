@@ -15,6 +15,17 @@
     </header>
 
     <div class="sva-scroll">
+      {{#if stale}}
+        <div class="sva-stale-notice" role="alert">
+          <i class="fa-solid fa-triangle-exclamation" inert></i>
+          <span>{{localize "SVA.UI.ItemConfig.Changed"}}</span>
+          <button type="button" data-action="reloadItem">
+            <i class="fa-solid fa-rotate" inert></i>
+            {{localize "SVA.UI.ItemConfig.Reload"}}
+          </button>
+          <button type="button" data-action="dismissStale">{{localize "SVA.UI.ItemConfig.KeepEdits"}}</button>
+        </div>
+      {{/if}}
       <section class="sva-match">
         <h3>{{localize "SVA.UI.ItemConfig.CurrentMatch"}}</h3>
         {{#if resolution.found}}

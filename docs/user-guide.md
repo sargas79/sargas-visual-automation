@@ -19,7 +19,7 @@ Sargas Visual Automation (SVA) plays [JB2A](https://jb2a.com) animations in Foun
 |             |                                                                                                                                                                                        |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Foundry VTT | **v14**                                                                                                                                                                                |
-| Game system | **Pathfinder 2e** or **GURPS 4e Game Aid** (`gurps`, v0.18+) for automation. Macros and the animation browser work in any system.                                                      |
+| Game system | **Pathfinder 2e**, **D&D 5e** (dnd5e 6.x) or **GURPS 4e Game Aid** (`gurps`, v0.18+) for automation. Macros and the animation browser work in any system.                              |
 | JB2A        | **Required.** Either [JB2A Patreon](https://www.patreon.com/JB2A) (`jb2a_patreon`, the full collection) or the free [JB2A](https://foundryvtt.com/packages/JB2A_DnD5e) (`JB2A_DnD5e`). |
 
 SVA ships **no animation files**. It reads the database of the JB2A module you have installed and plays its files. With the free module some animations (and some colours) are missing; SVA falls back to what exists and tells you in the console when a path is unavailable. If both JB2A modules are active, the Patreon one is used.
@@ -41,7 +41,7 @@ JB2A's own setting for a custom asset location (S3, a CDN or a renamed folder) i
 ## First steps
 
 1. Place two tokens on a scene. Select one and target the other (`T` key).
-2. **PF2e**: make a Strike with the selected token. The weapon animation plays from your token to the target, on every player's screen.
+2. **PF2e**: make a Strike with the selected token. **D&D 5e**: use a weapon's attack. The weapon animation plays from your token to the target, on every player's screen.
    **GURPS**: click a melee or ranged attack's skill level on the character sheet (or roll an OtF such as `[M:Broadsword]`).
 3. Open the **Animation browser** (see [below](#animation-browser)), search for "fire bolt", and click **Play on selected token**.
 4. Import the **SVA Example Macros** compendium and run **Arrows and Bolts**.
@@ -56,7 +56,7 @@ SVA looks for a recipe in this order and uses the first one it finds:
 
 1. **Item**: a recipe configured on the item itself ([item configuration](#configuring-an-item)).
 2. **World rules**: rules you create in the [rules manager](#rules-manager).
-3. **System rule pack**: the defaults shipped with SVA for your game system (`rules/pf2e.json`: common spells, cantrips and every weapon group; `rules/gurps.json`: weapon families, unarmed and natural attacks, firearms and common GURPS Magic spells).
+3. **System rule pack**: the defaults shipped with SVA for your game system (`rules/pf2e.json`: common spells, cantrips and every weapon group; `rules/dnd5e.json`: SRD spells, every base weapon, healing potions, spell effects and conditions; `rules/gurps.json`: weapon families, unarmed and natural attacks, firearms and common GURPS Magic spells).
 4. **Generic fallback**: based on what the item is (melee, ranged or thrown attack, damage type, healing).
 
 If the item's **Disable automation** box is ticked, nothing plays for it, whatever the rules say.
@@ -104,9 +104,16 @@ GURPS Game Aid has no item "activities": attacks, spells and skills are rows of 
 - Clients on a different scene don't see the animation.
 - Players below the world setting **minimum role to trigger** can't broadcast animations.
 
+### D&D 5e notes
+
+- Using an activity posts a usage card (**cast**), then its rolls: **attack** (hit or miss per target against its AC; a natural 20 is a critical, a natural 1 always misses), **damage**, **healing** and one **save** per creature that rolls from the card. Placing the activity's template (a Region on Foundry v14) is **areaPlaced**.
+- Default rules listen to one of these per action: attack spells and weapons to the attack roll, healing to the healing roll, area spells to the placed template, other spells to the usage card. Don't make a recipe listen to both `cast` and `attack` (or `healing`), or the action animates twice.
+- Concentration drives auras: a rule with the `aura` preset on a concentration spell (Spirit Guardians) starts when you begin concentrating and ends when concentration ends. Effects applied from a card (for example "Blessed") and conditions (`prone`, `frightened`…) are matched by their name / status id with type `effect` / `condition`.
+- **Teleport** spells (Misty Step) move your token themselves: click the destination when asked, and don't also use dnd5e's own **Teleport** button on the card.
+
 ## Configuring an item
 
-Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condition; for GURPS: equipment, spell, skill or attack items) and click the **Animation** control in the sheet header. In GURPS, attacks and spells that exist only on the character sheet (no item) are configured with a rule in the [rules manager](#rules-manager) instead.
+Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condition; for D&D 5e: weapon, spell, feature or consumable; for GURPS: equipment, spell, skill or attack items) and click the **Animation** control in the sheet header. In GURPS, attacks and spells that exist only on the character sheet (no item) are configured with a rule in the [rules manager](#rules-manager) instead.
 
 1. **Preset**: pick one of the presets above.
 2. **Animation**: type a JB2A path or click the picker to choose one in the animation browser. Pick a **colour** variant if the animation has several.
@@ -153,13 +160,13 @@ The list updates by itself when items or world rules change. The token HUD butto
 
 A world rule matches items and gives them a recipe. Use rules to change the default animation of many items at once (all fire spells, all bows, one spell by its slug).
 
-| Field    | Meaning                                                                                                                                                                                                                                                                                                             |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Label    | Your name for the rule.                                                                                                                                                                                                                                                                                             |
-| Enabled  | Disabled rules are ignored.                                                                                                                                                                                                                                                                                         |
-| Priority | Higher wins when several world rules match.                                                                                                                                                                                                                                                                         |
-| Match    | Any combination of: **key** (PF2e slug, e.g. `electric-arc`; GURPS: slug of the name, e.g. `fireball`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**, **base item** (e.g. `longsword`: every longsword variant). |
-| Recipe   | Same editor as the item configuration.                                                                                                                                                                                                                                                                              |
+| Field    | Meaning                                                                                                                                                                                                                                                                                                                                  |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Label    | Your name for the rule.                                                                                                                                                                                                                                                                                                                  |
+| Enabled  | Disabled rules are ignored.                                                                                                                                                                                                                                                                                                              |
+| Priority | Higher wins when several world rules match.                                                                                                                                                                                                                                                                                              |
+| Match    | Any combination of: **key** (PF2e slug, D&D 5e identifier or GURPS name slug, e.g. `electric-arc`, `fire-bolt`, `fireball`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**, **base item** (e.g. `longsword`: every longsword variant). |
+| Recipe   | Same editor as the item configuration.                                                                                                                                                                                                                                                                                                   |
 
 - **Which rule matches?** Drop an item on the manager (or pick one) to see the winning recipe and every candidate.
 - **Export** saves all world rules to a JSON file; **Import** loads such a file (share rule sets between worlds). Rules round-trip without changes.
@@ -192,7 +199,7 @@ Settings live in **Game Settings → Configure Settings → Sargas Visual Automa
 | Disable effects         | Client | You see no SVA animations at all. Other players are unaffected.                                    |
 | Reduced motion          | Client | Skip decorative effects (cast, screen effects); hits, misses, areas, impacts and auras still play. |
 | Volume                  | Client | Volume of SVA sounds on your machine.                                                              |
-| Condition markers       | World  | Show JB2A markers for conditions (PF2e).                                                           |
+| Condition markers       | World  | Show JB2A markers for conditions (PF2e, and D&D 5e: "animate conditions").                         |
 | GURPS: failed casts     | World  | Animate spell and healing rolls that fail (GURPS). Failed attacks always play as misses.           |
 | Debug logging           | Client | Detailed logs in the browser console (F12), including why a recipe matched.                        |
 

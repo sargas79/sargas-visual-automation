@@ -53,6 +53,11 @@
     {
       "lang": "en",
       "name": "English",
+      "path": "lang/en/dnd5e.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
       "path": "lang/en/gurps.json"
     },
     {

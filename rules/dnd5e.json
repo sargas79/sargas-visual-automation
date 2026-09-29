@@ -1,0 +1,3641 @@
+{
+  "$schema": "./rulepack.schema.json",
+  "system": "dnd5e",
+  "version": 1,
+  "rules": [
+    {
+      "id": "spell-fire-bolt",
+      "label": "Fire Bolt",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "fire-bolt",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.fire_bolt.orange",
+        "options": {},
+        "triggers": ["attack"],
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.fire.01.orange",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-eldritch-blast",
+      "label": "Eldritch Blast",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "eldritch-blast",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.eldritch_blast.purple",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-ray-of-frost",
+      "label": "Ray of Frost",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "ray-of-frost",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.ray_of_frost.blue",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-chill-touch",
+      "label": "Chill Touch",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "chill-touch",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.magical.01.dark_purple",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-shocking-grasp",
+      "label": "Shocking Grasp",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "shocking-grasp",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.magical.01.blue",
+        "options": {},
+        "triggers": ["attack"],
+        "stages": {
+          "impact": {
+            "animation": "jb2a.static_electricity.01.blue",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-poison-spray",
+      "label": "Poison Spray",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "poison-spray",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spell_projectile.poison.greenyellow",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-produce-flame",
+      "label": "Produce Flame",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "produce-flame",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.fire_bolt.orange",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-starry-wisp",
+      "label": "Starry Wisp",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "starry-wisp",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.guiding_bolt.01.blueyellow",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-sorcerous-burst",
+      "label": "Sorcerous Burst",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "sorcerous-burst",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.ranged.04.projectile.01.purple",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-guiding-bolt",
+      "label": "Guiding Bolt",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "guiding-bolt",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.guiding_bolt.02.yellow",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-chromatic-orb",
+      "label": "Chromatic Orb",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "chromatic-orb",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.lightning_orb.01.complete.bluepurple",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-ray-of-sickness",
+      "label": "Ray of Sickness",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "ray-of-sickness",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.ray_of_frost.green",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-ice-knife",
+      "label": "Ice Knife",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "ice-knife",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spell_projectile.ice_shard.blue",
+        "options": {},
+        "triggers": ["attack"],
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.frost.blue.01",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-scorching-ray",
+      "label": "Scorching Ray",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "scorching-ray",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.scorching_ray.01.orange",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-acid-arrow",
+      "label": "Acid Arrow",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "acid-arrow",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.arrow.poison.green",
+        "options": {},
+        "triggers": ["attack"],
+        "stages": {
+          "impact": {
+            "animation": "jb2a.liquid.splash.green",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-witch-bolt",
+      "label": "Witch Bolt",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "witch-bolt",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.witch_bolt.blue",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-vampiric-touch",
+      "label": "Vampiric Touch",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "vampiric-touch",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.magical.01.dark_red",
+        "options": {},
+        "triggers": ["attack"],
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.energy_strands.complete.dark_red",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-flame-blade",
+      "label": "Flame Blade",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "flame-blade",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.sword.melee.fire.orange",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "spell-inflict-wounds",
+      "label": "Inflict Wounds",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "inflict-wounds",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.energy_strands.complete.dark_purple",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-magic-missile",
+      "label": "Magic Missile",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "magic-missile",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.magic_missile.purple",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-sacred-flame",
+      "label": "Sacred Flame",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "sacred-flame",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.sacred_flame.target.yellow",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-toll-the-dead",
+      "label": "Toll the Dead",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "toll-the-dead",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.toll_the_dead.green.complete",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-vicious-mockery",
+      "label": "Vicious Mockery",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "vicious-mockery",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.impact_themed.music_note",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-mind-sliver",
+      "label": "Mind Sliver",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "mind-sliver",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.icon.horror.purple",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-frostbite",
+      "label": "Frostbite",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "frostbite",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.impact_themed.ice_shard.blue",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-dissonant-whispers",
+      "label": "Dissonant Whispers",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "dissonant-whispers",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.soundwave.02",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-hellish-rebuke",
+      "label": "Hellish Rebuke",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "hellish-rebuke",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.flames.01.orange",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-chain-lightning",
+      "label": "Chain Lightning",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "chain-lightning",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.chain_lightning.primary.blue",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-disintegrate",
+      "label": "Disintegrate",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "disintegrate",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.disintegrate.green",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-finger-of-death",
+      "label": "Finger of Death",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "finger-of-death",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.energy_strands.range.standard.dark_green",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-blight",
+      "label": "Blight",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "blight",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.toll_the_dead.green.skull_smoke",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-power-word-kill",
+      "label": "Power Word Kill",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "power-word-kill",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.toll_the_dead.red.skull_smoke",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-hold-person",
+      "label": "Hold Person",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "hold-person",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.markers.chain.spectral_standard.complete",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-hold-monster",
+      "label": "Hold Monster",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "hold-monster",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.markers.chain.spectral_standard.complete",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-bane",
+      "label": "Bane",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "bane",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.condition.curse.01.001.purple",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-hex",
+      "label": "Hex",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "hex",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.condition.curse.01.002.green",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-hunters-mark",
+      "label": "Hunter's Mark",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "hunters-mark",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.hunters_mark.pulse.01",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-banishment",
+      "label": "Banishment",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "banishment",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.misty_step.01.dark_black",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-heat-metal",
+      "label": "Heat Metal",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "heat-metal",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.impact.fire.01.orange",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-mind-spike",
+      "label": "Mind Spike",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "mind-spike",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.icon.horror.teal",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-divine-smite",
+      "label": "Divine Smite",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "divine-smite",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.divine_smite.target.yellowwhite",
+        "options": {},
+        "triggers": ["cast"],
+        "stages": {
+          "cast": {
+            "animation": "jb2a.divine_smite.caster.yellowwhite",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-searing-smite",
+      "label": "Searing Smite",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "searing-smite",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.divine_smite.target.orange",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-shining-smite",
+      "label": "Shining Smite",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "shining-smite",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.divine_smite.target.blueyellow",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-thunderous-smite",
+      "label": "Thunderous Smite",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "thunderous-smite",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.divine_smite.target.purplepink",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-wrathful-smite",
+      "label": "Wrathful Smite",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "wrathful-smite",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.divine_smite.target.dark_purple",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-ensnaring-strike",
+      "label": "Ensnaring Strike",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "ensnaring-strike",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.entangle.green",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-cure-wounds",
+      "label": "Cure Wounds",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "cure-wounds",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cure_wounds.400px.blue",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-healing-word",
+      "label": "Healing Word",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "healing-word",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.green",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-mass-cure-wounds",
+      "label": "Mass Cure Wounds",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "mass-cure-wounds",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cure_wounds.400px.green",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-mass-healing-word",
+      "label": "Mass Healing Word",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "mass-healing-word",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.burst.greenorange",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-prayer-of-healing",
+      "label": "Prayer of Healing",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "prayer-of-healing",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.burst.yellowwhite",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-heal",
+      "label": "Heal",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "heal",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.400px.green",
+        "options": {},
+        "triggers": ["healing"],
+        "stages": {
+          "cast": {
+            "animation": "jb2a.cast_generic.02.green",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-mass-heal",
+      "label": "Mass Heal",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "mass-heal",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.burst.tealyellow",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-power-word-heal",
+      "label": "Power Word Heal",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "power-word-heal",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.burst.bluewhite",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-aid",
+      "label": "Aid",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "aid",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.yellow",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-revivify",
+      "label": "Revivify",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "revivify",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.loop.yellowwhite",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-false-life",
+      "label": "False Life",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "false-life",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.purple",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-heroism",
+      "label": "Heroism",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "heroism",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.bardic_inspiration.greenorange",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-bless",
+      "label": "Bless",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "bless",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.bless.200px.intro",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-shield",
+      "label": "Shield",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "shield",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shield.01.complete",
+        "options": {
+          "target": "source"
+        },
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-shield-of-faith",
+      "label": "Shield of Faith",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "shield-of-faith",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shield.02.complete",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-mage-armor",
+      "label": "Mage Armor",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "mage-armor",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shield.03.complete",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-sanctuary",
+      "label": "Sanctuary",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "sanctuary",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.ward.rune.yellow",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-haste",
+      "label": "Haste",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "haste",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.swirling_sparkles.01.yellow",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-fly",
+      "label": "Fly",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "fly",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.wind_lines.01.01.white",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-invisibility",
+      "label": "Invisibility",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "invisibility",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shimmer.01.blue",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-greater-invisibility",
+      "label": "Greater Invisibility",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "greater-invisibility",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shimmer.01.purple",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-light",
+      "label": "Light",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "light",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.dancing_light.yellow",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-dancing-lights",
+      "label": "Dancing Lights",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "dancing-lights",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.dancing_light.blueyellow",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-detect-magic",
+      "label": "Detect Magic",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "detect-magic",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.detect_magic.circle.blue",
+        "options": {
+          "target": "source"
+        },
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-guidance",
+      "label": "Guidance",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "guidance",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.condition.boon.01",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-divine-favor",
+      "label": "Divine Favor",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "divine-favor",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.divine_smite.caster.yellowwhite",
+        "options": {
+          "target": "source"
+        },
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-spiritual-weapon",
+      "label": "Spiritual Weapon",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "spiritual-weapon",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.spiritual_weapon.mace.spectral",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-misty-step",
+      "label": "Misty Step",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "misty-step",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.blue",
+        "options": {},
+        "triggers": ["cast"],
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.blue",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-dimension-door",
+      "label": "Dimension Door",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "dimension-door",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.purple",
+        "options": {},
+        "triggers": ["cast"],
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.purple",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-teleport",
+      "label": "Teleport",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "teleport",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.dark_purple",
+        "options": {},
+        "triggers": ["cast"],
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.dark_purple",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-fireball",
+      "label": "Fireball",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "fireball",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.fireball.explosion.orange",
+        "options": {},
+        "triggers": ["areaPlaced"],
+        "stages": {
+          "projectile": {
+            "animation": "jb2a.fireball.beam.orange",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-lightning-bolt",
+      "label": "Lightning Bolt",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "lightning-bolt",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.lightning_bolt.wide.blue",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-burning-hands",
+      "label": "Burning Hands",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "burning-hands",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.burning_hands.01.orange",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-cone-of-cold",
+      "label": "Cone of Cold",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "cone-of-cold",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.cone_of_cold.blue",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-color-spray",
+      "label": "Color Spray",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "color-spray",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.template_cone_5e.001.001.pinkyellow",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-fear",
+      "label": "Fear",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "fear",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.template_cone_5e.001.002.purplered",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-prismatic-spray",
+      "label": "Prismatic Spray",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "prismatic-spray",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.template_cone_5e.001.003.greenyellow",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-thunderwave",
+      "label": "Thunderwave",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "thunderwave",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.thunderwave.center.blue",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-shatter",
+      "label": "Shatter",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "shatter",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.shatter.blue",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-acid-splash",
+      "label": "Acid Splash",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "acid-splash",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.liquid.splash.green",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-moonbeam",
+      "label": "Moonbeam",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "moonbeam",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.moonbeam.01.complete",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-call-lightning",
+      "label": "Call Lightning",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "call-lightning",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.call_lightning.low_res.blue",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-wall-of-fire",
+      "label": "Wall of Fire",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "wall-of-fire",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.wall_of_fire.300x100.yellow",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-wall-of-force",
+      "label": "Wall of Force",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "wall-of-force",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.wall_of_force.vertical.blue",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-gust-of-wind",
+      "label": "Gust of Wind",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "gust-of-wind",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.gust_of_wind.default",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-sleep",
+      "label": "Sleep",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "sleep",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.sleep.cloud.01",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-web",
+      "label": "Web",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "web",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.web.01",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-entangle",
+      "label": "Entangle",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "entangle",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.entangle.green",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-grease",
+      "label": "Grease",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "grease",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.grease.dark_brown.loop",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-fog-cloud",
+      "label": "Fog Cloud",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "fog-cloud",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.fog_cloud.01.white",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-darkness",
+      "label": "Darkness",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "darkness",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.darkness.black",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-faerie-fire",
+      "label": "Faerie Fire",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "faerie-fire",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.fireflies.many.01.purple",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-stinking-cloud",
+      "label": "Stinking Cloud",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "stinking-cloud",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.fumes.toxic.green",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-cloudkill",
+      "label": "Cloudkill",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "cloudkill",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.fog_cloud.02.green",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-sleet-storm",
+      "label": "Sleet Storm",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "sleet-storm",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.sleet_storm.01.blue",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-ice-storm",
+      "label": "Ice Storm",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "ice-storm",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.ice_spikes.radial.burst.blue",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-spike-growth",
+      "label": "Spike Growth",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "spike-growth",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.plant_growth.02.round",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-black-tentacles",
+      "label": "Black Tentacles",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "black-tentacles",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.black_tentacles.dark_purple",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-flame-strike",
+      "label": "Flame Strike",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "flame-strike",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.fireball.explosion.yellow",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-circle-of-death",
+      "label": "Circle of Death",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "circle-of-death",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.explosion.01.purple",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-sunburst",
+      "label": "Sunburst",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "sunburst",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.explosion.01.yellow",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-meteor-swarm",
+      "label": "Meteor Swarm",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "meteor-swarm",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.fireball.explosion.dark_red",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-insect-plague",
+      "label": "Insect Plague",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "insect-plague",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.fumes.steam",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "spell-spirit-guardians",
+      "label": "Spirit Guardians",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "spirit-guardians",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.spirit_guardians.blueyellow.ring",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "spell-antilife-shell",
+      "label": "Antilife Shell",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "antilife-shell",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.antilife_shell.blue_with_circle",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "feature-bardic-inspiration",
+      "label": "Bardic Inspiration",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "bardic-inspiration"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.bardic_inspiration.greenorange",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "feature-lay-on-hands",
+      "label": "Lay on Hands",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "lay-on-hands"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.burst.yellowwhite",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "feature-second-wind",
+      "label": "Second Wind",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "second-wind"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.red",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "feature-sneak-attack",
+      "label": "Sneak Attack",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "sneak-attack"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.sneak_attack.dark_red",
+        "options": {},
+        "triggers": ["damage"]
+      }
+    },
+    {
+      "id": "feature-flurry-of-blows",
+      "label": "Flurry of Blows",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "flurry-of-blows"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.flurry_of_blows.physical.blue",
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "feature-volley",
+      "label": "Volley",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": ["volley", "hail-of-thorns"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "area",
+        "animation": "jb2a.volley_of_projectiles_Cone5e.arrow.001.001",
+        "options": {},
+        "triggers": ["areaPlaced"]
+      }
+    },
+    {
+      "id": "weapon-battleaxe",
+      "label": "Battleaxe",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "battleaxe"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.battleaxe",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-blowgun",
+      "label": "Blowgun",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "blowgun"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dart.01.throw",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-club",
+      "label": "Club",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "club"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.club.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-dagger",
+      "label": "Dagger",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "dagger"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.dagger.melee.02",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-dart",
+      "label": "Dart",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "dart"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dart.01.throw",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-flail",
+      "label": "Flail",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "flail"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.01.flail",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-glaive",
+      "label": "Glaive",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "glaive"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.glaive.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-greataxe",
+      "label": "Greataxe",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "greataxe"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.greataxe.melee.standard",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-greatclub",
+      "label": "Greatclub",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "greatclub"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.greatclub.standard.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-greatsword",
+      "label": "Greatsword",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "greatsword"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.greatsword.melee.standard",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-halberd",
+      "label": "Halberd",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "halberd"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.halberd.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-handaxe",
+      "label": "Handaxe",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "handaxe"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.handaxe.melee.standard",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-handcrossbow",
+      "label": "Hand Crossbow",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "handcrossbow"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bolt.physical.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-heavycrossbow",
+      "label": "Heavy Crossbow",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "heavycrossbow"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bolt.physical.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-javelin",
+      "label": "Javelin",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "javelin"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.spear.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-lance",
+      "label": "Lance",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "lance"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.spear.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-lightcrossbow",
+      "label": "Light Crossbow",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "lightcrossbow"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bolt.physical.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-lighthammer",
+      "label": "Light Hammer",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "lighthammer"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.hammer.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-longbow",
+      "label": "Longbow",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "longbow"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.arrow.physical.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-longsword",
+      "label": "Longsword",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "longsword"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.sword.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-mace",
+      "label": "Mace",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "mace"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.mace.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-maul",
+      "label": "Maul",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "maul"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.maul.melee.standard",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-morningstar",
+      "label": "Morningstar",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "morningstar"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.mace",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-musket",
+      "label": "Musket",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "musket"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.01.orange",
+        "options": {},
+        "triggers": ["attack"],
+        "stages": {
+          "cast": {
+            "animation": "jb2a.muzzle_flash.single.01",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "weapon-pike",
+      "label": "Pike",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "pike"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.halberd.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-pistol",
+      "label": "Pistol",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "pistol"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.02.orange",
+        "options": {},
+        "triggers": ["attack"],
+        "stages": {
+          "cast": {
+            "animation": "jb2a.muzzle_flash.single.01",
+            "options": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "weapon-quarterstaff",
+      "label": "Quarterstaff",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "quarterstaff"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.quarterstaff.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-rapier",
+      "label": "Rapier",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "rapier"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.rapier.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-scimitar",
+      "label": "Scimitar",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "scimitar"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.scimitar.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-shortsword",
+      "label": "Shortsword",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "shortsword"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.shortsword.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-sickle",
+      "label": "Sickle",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "sickle"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.01.sickle",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-spear",
+      "label": "Spear",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "spear"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.spear.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-shortbow",
+      "label": "Shortbow",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "shortbow"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.arrow.physical.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-sling",
+      "label": "Sling",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "sling"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.slingshot",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-trident",
+      "label": "Trident",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "trident"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.spiritual_weapon.trident.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-warpick",
+      "label": "War Pick",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "warpick"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.hammer",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-warhammer",
+      "label": "Warhammer",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "warhammer"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.warhammer.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-whip",
+      "label": "Whip",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "whip"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.01.flail",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-dagger-thrown",
+      "label": "Dagger (thrown)",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "dagger",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dagger.throw.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-dart-thrown",
+      "label": "Dart (thrown)",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "dart",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dart.01.throw",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-handaxe-thrown",
+      "label": "Handaxe (thrown)",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "handaxe",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.handaxe.throw.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-javelin-thrown",
+      "label": "Javelin (thrown)",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "javelin",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.javelin.01.throw",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-lighthammer-thrown",
+      "label": "Light Hammer (thrown)",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "lighthammer",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.hammer.throw",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-spear-thrown",
+      "label": "Spear (thrown)",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "spear",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spear.throw.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-trident-thrown",
+      "label": "Trident (thrown)",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "baseItem": "trident",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spear.throw.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "weapon-unarmed-strike",
+      "label": "Unarmed Strike",
+      "enabled": true,
+      "priority": 50,
+      "match": {
+        "key": ["unarmed-strike", "unarmed"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.physical.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "natural-claw",
+      "label": "Claws",
+      "enabled": true,
+      "priority": 40,
+      "match": {
+        "regex": "\\b(claw|claws|talon|talons)\\b",
+        "type": "weapon"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.claws.200px.red",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "natural-bite",
+      "label": "Bite",
+      "enabled": true,
+      "priority": 40,
+      "match": {
+        "regex": "\\b(bite|jaws|fangs|beak)\\b",
+        "type": "weapon"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.bite.200px.red",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "natural-slam",
+      "label": "Slam",
+      "enabled": true,
+      "priority": 40,
+      "match": {
+        "regex": "\\b(slam|fist|tentacle|tail|horn|horns|hooves|gore)\\b",
+        "type": "weapon"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_generic.creature_attack.fist",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-axe",
+      "label": "Axe",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "axe"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.battleaxe",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-bow",
+      "label": "Bow",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "bow"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.arrow.physical.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-brawling",
+      "label": "Brawling",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "brawling"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.physical.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-club",
+      "label": "Club",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "club"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.club",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-crossbow",
+      "label": "Crossbow",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "crossbow"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bolt.physical.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-dart",
+      "label": "Dart",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "dart"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dart.01.throw",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-firearm",
+      "label": "Firearm",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "firearm"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.01.orange",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-flail",
+      "label": "Flail",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "flail"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.01.flail",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-hammer",
+      "label": "Hammer",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "hammer"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.warhammer",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-knife",
+      "label": "Knife",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "knife"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.dagger.melee.02",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-pick",
+      "label": "Pick",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "pick"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.hammer",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-polearm",
+      "label": "Polearm",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "polearm"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.halberd.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-sling",
+      "label": "Sling",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "sling"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.slingshot",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-spear",
+      "label": "Spear",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "spear"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.spear.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-sword",
+      "label": "Sword",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "sword"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.sword.melee.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-axe-thrown",
+      "label": "Axe (thrown)",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "axe",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.handaxe.throw.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-hammer-thrown",
+      "label": "Hammer (thrown)",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "hammer",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.hammer.throw",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-knife-thrown",
+      "label": "Knife (thrown)",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "knife",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dagger.throw.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-spear-thrown",
+      "label": "Spear (thrown)",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "spear",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spear.throw.01",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-club-thrown",
+      "label": "Club (thrown)",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "club",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.boomerang.01.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "group-sword-thrown",
+      "label": "Sword (thrown)",
+      "enabled": true,
+      "priority": 10,
+      "match": {
+        "weaponGroup": "sword",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.sword.throw.white",
+        "options": {},
+        "triggers": ["attack"]
+      }
+    },
+    {
+      "id": "potion-healing",
+      "label": "Potions of Healing",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": [
+          "potion-of-healing",
+          "greater-potion-of-healing",
+          "superior-potion-of-healing",
+          "supreme-potion-of-healing",
+          "potion-of-greater-healing",
+          "potion-of-superior-healing",
+          "potion-of-supreme-healing"
+        ]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.red",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "potion-healing-generic",
+      "label": "Healing potions",
+      "enabled": true,
+      "priority": 20,
+      "match": {
+        "type": "consumable",
+        "traits": ["potion", "healing"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.red",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "fallback-healing",
+      "label": "Healing",
+      "enabled": true,
+      "priority": 5,
+      "match": {
+        "traits": ["healing"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.green",
+        "options": {},
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "effect-blessed",
+      "label": "Blessed",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["blessed", "bless"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.bless.200px.loop",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-imperceptible-barrier",
+      "label": "Shield (effect)",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["imperceptible-barrier", "shield"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.shield.01.loop",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-shimmering-field",
+      "label": "Shield of Faith (effect)",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["shimmering-field", "shield-of-faith"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.shield.02.loop",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-mage-armor",
+      "label": "Mage Armor (effect)",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["mage-armor"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.shield_themed.below.ice",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-hasted",
+      "label": "Hasted",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["hasted", "haste"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.swirling_sparkles.01.yellow",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-flight",
+      "label": "Flight",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["flight", "fly"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.wind_lines.01.01.white",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-hunters-mark",
+      "label": "Hunter's Mark (effect)",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["hunters-mark"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.hunters_mark.loop.01",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-warded",
+      "label": "Sanctuary (effect)",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["warded", "sanctuary"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.ward.rune.yellow",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-bravery",
+      "label": "Heroism (effect)",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["bravery", "heroism"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.token_border.circle.spinning.orange",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-outlined",
+      "label": "Faerie Fire (effect)",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["outlined", "faerie-fire"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.fireflies.few.01.purple",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-bane",
+      "label": "Bane (effect)",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["bane"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.condition.curse.01.001.purple",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "effect-rage",
+      "label": "Rage",
+      "enabled": true,
+      "priority": 90,
+      "match": {
+        "key": ["rage", "raging"],
+        "type": "effect"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.token_border.circle.static.dark_red",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-frightened",
+      "label": "Frightened",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "frightened",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.markers.fear.dark_purple",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-charmed",
+      "label": "Charmed",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "charmed",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.markers.heart.pink",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-stunned",
+      "label": "Stunned",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "stunned",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.dizzy_stars.200px.yellow",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-poisoned",
+      "label": "Poisoned",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "poisoned",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.markers.poison.dark_green",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-restrained",
+      "label": "Restrained",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "restrained",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.markers.chain.spike.loop",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-grappled",
+      "label": "Grappled",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "grappled",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.markers.chain.standard.loop",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-paralyzed",
+      "label": "Paralyzed",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "paralyzed",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.markers.chain.spectral_standard.loop",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-unconscious",
+      "label": "Unconscious",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "unconscious",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.sleep.symbol.dark_purple",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-deafened",
+      "label": "Deafened",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "deafened",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.markers.mute.blue",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    },
+    {
+      "id": "condition-cursed",
+      "label": "Cursed",
+      "enabled": true,
+      "priority": 80,
+      "match": {
+        "key": "cursed",
+        "type": ["condition", "effect"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "aura",
+        "animation": "jb2a.condition.curse.01.001.red",
+        "options": {},
+        "triggers": ["effectApplied"]
+      }
+    }
+  ]
+}

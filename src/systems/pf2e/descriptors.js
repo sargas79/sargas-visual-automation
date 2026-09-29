@@ -95,11 +95,15 @@ function weaponRange(item) {
   return null;
 }
 
+/** weapon/values.ts MANDATORY_RANGED_GROUPS: always ranged even when range data is missing. */
+const MANDATORY_RANGED_GROUPS = ["bomb", "bow", "crossbow", "firearm", "sling"];
+
 function weaponAttackKind(item, { altUsage } = {}) {
   const traits = traitsOf(item);
   if (altUsage === "thrown") return ATTACK_KINDS.THROWN;
   if (altUsage === "melee") return ATTACK_KINDS.MELEE;
-  const ranged = !!weaponRange(item);
+  const group = item.group ?? item.system?.group ?? null;
+  const ranged = !!weaponRange(item) || MANDATORY_RANGED_GROUPS.includes(group);
   if (!ranged) return ATTACK_KINDS.MELEE;
   // A ranged usage with the plain "thrown" trait (weapon thrown usage) or a "thrown-N" trait (NPC attack / thrown-only weapon)
   if (traits.some((t) => t === "thrown" || /^thrown-\d+$/.test(t))) return ATTACK_KINDS.THROWN;

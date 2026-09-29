@@ -1,0 +1,30 @@
+{
+  "name": "sargas-visual-automation",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Foundry VTT module that plays and automates JB2A animations without Sequencer or Automated Animations.",
+  "type": "module",
+  "license": "MIT",
+  "repository": "github:sargas79/sargas-visual-automation",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "link": "node tools/link-foundry.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.9",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}

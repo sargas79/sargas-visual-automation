@@ -1,1 +1,12 @@
-{}
+{
+  "SVA": {
+    "Engine": {
+      "Settings": {
+        "CacheSize": {
+          "Name": "Animation cache size",
+          "Hint": "How many animation files are kept loaded in memory. Higher values avoid reloading, lower values save memory."
+        }
+      }
+    }
+  }
+}

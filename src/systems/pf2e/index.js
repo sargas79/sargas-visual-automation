@@ -3,11 +3,17 @@
  * Targets the PF2e system for Foundry v14 (pf2e 8.x, verified against tag pf2e-8.5.1 of
  * https://github.com/foundryvtt/pf2e). See ./messages.js for the message → event table.
  */
+import { MODULE_ID } from "../../constants.js";
+import { EVENT_TYPES } from "../../shared/events.js";
 import { SystemAdapter } from "../../shared/adapter.js";
 import { describeItem, itemKey } from "./descriptors.js";
 import { eventFromMessage } from "./messages.js";
 import { eventFromRegion, eventFromTemplate, removalFromRegion } from "./areas.js";
 import { registerSheetControls } from "./sheet.js";
+import { EFFECT_ITEM_TYPES, eventFromEffectItem } from "./effects.js";
+
+/** World setting: animate PF2e conditions (effects are always animated). */
+export const SETTING_CONDITIONS = "pf2eConditionEvents";
 
 /** How many handled ids to remember for de-duplication. */
 const SEEN_LIMIT = 200;
@@ -36,7 +42,44 @@ export default class Pf2eAdapter extends SystemAdapter {
     this._on("createMeasuredTemplate", (doc, options, userId) =>
       this.onCreateArea(doc, options, userId, eventFromTemplate)
     );
+    // Effects & conditions embedded on actors
+    this._on("createItem", (item, options, userId) =>
+      this.onEffectItem(item, options, userId, EVENT_TYPES.EFFECT_APPLIED)
+    );
+    this._on("deleteItem", (item, options, userId) =>
+      this.onEffectItem(item, options, userId, EVENT_TYPES.EFFECT_REMOVED)
+    );
+    this._registerSettings();
     this._unregisterSheet = registerSheetControls(this.ctx?.api);
+  }
+
+  _registerSettings() {
+    const settings = game.settings;
+    if (!settings) return;
+    try {
+      settings.get(MODULE_ID, SETTING_CONDITIONS);
+      return; // already registered
+    } catch {
+      // not registered yet
+    }
+    // VERIFY(v14): register() runs on "ready"; registering a world setting this late works but it is only listed in
+    // the settings config after this point (fine: the dialog is opened later).
+    settings.register(MODULE_ID, SETTING_CONDITIONS, {
+      name: "SVA.Pf2e.Settings.ConditionEvents.Name",
+      hint: "SVA.Pf2e.Settings.ConditionEvents.Hint",
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: true
+    });
+  }
+
+  _conditionsEnabled() {
+    try {
+      return game.settings.get(MODULE_ID, SETTING_CONDITIONS) !== false;
+    } catch {
+      return true;
+    }
   }
 
   unregister() {
@@ -85,6 +128,13 @@ export default class Pf2eAdapter extends SystemAdapter {
     if (!this._isOwnAction(userId)) return;
     if (!this._markSeen(`area:${doc?.uuid ?? doc?.id}`)) return;
     this._emit(build(doc, { userId }));
+  }
+
+  onEffectItem(item, _options, userId, type) {
+    if (!EFFECT_ITEM_TYPES.includes(item?.type)) return;
+    if (!this._isOwnAction(userId)) return;
+    if (!this._markSeen(`${type}:${item.uuid ?? item.id}`)) return;
+    this._emit(eventFromEffectItem(item, type, { userId, conditions: this._conditionsEnabled() }));
   }
 
   getItemKey(item) {

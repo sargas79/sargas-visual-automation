@@ -27,11 +27,11 @@ system hooks ──► YourAdapter ──this.ctx.emit(event)──► api.autom
 
 Three shared files are your whole contract. Import them; never import anything else from SVA's `src/`:
 
-| File                     | What you use                                                                                                                                                                               |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `src/shared/adapter.js`  | `SystemAdapter`, the base class: `static id`, `static label`, `static isActive()`, `register()`, `unregister()`, `getItemKey(item)`, `getItemDescriptors(item)`, `rulePackUrl`, `this.ctx` |
-| `src/shared/events.js`   | `EVENT_TYPES`, `OUTCOMES`, `AREA_SHAPES`, `ATTACK_KINDS`, `createAutomationEvent`, and the `AutomationEvent` / `ItemDescriptors` typedefs                                                  |
-| `rules/<system-id>.json` | Your default rule pack (plain JSON)                                                                                                                                                        |
+| File                     | What you use                                                                                                                                                                                                   |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/shared/adapter.js`  | `SystemAdapter`, the base class: `static id`, `static label`, `static isActive()`, `static init(api)`, `register()`, `unregister()`, `getItemKey(item)`, `getItemDescriptors(item)`, `rulePackUrl`, `this.ctx` |
+| `src/shared/events.js`   | `EVENT_TYPES`, `OUTCOMES`, `AREA_SHAPES`, `ATTACK_KINDS`, `createAutomationEvent`, and the `AutomationEvent` / `ItemDescriptors` typedefs                                                                      |
+| `rules/<system-id>.json` | Your default rule pack (plain JSON)                                                                                                                                                                            |
 
 Rules for adapters:
 
@@ -57,6 +57,7 @@ export default class Dnd5eAdapter extends SystemAdapter {
 ```
 
 - `static isActive()` defaults to `game.system.id === this.id`. Override it only if you need to check a system version, for example `return super.isActive() && foundry.utils.isNewerVersion(game.system.version, "4.99")`.
+- Optional `static init(api)`: called once for **every** registered adapter class during Foundry's `init` (by the automation area; a class registered later is initialized as soon as it is registered). No instance exists yet. Register your system's settings here (keys prefixed with your system id, e.g. `dnd5eFoo`, optionally `svaGroup: "systems"`), and return early when `!this.isActive()` so other systems' worlds don't get them. The PF2e adapter registers `pf2eConditionEvents` this way.
 - The core constructs your class with `ctx = { api, emit }` on Foundry's `ready`, then calls `register()` once. `ctx.api` is the full SVA API; `ctx.emit` forwards events to the automation core and fills `systemId` for you.
 - Keep every hook id you register so `unregister()` can remove it (tests and hot reload call it). The template shows a `#on(hook, fn)` helper for this.
 
@@ -87,6 +88,7 @@ Returns `ItemDescriptors` (see `src/shared/events.js`). Start from `super.getIte
 | `traits`      | string[]                       | Lower-case tags rules can match: `"fire"`, `"cantrip"`, `"thrown"`, `"finesse"`, spell school…                                                                                 |
 | `attackKind`  | `ATTACK_KINDS` value or `null` | `melee`, `ranged` or `thrown`. Decides between the `melee` and `ranged` fallback presets.                                                                                      |
 | `weaponGroup` | string or `null`               | Normalized group/base weapon (`"sword"`, `"bow"`, `"axe"`, `"hammer"`, `"dagger"`…). Use the **same vocabulary as PF2e** where it exists so fallbacks and rules can be shared. |
+| `baseItem`    | string or `null`               | Base weapon/item this is a variant of (`"longsword"` for a +1 Striking Longsword or a named magic longsword). Rules match it with `match.baseItem`.                            |
 | `range`       | number or `null`               | In scene distance units.                                                                                                                                                       |
 | `area`        | `{ shape, size }` or `null`    | `shape` from `AREA_SHAPES` (`burst`, `cone`, `line`, `emanation`, `square`); `size` in scene units (radius for bursts/emanations, length for cones/lines).                     |
 | `damageTypes` | string[]                       | Lower-case (`"fire"`, `"cold"`, `"piercing"`). The generic fallback uses these to colour animations.                                                                           |
@@ -96,17 +98,18 @@ Returns `ItemDescriptors` (see `src/shared/events.js`). Start from `super.getIte
 
 Watch your system's hooks and call `this.ctx.emit(partialEvent)`. `createAutomationEvent` in `events.js` shows the defaults; you only need to set what you know.
 
-| Field         | Set it to                                                                                                                                    |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`        | One of `EVENT_TYPES`: `attack`, `damage`, `cast`, `save`, `healing`, `areaPlaced`, `effectApplied`, `effectRemoved`.                         |
-| `source`      | `{ tokenId, actorId }` of whoever acts (a token on the current scene if possible).                                                           |
-| `targets`     | `[{ tokenId, outcome? }]`. Per-target outcome when the system has one (attacks vs AC, saves per target).                                     |
-| `outcome`     | Overall `OUTCOMES` value: `criticalSuccess`, `success`, `failure`, `criticalFailure`, `none` (no roll).                                      |
-| `itemUuid`    | The item's UUID.                                                                                                                             |
-| `descriptors` | `this.getItemDescriptors(item)`. Fill it even though the core could look it up: the event must be self-contained.                            |
-| `area`        | For `areaPlaced` (and optionally area spells): `{ shape, origin: {x, y} (canvas px), direction (deg), distance, width?, documentUuid? }`.    |
-| `effectUuid`  | For `effectApplied` / `effectRemoved`: the effect's UUID.                                                                                    |
-| `userId`      | The user whose client produced the event. **Only that client runs automation**, and it broadcasts the result, so every animation plays once. |
+| Field         | Set it to                                                                                                                                          |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | Optional but recommended: a stable id of the occurrence, e.g. `` `${message.id}:${type}` ``. The core drops events whose `id` was already handled. |
+| `type`        | One of `EVENT_TYPES`: `attack`, `damage`, `cast`, `save`, `healing`, `areaPlaced`, `effectApplied`, `effectRemoved`.                               |
+| `source`      | `{ tokenId, actorId }` of whoever acts (a token on the current scene if possible).                                                                 |
+| `targets`     | `[{ tokenId, outcome? }]`. Per-target outcome when the system has one (attacks vs AC, saves per target).                                           |
+| `outcome`     | Overall `OUTCOMES` value: `criticalSuccess`, `success`, `failure`, `criticalFailure`, `none` (no roll).                                            |
+| `itemUuid`    | The item's UUID.                                                                                                                                   |
+| `descriptors` | `this.getItemDescriptors(item)`. Fill it even though the core could look it up: the event must be self-contained.                                  |
+| `area`        | For `areaPlaced` (and optionally area spells): `{ shape, origin: {x, y} (canvas px), direction (deg), distance, width?, documentUuid? }`.          |
+| `effectUuid`  | For `effectApplied` / `effectRemoved`: the effect's UUID.                                                                                          |
+| `userId`      | The user whose client produced the event. **Only that client runs automation**, and it broadcasts the result, so every animation plays once.       |
 
 ### Outcomes
 
@@ -128,6 +131,7 @@ Most systems fire hooks on every client (`createChatMessage`, `createItem`…). 
 - For rolls and chat cards: only when `message.author.id === game.user.id` (the roller).
 - For document changes (effects applied/removed, templates placed): only on the client that made the change (the `userId` argument of `create*`/`delete*` hooks), or on the active GM when the change came from the server.
 - Don't emit the same roll twice: if a system posts an attack card and then updates it with the result, emit on the update that has the result, once. The core also drops exact duplicates, but don't rely on it.
+- Give each event an `id` that identifies the occurrence, for example `` `${message.id}:${type}` `` or `` `${item.id}:effectApplied` ``. The core never plays two events with the same `id`, and two events with different ids always both play (two quick identical strikes). Without an `id`, identical events within 1 s are dropped.
 
 ### Which events to emit
 
@@ -175,8 +179,8 @@ Create `rules/<system-id>.json`. The adapter's `rulePackUrl` (default `modules/s
 }
 ```
 
-- `match` fields combine with AND: `key`, `name` (exact), `regex` (on the name), `type`, `traits` (all required), `attackKind`, `weaponGroup`.
-- Prefer `key` matches for specific spells and `weaponGroup`/`traits` matches for families. Give specific rules a higher `priority`.
+- `match` fields combine with AND: `key`, `name` (exact), `regex` (on the name), `type`, `traits` (all required), `attackKind`, `weaponGroup`, `baseItem`.
+- Prefer `key` matches for specific spells, `baseItem` for base weapons (it covers every variant) and `weaponGroup`/`traits` matches for families. Give specific rules a higher `priority`.
 - Use **real JB2A database paths** (check them in the animation browser) and prefer paths that exist in the free JB2A module too. For 5e, JB2A has 5e cone variants (`template_cone_5e`); for PF2e, `template_cone_PF2e`.
 - Recipe fields (`preset`, `animation`, `options`, `stages`, `outcomes`, `sound`, `triggers`) are documented in [api.md](api.md#svaautomation-and-svasystems) and `docs/architecture.md`.
 

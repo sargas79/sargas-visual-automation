@@ -100,7 +100,7 @@ api.sequence()                         // → SequenceBuilder
      .scale(n).scaleToObject(n).size(w, h, {gridUnits}).rotate(deg).mirrorX().mirrorY().opacity(n).tint(hex)
      .fadeIn(ms, {ease}).fadeOut(ms, {ease}).scaleIn(v, ms, {ease}).scaleOut(v, ms, {ease})
      .duration(ms).playbackRate(r).startTime(ms).endTime(ms).delay(ms).layer(name).zIndex(n)
-     .missed(bool).returnTrip(bool).persist(bool).name(tag).forUsers(ids)
+     .missed(bool).returnTrip(bool).persist(bool).essential(bool).name(tag).forUsers(ids)
      .waitUntilFinished(offsetMs = 0)
   .wait(ms)
   .sound(file, { volume, delay })
@@ -127,6 +127,7 @@ api.playSequence(descriptor, { broadcast = true })  // Promise<void>
 
 ```js
 api.systems.register(AdapterClass); // built-ins come from src/systems/index.js BUILTIN_ADAPTERS
+api.systems.initAll(); // automation init: calls every class's optional static init(api) once
 api.systems.active; // the active SystemAdapter instance | null
 api.systems.list(); // registered adapter classes
 
@@ -155,7 +156,7 @@ Recipe = {
   sound?: { file, volume, delay },
   triggers?: ["attack", "damage", "cast", "save", "healing", "areaPlaced", "effectApplied"] // default per preset
 }
-Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, traits?, attackKind?, weaponGroup? }, recipe }
+Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, traits?, attackKind?, weaponGroup?, baseItem? }, recipe }
 RulePack (rules/<system>.json) = { system, version: 1, rules: Rule[] }
 ```
 
@@ -189,7 +190,8 @@ These were added while the areas were built, and are part of the contract from n
 
 - **API root:** `SVA.SystemAdapter`, `SVA.LAYERS`, `SVA.EVENT_TYPES`, `SVA.OUTCOMES`, `SVA.AREA_SHAPES`, `SVA.ATTACK_KINDS`. Third-party adapters extend `SVA.SystemAdapter`.
 - **db:**
-  - `api.db.findThumbnail(pathOrFile)` (async, probes candidate names). JB2A doesn't list thumbnails, so `thumbnail` is a best guess.
+  - `api.db.findThumbnail(pathOrFile)` (async): answers from the thumbnail index when it is ready, else probes candidate names.
+  - `api.db.thumbnails` (#67): `{status, ready, count, find(file), build({force}), clearCache()}`. JB2A doesn't list its thumbnails, so after the catalog loads the JB2A `Library` folder is walked once with the FilePicker (`data` or `s3`), cached in the browser's localStorage per JB2A version and install location, and videos are matched to thumbnails by normalized name (`src/db/thumbnail-index.js`). `thumbnail` comes from the index when it is ready (then `null` means none exists), otherwise it is the name guess. The animation browser captures a video frame for cards without a thumbnail and shows placeholder art when that fails too.
   - `CatalogEntry.label` and `CatalogEntry.distances` (on distance groups); `ResolvedFile.template.name`.
   - `resolve(path, {distance, gridDistance})`.
   - `search` returns distance groups rather than each `05ft`/`15ft`/… variant.
@@ -203,22 +205,22 @@ These were added while the areas were built, and are part of the contract from n
   - `api.effects.store(sequence)` (called by `playSequence`).
   - `api.net.off`, `api.net.preload(files)`, `api.net.prefs`.
   - Ending a stored effect is driven by the scene flag update; `end`/`endAll` also broadcast `end` so unstored named effects end everywhere.
-  - Reduced motion skips `screen`-layer effects and drops `returnTrip`, `scaleIn` and `scaleOut`; persistent effects are always kept.
+  - Reduced motion (#66): persistent effects are always kept; `EffectDescriptor.essential: true` effects are kept unchanged and `essential: false` effects are skipped. Only effects that don't set `essential` use the fallback heuristic: skip `screen`-layer effects and drop `returnTrip`, `scaleIn` and `scaleOut`. Builder: `.essential(bool = true)` (`null` clears it). Automation presets mark the effects that convey the result (attack / projectile including misses, onToken, area, impact, onTarget) essential, and cast / onSource not.
 - **automation:**
   - World rules are stored as `{version: 1, rules: []}`.
   - `explain(item, opts)` returns a trace `{descriptors, disabled, result, candidates[{source, ruleId, label, priority, matched, reasons[]}], reasons}`, where `result` is the `resolveRecipe` shape.
   - `setItemRecipe(item, null)` clears the item recipe; `rules.importJSON` accepts a string or an object; `rules.exportJSON` returns a string.
   - Extras: `api.automation.schema`, `reloadRulePack`, `isItemDisabled`, `rules.all/systemRules/setSystemRules`.
-  - Duplicate events are dropped within 1 s.
+  - Duplicate events: an event with an `id` is dropped when that id was already handled (the last 500 ids are remembered); an event without an `id` is dropped when an identical one arrived within 1 s.
 - **events:**
   - `area.origin` is the centre for burst/emanation/square and the apex for cone/line; `area.angle` (degrees) for cones.
   - Adapters include at least `descriptors.key` on `effectRemoved`, because the item is usually already deleted.
-  - `ItemDescriptors.baseItem` (PF2e weapons).
+  - Optional `AutomationEvent.id`: a stable id of the occurrence (PF2e: `<messageId>:<type>`, `<regionId>:<type>`, `<effectItemUuid>:<type>`), used for de-duplication.
+  - `ItemDescriptors.baseItem` (PF2e weapons), matched by `Rule.match.baseItem` (specificity between `name` and `regex`).
+- **teleport:** the `teleport` preset moves the source token between the vanish and the appear (on the automation client): destination = `event.area.origin` → `options.destination` → a canvas click (`options.pickDestination`); `options.moveToken: false` keeps animation only. The GM updates the token with `animate: false`; players send `teleportMove` `{requestId, sceneId, tokenId, x, y}` over `api.net`, the active GM applies it when the sender owns the token and answers `teleportMoved` `{requestId, ok, reason?}` (types added through `api.net.on/emit`, protocol `v: 1` unchanged). `api.automation.teleport.{moveToken, pickCanvasPoint}`.
+- **systems:** optional `static init(api)` on `SystemAdapter`, called once per registered class during the automation area's `init` (immediately for classes registered later), active or not. Adapters register their settings there; PF2e registers `pf2eConditionEvents`.
 - **ui:** `api.ui.openSettings()`. Settings may declare `svaGroup` to choose their group in the SVA settings panel.
 
 ### Open follow-ups
 
-- An optional `AutomationEvent.id` (for example the chat message id), to replace the 1 s duplicate window.
-- `Rule.match.baseItem`.
-- An optional `essential` flag on effects, for reduced motion.
-- A static adapter `init()` hook, so adapters can register settings during `init` (PF2e currently registers on `ready`).
+None. New ones are tracked as GitHub issues.

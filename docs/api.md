@@ -123,6 +123,7 @@ Setters mirror the fields of an `EffectDescriptor` (see `src/shared/descriptors.
 | `.missed(bool)`                                    | Land beside the target instead of on it (with `stretchTo`).                                                                                                                               |
 | `.returnTrip(bool)`                                | After a stretched effect, play it back to the source (thrown weapons).                                                                                                                    |
 | `.persist(bool)`                                   | Keep until ended. Loops using JB2A's `_markers` (intro → loop → outro on end) and is [stored in the scene](#svaeffects---persistent-effects).                                             |
+| `.essential(bool = true)`                          | Reduced motion: `true` always plays it unchanged, `false` skips it; `null` clears it. Unset effects use the fallback (skip `screen` layer, drop `returnTrip`/`scaleIn`/`scaleOut`).       |
 | `.name(tag)`                                       | Tag used to find and end effects.                                                                                                                                                         |
 | `.forUsers(ids)`                                   | Only these user ids see it (empty = everyone).                                                                                                                                            |
 | `.waitUntilFinished(offsetMs = 0)`                 | The sequence waits for this effect to end before the next step. A negative offset continues that many ms **before** the end (good for overlapping intro → loop).                          |
@@ -213,7 +214,7 @@ SequenceDescriptor = {
 
 Anchors inside a descriptor are always normalized to `{ tokenId }` or `{ x, y }`. The full field list is the JSDoc of `EffectDescriptor` in `src/shared/descriptors.js`.
 
-**Permissions:** before broadcasting, SVA checks the world setting "minimum role to trigger". A user below it gets a warning and nothing is sent. Clients that disabled effects, or reduced motion, filter what they render locally.
+**Permissions:** before broadcasting, SVA checks the world setting "minimum role to trigger". A user below it gets a warning and nothing is sent. Clients that disabled effects, or reduced motion, filter what they render locally. With reduced motion, mark effects that carry information (hits, misses, impacts) with `.essential()` and decorative ones with `.essential(false)`.
 
 ## `SVA.effects` - persistent effects
 
@@ -325,6 +326,11 @@ SVA.automation.rules.exportJSON();
 await SVA.automation.rules.importJSON(json);
 
 SVA.automation.presets; // { melee, ranged, onToken, area, aura, teleport } with labels and option schemas
+
+// Teleport helpers used by the teleport preset.
+const point = await SVA.automation.teleport.pickCanvasPoint(); // {x, y} canvas px, or null (right-click/Escape)
+await SVA.automation.teleport.moveToken({ sceneId, tokenId, x, y }); // top-left px, no slide; players go through the GM
+// → { ok: true } | { ok: false, reason: "noGM" | "denied" | "missing" | "invalid" | "failed" }
 
 // Feed an event yourself (e.g. from a module for a system without an adapter).
 SVA.automation.handle({

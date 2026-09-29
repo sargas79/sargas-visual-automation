@@ -48,6 +48,8 @@ export const ATTACK_KINDS = Object.freeze({
  * @property {string[]} traits          Lower-case traits/tags ("fire", "thrown", "cantrip"...).
  * @property {string|null} attackKind   One of ATTACK_KINDS or null.
  * @property {string|null} weaponGroup  Normalized weapon group/base ("sword", "bow", "axe"...) or null.
+ * @property {string|null} [baseItem]   Base weapon/item the item is a variant of ("longsword" for a +1 Striking
+ *                                      Longsword or a named magic longsword), or null. Rules match it with `match.baseItem`.
  * @property {number|null} range        In scene distance units.
  * @property {{shape: string, size: number}|null} area  Shape from AREA_SHAPES, size in scene distance units.
  * @property {string[]} damageTypes     Lower-case ("fire", "cold", "piercing"...).
@@ -56,6 +58,9 @@ export const ATTACK_KINDS = Object.freeze({
 
 /**
  * @typedef {object} AutomationEvent
+ * @property {string|null} [id]         Stable id of the occurrence (e.g. "<chatMessageId>:attack"). When present the core
+ *                                      drops any later event with the same id; without it, identical events within a
+ *                                      short time window are dropped instead.
  * @property {string} type              One of EVENT_TYPES.
  * @property {string} systemId          Adapter id that produced it.
  * @property {{tokenId: string|null, actorId: string|null}|null} source
@@ -76,6 +81,7 @@ export function createAutomationEvent(partial) {
     throw new Error(`Unknown automation event type: ${partial?.type}`);
   }
   return {
+    id: null,
     systemId: null,
     source: null,
     targets: [],

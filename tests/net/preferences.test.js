@@ -74,6 +74,17 @@ describe("client preferences", () => {
     expect(applyReducedMotion(aura)).toBe(aura);
   });
 
+  it("reduced motion honours the essential flag (#66)", async () => {
+    await game.settings.set(MODULE_ID, NET_SETTINGS.REDUCED_MOTION, true);
+    const essential = { id: "a", essential: true, layer: "screen", returnTrip: true };
+    expect(filterEffect(essential)).toBe(essential);
+    expect(filterEffect({ id: "b", essential: false })).toBeNull();
+    const aura = { id: "c", persist: true, essential: false };
+    expect(filterEffect(aura)).toBe(aura);
+    await game.settings.set(MODULE_ID, NET_SETTINGS.REDUCED_MOTION, false);
+    expect(filterEffect({ id: "d", essential: false })).toEqual({ id: "d", essential: false });
+  });
+
   it("clamps the volume", async () => {
     await game.settings.set(MODULE_ID, NET_SETTINGS.VOLUME, 3);
     expect(getVolume()).toBe(1);

@@ -132,7 +132,7 @@ Place a Tile under Fighter first.
 | 6.4 | [ ] Console on GM: `SVA.sequence().effect().file("jb2a.explosion.01.orange").atLocation(token).forUsers([game.user.id])` then play | Only the GM sees it.                                                                                          |
 | 6.5 | [ ] Set "minimum role to trigger" to **Trusted Player**, Player runs the macro.                                                    | Nothing is broadcast; the player gets a permission warning. GM sees nothing. Reset the setting to **Player**. |
 | 6.6 | [ ] On the Player client, turn on the client setting **disable effects**. GM plays an effect.                                      | **Player sees nothing**; GM sees it. Automation still broadcasts for others.                                  |
-| 6.7 | [ ] On the Player client, turn on **reduced motion** instead.                                                                      | Non-essential effects (auras, ambient loops, screen effects) are skipped; attack/impact effects still play.   |
+| 6.7 | [ ] On the Player client, turn on **reduced motion** instead.                                                                      | Decorative effects (cast, screen effects) are skipped; hits, misses, impacts and auras still show.            |
 | 6.8 | [ ] Set the Player's effect **volume** to 0, play a macro with a sound.                                                            | Player hears nothing; GM hears the sound.                                                                     |
 | 6.9 | [ ] Console on Player: `SVA.engine.preload(["jb2a.fireball.explosion.orange"])`                                                    | Resolves; a later Fireball starts without a visible loading pause.                                            |
 
@@ -187,17 +187,21 @@ Roll everything from the **Player** client unless noted, with the named tokens s
 
 ### 8.3 Effects, auras, healing, multi-target
 
-| #     | Check                                                                            | Expected result                                                     |
-| ----- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 8.3.1 | [ ] Cast **Bless** (effect applied to Caster).                                   | Persistent aura on Caster, sized to the emanation, on both clients. |
-| 8.3.2 | [ ] Reload both clients.                                                         | The Bless aura is restored.                                         |
-| 8.3.3 | [ ] Remove the Bless effect from the actor.                                      | The aura ends on both clients; its name was `aura:<actorId>:bless`. |
-| 8.3.4 | [ ] Cast the **Shield** cantrip, then let the effect expire / remove it.         | Shield starts and stops with the effect.                            |
-| 8.3.5 | [ ] Apply a condition (e.g. Frightened) with condition markers enabled/disabled. | Marker only when the setting is on.                                 |
-| 8.3.6 | [ ] **Heal** (1 action) on Fighter; **Heal** 3-action burst on several allies.   | Healing animation on each healed token.                             |
-| 8.3.7 | [ ] **Battle Medicine** and **Healing Potion**.                                  | Healing animation on the healed token.                              |
-| 8.3.8 | [ ] Strike or spell with **3 targets** selected.                                 | One sequence per target with a small stagger.                       |
-| 8.3.9 | [ ] Area spell with 3 tokens inside the area.                                    | Area animation once, plus an impact on each token inside.           |
+| #      | Check                                                                               | Expected result                                                                                                                     |
+| ------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 8.3.1  | [ ] Cast **Bless** (effect applied to Caster).                                      | Persistent aura on Caster, sized to the emanation, on both clients.                                                                 |
+| 8.3.2  | [ ] Reload both clients.                                                            | The Bless aura is restored.                                                                                                         |
+| 8.3.3  | [ ] Remove the Bless effect from the actor.                                         | The aura ends on both clients; its name was `aura:<actorId>:bless`.                                                                 |
+| 8.3.4  | [ ] Cast the **Shield** cantrip, then let the effect expire / remove it.            | Shield starts and stops with the effect.                                                                                            |
+| 8.3.5  | [ ] Apply a condition (e.g. Frightened) with condition markers enabled/disabled.    | Marker only when the setting is on.                                                                                                 |
+| 8.3.6  | [ ] **Heal** (1 action) on Fighter; **Heal** 3-action burst on several allies.      | Healing animation on each healed token.                                                                                             |
+| 8.3.7  | [ ] **Battle Medicine** and **Healing Potion**.                                     | Healing animation on the healed token.                                                                                              |
+| 8.3.8  | [ ] Strike or spell with **3 targets** selected.                                    | One sequence per target with a small stagger.                                                                                       |
+| 8.3.9  | [ ] Area spell with 3 tokens inside the area.                                       | Area animation once, plus an impact on each token inside.                                                                           |
+| 8.3.10 | [ ] GM: cast **Translocate** from Caster, click a free square.                      | "Click the destination" notice; vanish on Caster, the token jumps (no slide) to the clicked square, appear there - on both clients. |
+| 8.3.11 | [ ] Player client: cast **Translocate** with the player's own token (GM connected). | Same as 8.3.10; the GM applies the move.                                                                                            |
+| 8.3.12 | [ ] Player: cast it again, right-click (or Escape) instead of clicking.             | "Teleport cancelled"; nothing plays, the token stays.                                                                               |
+| 8.3.13 | [ ] Player: cast it with no GM connected.                                           | Vanish plays, warning "No GM is connected", the token stays.                                                                        |
 
 ## 9. UI
 
@@ -205,12 +209,16 @@ Roll everything from the **Player** client unless noted, with the named tokens s
 | ---- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | 9.1  | [ ] Open the **Animation browser** (`SVA.ui.openBrowser()` or its toolbar/settings button).     | Tree + search + thumbnail grid.                                                                 |
 | 9.2  | [ ] Search "fire bolt", hover a thumbnail.                                                      | Hover plays a video preview.                                                                    |
+| 9.2a | [ ] First browser use after installing JB2A: console "Indexed N JB2A thumbnails"; reload.       | N ≈ 6600 (Patreon 0.9.3); no new walk after the reload (cached).                                |
+| 9.2b | [ ] Browse `jb2a.template_circle` (many animations without a JB2A thumbnail).                   | Cards get a captured frame when visible; failures show "No preview".                            |
 | 9.3  | [ ] Find `jb2a.shield.01.complete.01.blue` in < 3 clicks, **Copy path**.                        | Clipboard contains the dot path.                                                                |
 | 9.4  | [ ] **Play on selected token**.                                                                 | Plays on the selected token.                                                                    |
 | 9.5  | [ ] Add and remove a favourite, reopen the window.                                              | Favourites persist.                                                                             |
 | 9.6  | [ ] Open a PF2e item sheet (longsword): header control **Animation**.                           | Opens the item config.                                                                          |
 | 9.7  | [ ] Pick a preset, a JB2A path (via the browser picker), a colour, per-outcome overrides; save. | Next Strike uses the new animation **without reload**.                                          |
 | 9.8  | [ ] **Preview** button with a token selected and one targeted.                                  | Plays locally only.                                                                             |
+| 9.8a | [ ] Item config open on two clients (GM + Player owner); save a new animation on one.           | The other editor reloads it; with unsaved edits it shows the Reload / Keep notice.              |
+| 9.8b | [ ] Sound section: click the file button next to **Sound file**, pick an audio file.            | Foundry file browser (audio only); the path lands in the field.                                 |
 | 9.9  | [ ] **Rules manager**: add, edit, disable, delete a world rule.                                 | Changes apply immediately.                                                                      |
 | 9.10 | [ ] Rules manager "which rule matches" for an item.                                             | Same answer as `SVA.automation.explain(item)`.                                                  |
 | 9.11 | [ ] **Export** rules, delete them all, **Import** the file.                                     | Rules are identical after the round-trip.                                                       |

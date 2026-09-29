@@ -22,7 +22,7 @@ import {
   ruleToFormModel,
   toExportText
 } from "../models/rules-model.js";
-import { getPresets, pickAnimationInto, renderRecipeForm } from "./recipe-editor.js";
+import { getPresets, pickAnimationInto, pickFileInto, renderRecipeForm } from "./recipe-editor.js";
 
 export const EXPORT_FILENAME = "sva-world-rules.json";
 
@@ -68,6 +68,7 @@ export function getRulesManagerClass() {
         exportRules: SvaRulesManager.#onExport,
         importRules: SvaRulesManager.#onImportClick,
         pickAnimation: SvaRulesManager.#onPickAnimation,
+        pickSound: SvaRulesManager.#onPickSound,
         clearTest: SvaRulesManager.#onClearTest
       }
     };
@@ -261,6 +262,12 @@ export function getRulesManagerClass() {
 
     static #onPickAnimation(_event, target) {
       pickAnimationInto(this.element, target.dataset.target);
+    }
+
+    static #onPickSound(_event, target) {
+      if (!pickFileInto(this.element, target.dataset.target, { type: "audio" })) {
+        notify("warn", "SVA.UI.Recipe.NoFilePicker");
+      }
     }
 
     static #onClearTest() {

@@ -70,14 +70,14 @@ SVA.automation.explain(item);
 
 A recipe picks a **preset** and a JB2A animation:
 
-| Preset     | Used for                                                          | Plays                                                                |
-| ---------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `melee`    | Melee strikes, unarmed and natural attacks                        | A swing from the attacker onto each target                           |
-| `ranged`   | Bows, crossbows, thrown weapons, spell attacks, rays, projectiles | A projectile from the source to each target, scaled to the distance  |
-| `onToken`  | Save spells, buffs, healing                                       | An effect on each target (or on the caster)                          |
-| `area`     | Bursts, cones, lines and emanations                               | An animation fitted to the placed template / area                    |
-| `aura`     | Effects and conditions that last                                  | A persistent looping effect on the token until the effect is removed |
-| `teleport` | Misty Step and similar                                            | A vanish at the start and an appear at the destination               |
+| Preset     | Used for                                                          | Plays                                                                                 |
+| ---------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `melee`    | Melee strikes, unarmed and natural attacks                        | A swing from the attacker onto each target                                            |
+| `ranged`   | Bows, crossbows, thrown weapons, spell attacks, rays, projectiles | A projectile from the source to each target, scaled to the distance                   |
+| `onToken`  | Save spells, buffs, healing                                       | An effect on each target (or on the caster)                                           |
+| `area`     | Bursts, cones, lines and emanations                               | An animation fitted to the placed template / area                                     |
+| `aura`     | Effects and conditions that last                                  | A persistent looping effect on the token until the effect is removed                  |
+| `teleport` | Misty Step, Translocate and similar                               | A vanish, the token moves to the destination (click it on the canvas), then an appear |
 
 Recipes can add **stages** (`cast` on the caster, `projectile`, `impact`, `onSource`, `onTarget`) and **per-outcome overrides**: a different animation on a critical hit, a miss that lands beside the target, no impact on a failure, and so on.
 
@@ -95,9 +95,11 @@ Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condi
 2. **Animation**: type a JB2A path or click the picker to choose one in the animation browser. Pick a **colour** variant if the animation has several.
 3. **Options**: scale, layer, delay, and the preset's own options.
 4. **Outcomes**: optional overrides for critical success, success, failure and critical failure.
-5. **Stages**: optional cast, projectile, impact, on-source and on-target animations.
+5. **Stages**: optional cast, projectile, impact, on-source and on-target animations. Under **Sound**, the file button opens Foundry's file browser to pick an audio file.
 6. **Preview**: select a token and target others, then click Preview. Only you see the preview.
 7. **Save**. The next use of the item plays the new animation, no reload needed.
+
+If the item is changed elsewhere while the window is open (another user, a macro), the editor reloads it. When you have unsaved edits it keeps them and asks instead: **Reload** discards your edits, **Keep my edits** lets you save over the other change.
 
 Tick **Disable automation** to silence an item. Click **Reset** to remove the item's own recipe and go back to the rules.
 
@@ -109,13 +111,13 @@ The recipe is stored in the item's flags, so it travels with the item when you c
 
 A world rule matches items and gives them a recipe. Use rules to change the default animation of many items at once (all fire spells, all bows, one spell by its slug).
 
-| Field    | Meaning                                                                                                                                                                                                        |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Label    | Your name for the rule.                                                                                                                                                                                        |
-| Enabled  | Disabled rules are ignored.                                                                                                                                                                                    |
-| Priority | Higher wins when several world rules match.                                                                                                                                                                    |
-| Match    | Any combination of: **key** (PF2e slug, e.g. `electric-arc`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**. |
-| Recipe   | Same editor as the item configuration.                                                                                                                                                                         |
+| Field    | Meaning                                                                                                                                                                                                                                                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Label    | Your name for the rule.                                                                                                                                                                                                                                                   |
+| Enabled  | Disabled rules are ignored.                                                                                                                                                                                                                                               |
+| Priority | Higher wins when several world rules match.                                                                                                                                                                                                                               |
+| Match    | Any combination of: **key** (PF2e slug, e.g. `electric-arc`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**, **base item** (e.g. `longsword`: every longsword variant). |
+| Recipe   | Same editor as the item configuration.                                                                                                                                                                                                                                    |
 
 - **Which rule matches?** Drop an item on the manager (or pick one) to see the winning recipe and every candidate.
 - **Export** saves all world rules to a JSON file; **Import** loads such a file (share rule sets between worlds). Rules round-trip without changes.
@@ -126,7 +128,7 @@ A world rule matches items and gives them a recipe. Use rules to change the defa
 Open it from the **Animation browser** button in the module settings (and in the item configuration's animation picker). With a macro: `SVA.ui.openBrowser()`.
 
 - Browse the JB2A tree on the left or **search** by name.
-- Thumbnails show every animation; **hover** one to preview the video.
+- Thumbnails show every animation; **hover** one to preview the video. JB2A's own thumbnails are indexed the first time the browser is used after installing or updating JB2A (a few seconds, in the background, then cached in your browser). Animations without one get a preview frame captured from the video when they scroll into view; if that isn't possible (for example JB2A on S3 without CORS), a "No preview" placeholder is shown.
 - **Copy path** copies the database path (`jb2a.fire_bolt.orange`) for macros and recipes.
 - **Play on selected token** plays it on the selected token (and to the target, for projectiles).
 - **Favourites** keep the animations you use most at the top.
@@ -146,7 +148,7 @@ Settings live in **Game Settings → Configure Settings → Sargas Visual Automa
 | Minimum role to trigger | World  | Users below this role can't broadcast animations (automation or macros).                           |
 | Max concurrent effects  | Client | Upper limit of effects on screen at once, to protect slower machines.                              |
 | Disable effects         | Client | You see no SVA animations at all. Other players are unaffected.                                    |
-| Reduced motion          | Client | Skip non-essential effects (auras, ambient loops, screen effects); attacks and impacts still play. |
+| Reduced motion          | Client | Skip decorative effects (cast, screen effects); hits, misses, areas, impacts and auras still play. |
 | Volume                  | Client | Volume of SVA sounds on your machine.                                                              |
 | Condition markers       | World  | Show JB2A markers for conditions (PF2e).                                                           |
 | Debug logging           | Client | Detailed logs in the browser console (F12), including why a recipe matched.                        |

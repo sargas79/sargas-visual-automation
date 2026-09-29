@@ -11,6 +11,7 @@ import {
   targetedTokens,
   templatePath
 } from "../context.js";
+import { frameCapture } from "../frame-capture.js";
 import {
   breadcrumbs,
   createChildCache,
@@ -101,6 +102,8 @@ export function getBrowserClass() {
     #children = null;
     #root = ROOT;
     #searchTimer = null;
+    #thumbObserver = null;
+    #awaitingThumbnails = false;
 
     get title() {
       return this.onPick ? t("SVA.UI.Browser.PickTitle") : super.title;
@@ -172,6 +175,12 @@ export function getBrowserClass() {
         pickMode: !!this.onPick,
         resolveThumbnail: (p) => db.resolve?.(p)?.thumbnail ?? null
       });
+      // Frames captured earlier this session stand in for missing thumbnails.
+      const captured = frameCapture();
+      for (const card of context.cards) {
+        if (card.isLeaf && !card.thumbnail) card.thumbnail = captured.peek(card.path) ?? null;
+      }
+      this.#refreshWhenIndexed(db);
       context.pager = {
         hasPrev: page.hasPrev,
         hasNext: page.hasNext,
@@ -197,6 +206,7 @@ export function getBrowserClass() {
           }, SEARCH_DEBOUNCE_MS);
         });
       }
+      this.#watchThumbnails(root);
       for (const card of root.querySelectorAll(".sva-card")) {
         if (card.dataset.svaBound) continue;
         card.dataset.svaBound = "1";
@@ -211,6 +221,83 @@ export function getBrowserClass() {
           else SvaAnimationBrowser.#onPlay.call(this, event, card);
         });
       }
+    }
+
+    /** Re-render the grid once a thumbnail index that is being built is ready. */
+    #refreshWhenIndexed(db) {
+      const thumbnails = db?.thumbnails;
+      if (thumbnails?.status !== "building" || this.#awaitingThumbnails) return;
+      this.#awaitingThumbnails = true;
+      Promise.resolve(thumbnails.ready).then((ok) => {
+        this.#awaitingThumbnails = false;
+        if (ok && this.rendered) this.render({ parts: ["grid"] });
+      });
+    }
+
+    /**
+     * Cards without a thumbnail (or whose thumbnail fails to load) get a captured
+     * video frame once they scroll into view; the placeholder stays otherwise.
+     */
+    #watchThumbnails(root) {
+      this.#thumbObserver?.disconnect();
+      this.#thumbObserver = null;
+      const grid = root.querySelector(".sva-grid");
+      if (!grid) return;
+      const missing = [];
+      for (const card of grid.querySelectorAll(".sva-card-leaf")) {
+        const img = card.querySelector(".sva-card-media img");
+        if (!img) {
+          missing.push(card);
+          continue;
+        }
+        if (img.dataset.svaWatched) continue;
+        img.dataset.svaWatched = "1";
+        img.addEventListener(
+          "error",
+          () => {
+            img.remove();
+            this.#captureCard(card);
+          },
+          { once: true }
+        );
+      }
+      if (!missing.length) return;
+      if (typeof IntersectionObserver !== "function") {
+        for (const card of missing) this.#captureCard(card);
+        return;
+      }
+      this.#thumbObserver = new IntersectionObserver(
+        (entries, observer) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            observer.unobserve(entry.target);
+            this.#captureCard(entry.target);
+          }
+        },
+        { root: grid, rootMargin: "150px" }
+      );
+      for (const card of missing) this.#thumbObserver.observe(card);
+    }
+
+    async #captureCard(card) {
+      const media = card.querySelector(".sva-card-media");
+      const path = card.dataset.path;
+      if (!media || !path || media.querySelector("img")) return;
+      let file = null;
+      try {
+        file = getApi()?.db?.resolve?.(path)?.file ?? null;
+      } catch (err) {
+        log.debug("Thumbnail resolve failed", err);
+      }
+      if (!file) return media.classList.add("sva-thumb-none");
+      media.classList.add("sva-thumb-pending");
+      const url = await frameCapture().capture(path, file);
+      media.classList.remove("sva-thumb-pending");
+      if (!card.isConnected || media.querySelector("img")) return;
+      if (!url) return media.classList.add("sva-thumb-none");
+      const img = document.createElement("img");
+      Object.assign(img, { src: url, alt: "" });
+      media.prepend(img);
     }
 
     /** Hover preview: swap the thumbnail for a muted looping video. */
@@ -244,6 +331,8 @@ export function getBrowserClass() {
 
     async close(options) {
       clearTimeout(this.#searchTimer);
+      this.#thumbObserver?.disconnect();
+      this.#thumbObserver = null;
       if (sharedBrowser === this) sharedBrowser = null;
       return super.close(options);
     }

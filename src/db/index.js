@@ -9,6 +9,7 @@ import { log } from "../logger.js";
 import { Catalog } from "./catalog.js";
 import { loadDatabase } from "./loader.js";
 import { thumbnailCandidates } from "./metadata.js";
+import { createThumbnailService } from "./thumbnails.js";
 
 function localize(key, data) {
   const i18n = globalThis.game?.i18n;
@@ -31,7 +32,8 @@ function sceneGridDistance() {
 
 /**
  * Creates the `api.db` object.
- * @param {object} [options]  Passed to `loadDatabase` (tests inject modules/importer/timeout).
+ * @param {object} [options]  Passed to `loadDatabase` (tests inject modules/importer/timeout);
+ *   `options.thumbnails` is passed to `createThumbnailService` (storage/picker/canBrowse).
  */
 export function createDb(options = {}) {
   let catalog = null;
@@ -40,6 +42,18 @@ export function createDb(options = {}) {
   let started = false;
   const ready = new Promise((resolve) => (settle = resolve));
   const thumbnailCache = new Map();
+  const thumbnails = createThumbnailService(options.thumbnails);
+
+  /** Loads the cached thumbnail index or starts building it (background, never throws). */
+  const startThumbnails = (id) => {
+    try {
+      const sample = catalog.units.find((n) => n.isLeaf)?.files?.[0] ?? catalog.resolve("jb2a")?.file;
+      const version = options.modules?.get?.(id)?.version ?? globalThis.game?.modules?.get?.(id)?.version;
+      thumbnails.start({ provider: id, version, sampleFile: sample });
+    } catch (err) {
+      log.warn("Could not start the thumbnail index", err);
+    }
+  };
 
   const db = {
     /** @type {Promise<void>} */
@@ -69,13 +83,21 @@ export function createDb(options = {}) {
     },
 
     /**
-     * Not in the contract yet: verified thumbnail for a db path or file URL.
-     * Probes the candidate names with HEAD requests and caches the result.
+     * Thumbnail index (#67): `status`, `ready`, `count`, `find(file)`, `build({force})`,
+     * `clearCache()`. Built from the JB2A folder listing, cached per JB2A version.
+     */
+    thumbnails,
+
+    /**
+     * Verified thumbnail for a db path or file URL. Uses the thumbnail index when it
+     * is ready; otherwise probes the candidate names with HEAD requests (cached).
      * @returns {Promise<string|null>}
      */
     async findThumbnail(pathOrFile) {
       const file = String(pathOrFile).includes("/") ? pathOrFile : db.resolve(pathOrFile)?.file;
       if (!file) return null;
+      const indexed = thumbnails.find(file);
+      if (indexed !== undefined) return indexed;
       if (thumbnailCache.has(file)) return thumbnailCache.get(file);
       let found = null;
       for (const candidate of thumbnailCandidates(file)) {
@@ -105,8 +127,9 @@ export function createDb(options = {}) {
         } else if (!result.database) {
           warn("SVA.Db.LoadFailed", { module: result.provider });
         } else {
-          catalog = new Catalog(result.database, options);
+          catalog = new Catalog(result.database, { ...options, thumbnail: (file) => thumbnails.find(file) });
           log.info(`JB2A catalog loaded from ${result.provider} (${result.source}): ${catalog.units.length} entries`);
+          startThumbnails(result.provider);
         }
       } catch (err) {
         log.error("Failed to build the JB2A catalog", err);

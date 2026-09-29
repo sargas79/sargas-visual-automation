@@ -37,7 +37,16 @@ export const OUTCOME_ALIASES = Object.freeze({
   criticalMiss: OUTCOMES.CRITICAL_FAILURE
 });
 
-export const MATCH_KEYS = Object.freeze(["key", "name", "regex", "type", "traits", "attackKind", "weaponGroup"]);
+export const MATCH_KEYS = Object.freeze([
+  "key",
+  "name",
+  "regex",
+  "type",
+  "traits",
+  "attackKind",
+  "weaponGroup",
+  "baseItem"
+]);
 
 const RECIPE_KEYS = new Set([
   "version",

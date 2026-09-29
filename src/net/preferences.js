@@ -106,12 +106,17 @@ export function senderAllowed(senderId) {
 
 /**
  * Reduced motion keeps the information and drops the flourish:
- * screen-space effects are skipped, return trips and scale-in/out animations removed.
- * Persistent effects (auras, conditions) are always kept.
+ * - persistent effects (auras, conditions) are always kept, unchanged;
+ * - `essential: true` effects are kept unchanged (they convey the result);
+ * - `essential: false` effects are skipped;
+ * - effects that don't set `essential` use the fallback heuristic: screen-space
+ *   effects are skipped, return trips and scale-in/out animations removed.
  * @returns {object|null} the adjusted effect, or null to skip it.
  */
 export function applyReducedMotion(effect) {
   if (effect.persist) return effect;
+  if (effect.essential === true) return effect;
+  if (effect.essential === false) return null;
   if (effect.layer === LAYERS.SCREEN) return null;
   const out = { ...effect };
   delete out.returnTrip;

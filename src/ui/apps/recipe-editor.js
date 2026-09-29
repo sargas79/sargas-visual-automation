@@ -26,6 +26,37 @@ export function readRecipe(form, base) {
   return formToRecipe(readFormElements(form?.elements ?? []), { presets: getPresets(), base });
 }
 
+/** @returns {object|null} the configured FilePicker class. */
+export function getFilePickerClass() {
+  // VERIFY(v14): foundry.applications.apps.FilePicker; `.implementation` is the configured subclass.
+  const FP = globalThis.foundry?.applications?.apps?.FilePicker;
+  return FP?.implementation ?? FP ?? null;
+}
+
+/**
+ * Open the Foundry file browser and write the chosen file into the named input.
+ * @param {HTMLElement} root  element containing the input
+ * @param {string} name       input name
+ * @param {{type?: string}} [options]  FilePicker type ("audio", "image", ...)
+ * @returns {object|null} the FilePicker, or null when unavailable
+ */
+export function pickFileInto(root, name, { type = "audio" } = {}) {
+  const input = root?.querySelector(`[name="${CSS.escape(name)}"]`);
+  const FilePicker = getFilePickerClass();
+  if (!input || !FilePicker) return null;
+  // VERIFY(v14): FilePicker options {type, current, callback}; render({force: true}).
+  const picker = new FilePicker({
+    type,
+    current: input.value || "",
+    callback: (path) => {
+      input.value = path;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  });
+  picker.render({ force: true });
+  return picker;
+}
+
 /**
  * Open the browser as a picker and write the chosen path into the named input.
  * @param {HTMLElement} root  element containing the input

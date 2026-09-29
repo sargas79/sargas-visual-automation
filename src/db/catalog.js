@@ -22,7 +22,7 @@ export const ROOT = "jb2a";
  * @typedef {object} ResolvedFile
  * @property {string} path            Dot path of the chosen leaf (or of its distance group).
  * @property {string} file
- * @property {string|null} thumbnail  Best-guess `_Thumb.webp` (see metadata.thumbnailCandidates).
+ * @property {string|null} thumbnail  `_Thumb.webp` from the thumbnail index, else a best guess.
  * @property {{width:number,height:number}|null} size
  * @property {{name:string, gridSize:number, startPad:number, endPad:number}|null} template
  * @property {{loop?: {start:number,end:number}, forcedEnd?: number}|null} markers
@@ -55,10 +55,13 @@ export function normalizePath(path) {
 export class Catalog {
   /**
    * @param {object} database   Raw JB2A database object (`_templates` + categories).
-   * @param {{random?: () => number}} [options]  `random` is injectable for tests.
+   * @param {{random?: () => number, thumbnail?: (file: string) => string|null|undefined}} [options]
+   *   `random` is injectable for tests. `thumbnail` looks up a file's thumbnail (the
+   *   thumbnail index); `undefined` from it falls back to the name guess.
    */
-  constructor(database, { random = Math.random } = {}) {
+  constructor(database, { random = Math.random, thumbnail } = {}) {
     this.random = random;
+    this.thumbnailLookup = typeof thumbnail === "function" ? thumbnail : null;
     /** @type {Map<string, object>} */
     this.nodes = new Map();
     this.templates = database?._templates ?? {};
@@ -87,7 +90,7 @@ export class Catalog {
     if (isLeafValue(value)) {
       const files = leafFiles(value);
       if (!files.length) return;
-      const node = this.#addNode(path, name, parent, {
+      this.#addNode(path, name, parent, {
         isLeaf: true,
         files,
         template: parent.template,
@@ -96,7 +99,6 @@ export class Catalog {
         distance: parent.isDistanceGroup ? name : null,
         isUnit: !parent.isDistanceGroup
       });
-      node.thumbnail = guessThumbnail(files[0]);
       return;
     }
     if (typeof value !== "object") return;
@@ -198,12 +200,18 @@ export class Catalog {
     return {
       path: reportPath,
       file: chosen,
-      thumbnail: guessThumbnail(chosen),
+      thumbnail: this.thumbnailFor(chosen),
       size: parseSize(chosen),
       template: node.template ? { ...node.template } : null,
       markers: parseMarkers(node.markers),
       distance: node.distance
     };
+  }
+
+  /** Thumbnail URL for a file: the thumbnail index when it knows, else the name guess. */
+  thumbnailFor(file) {
+    const found = this.thumbnailLookup?.(file);
+    return found === undefined ? guessThumbnail(file) : found;
   }
 
   #unitsBelow(node) {
@@ -231,7 +239,8 @@ export class Catalog {
       entry.children = [...node.children];
       if (node.isDistanceGroup) entry.distances = [...node.children];
     }
-    entry.thumbnail = node.isLeaf ? node.thumbnail : (this.#firstLeaf(node)?.thumbnail ?? null);
+    const leaf = node.isLeaf ? node : this.#firstLeaf(node);
+    entry.thumbnail = leaf ? this.thumbnailFor(leaf.files[0]) : null;
     return entry;
   }
 }

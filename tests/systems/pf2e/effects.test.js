@@ -11,6 +11,7 @@ function setup() {
   const cleric = mockActor("cleric");
   installCanvas({ actors: [fighter, cleric] });
   const emit = vi.fn();
+  Pf2eAdapter.init({});
   const adapter = new Pf2eAdapter({ api: {}, emit });
   adapter.register();
   return { adapter, emit, bless, frightened, fighter };
@@ -40,6 +41,7 @@ describe("effects & conditions", () => {
     Hooks.callAll("createItem", bless, {}, "user1");
     Hooks.callAll("deleteItem", bless, {}, "user1");
     expect(emit.mock.calls.map((c) => c[0].type)).toEqual([EVENT_TYPES.EFFECT_APPLIED, EVENT_TYPES.EFFECT_REMOVED]);
+    expect(emit.mock.calls.map((c) => c[0].id)).toEqual([`${bless.uuid}:effectApplied`, `${bless.uuid}:effectRemoved`]);
   });
 
   it("conditions are animated unless the setting is off", async () => {

@@ -5,7 +5,7 @@
  */
 import { createSequence } from "../shared/descriptors.js";
 import { EVENT_TYPES, createAutomationEvent } from "../shared/events.js";
-import { getBuilder } from "./presets.js";
+import { buildTeleportPhases, getBuilder } from "./presets.js";
 import { normalizeRecipe } from "./schema.js";
 import { defaultGrid, defaultTokenSize } from "./steps.js";
 
@@ -33,4 +33,27 @@ export function compile(recipe, event, ctx = {}) {
   });
   if (!steps.some((s) => s.type === "effect")) return [];
   return [createSequence(steps, { sceneId: ev.sceneId, userId: ev.userId })];
+}
+
+/**
+ * Compile a `teleport` recipe as two sequences, so the token can be moved between them.
+ * @returns {{departure: object|null, arrival: object|null}} SequenceDescriptors (null when a phase has no effect).
+ */
+export function compileTeleportPhases(recipe, event, ctx = {}) {
+  const normalized = normalizeRecipe(recipe);
+  const ev = createAutomationEvent(event);
+  const phases = buildTeleportPhases(
+    {
+      recipe: normalized,
+      event: ev,
+      sourceId: ev.source?.tokenId ?? null,
+      targets: (ev.targets ?? []).filter((t) => t?.tokenId),
+      grid: ctx.grid ?? defaultGrid(),
+      getTokenSize: ctx.getTokenSize ?? defaultTokenSize
+    },
+    { moving: true }
+  );
+  const toSequence = (steps) =>
+    steps.some((s) => s.type === "effect") ? createSequence(steps, { sceneId: ev.sceneId, userId: ev.userId }) : null;
+  return { departure: toSequence(phases.departure), arrival: toSequence(phases.arrival) };
 }

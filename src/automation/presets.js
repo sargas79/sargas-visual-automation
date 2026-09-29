@@ -7,6 +7,9 @@
  *   sound → cast (source, waits for it) → onSource (source) + main animation(s)
  *   → impact / onTarget on each affected target (after the main animation).
  * Multi-target presets stagger each target by `options.stagger` ms.
+ * Reduced motion (#66): effects that convey the result (attack / projectile,
+ * onToken, area, impact, onTarget) are `essential: true`; cast and onSource are
+ * `essential: false`.
  */
 import { AREA_SHAPES, EVENT_TYPES } from "../shared/events.js";
 import {
@@ -63,7 +66,8 @@ function sourceStage(recipe, id, sourceId, waitDefault) {
   const opts = stage.options ?? {};
   const effect = makeEffect(stage.animation, opts, {
     atLocation: tokenAnchor(sourceId),
-    scaleToObject: opts.scale ?? 1.5
+    scaleToObject: opts.scale ?? 1.5,
+    essential: false // decorative: skipped with reduced motion
   });
   return [effectStep(effect, waitDefault === undefined ? undefined : (opts.waitUntilFinished ?? waitDefault))];
 }
@@ -92,7 +96,8 @@ function targetSteps(recipe, tokenId, delay) {
         makeEffect(stage.animation, opts, {
           atLocation: tokenAnchor(tokenId),
           scaleToObject: opts.scale ?? scale,
-          delay
+          delay,
+          essential: true // conveys the result
         })
       )
     );
@@ -142,7 +147,7 @@ function buildAttack(ctx, { useProjectile, staggerDefault }) {
         : { atLocation: tokenAnchor(target.tokenId), scaleToObject: fileOpts.scale ?? 1 };
       if (missed && sourceId) extra.missed = true;
       if (useProjectile && fileOpts.returnTrip && sourceId) extra.returnTrip = true;
-      main.push(makeEffect(file, fileOpts, { ...extra, delay }));
+      main.push(makeEffect(file, fileOpts, { ...extra, delay, essential: true }));
     }
     if (!missed) post.push(...targetSteps(r, target.tokenId, delay));
   });
@@ -163,7 +168,12 @@ function buildOnToken(ctx) {
     const ropts = r.options ?? {};
     const delay = i * stagger;
     if (r.animation) {
-      const extra = { atLocation: tokenAnchor(target.tokenId), scaleToObject: ropts.scale ?? 1.5, delay };
+      const extra = {
+        atLocation: tokenAnchor(target.tokenId),
+        scaleToObject: ropts.scale ?? 1.5,
+        delay,
+        essential: true
+      };
       if (ropts.attach) extra.attachTo = { tokenId: target.tokenId };
       main.push(makeEffect(r.animation, ropts, extra));
     }
@@ -223,7 +233,7 @@ function buildArea(ctx) {
       if (anchor) extra = { atLocation: anchor, size: { width: side, height: side, gridUnits: true } };
     }
   }
-  const main = extra && recipe.animation ? [makeEffect(recipe.animation, opts, extra)] : [];
+  const main = extra && recipe.animation ? [makeEffect(recipe.animation, opts, { ...extra, essential: true })] : [];
   const stagger = opts.stagger ?? 50;
   const post = ctx.targets.flatMap((t, i) =>
     targetSteps(recipeForOutcome(ctx.recipe, t.outcome ?? event.outcome), t.tokenId, i * stagger)
@@ -254,21 +264,34 @@ function buildAura(ctx) {
   return assemble(preSteps(recipe, sourceId), main, [], null);
 }
 
-function buildTeleport(ctx) {
+/** Where a teleport lands: the placed area's origin, else `options.destination` ({x, y} canvas px), else null. */
+export function teleportDestination(event, options = {}) {
+  const point = event?.area?.origin ?? options?.destination ?? null;
+  return point && Number.isFinite(point.x) && Number.isFinite(point.y) ? { x: point.x, y: point.y } : null;
+}
+
+/**
+ * Teleport in two phases: `departure` (sound, cast, vanish on the source) and `arrival` (appear at the destination).
+ * With `{ moving: true }` the vanish waits until it finishes (the token is moved between the two phases, see
+ * ./teleport.js) and the arrival has no `arrivalDelay`; otherwise both phases play as one sequence.
+ */
+export function buildTeleportPhases(ctx, { moving = false } = {}) {
   const { event, sourceId } = ctx;
   const recipe = recipeForOutcome(ctx.recipe, event.outcome);
   const opts = recipe.options ?? {};
   const scale = opts.scale ?? 1.5;
-  const steps = preSteps(recipe, sourceId, { onSource: false });
+  const departureSteps = preSteps(recipe, sourceId, { onSource: false });
+  const arrivalSteps = [];
   const departure = getStage(recipe, "onSource");
   const arrival = getStage(recipe, "onTarget");
   const departFile = departure?.animation ?? recipe.animation;
   if (sourceId && departFile) {
     const o = { ...opts, ...departure?.options };
-    steps.push(effectStep(makeEffect(departFile, o, { atLocation: tokenAnchor(sourceId), scaleToObject: scale })));
+    const effect = makeEffect(departFile, o, { atLocation: tokenAnchor(sourceId), scaleToObject: scale });
+    departureSteps.push(effectStep(effect, moving ? (o.waitUntilFinished ?? 0) : undefined));
   }
-  const point = event.area?.origin ?? opts.destination ?? null;
-  const dest = point ? { x: point.x, y: point.y } : tokenAnchor(ctx.targets[0]?.tokenId);
+  const point = teleportDestination(event, opts);
+  const dest = point ?? tokenAnchor(ctx.targets[0]?.tokenId);
   const arriveFile = arrival?.animation ?? recipe.animation;
   if (dest && arriveFile) {
     const o = { ...opts, ...arrival?.options };
@@ -278,9 +301,15 @@ function buildTeleport(ctx) {
           return { size: { width: side, height: side, gridUnits: true } };
         })()
       : { scaleToObject: scale };
-    steps.push(effectStep(makeEffect(arriveFile, o, { atLocation: dest, ...sizing, delay: opts.arrivalDelay ?? 400 })));
+    const delay = moving ? 0 : (opts.arrivalDelay ?? 400);
+    arrivalSteps.push(effectStep(makeEffect(arriveFile, o, { atLocation: dest, ...sizing, delay })));
   }
-  return steps;
+  return { departure: departureSteps, arrival: arrivalSteps };
+}
+
+function buildTeleport(ctx) {
+  const { departure, arrival } = buildTeleportPhases(ctx);
+  return [...departure, ...arrival];
 }
 
 /* ------------------------------------------------------------------------ */
@@ -338,7 +367,10 @@ const DEFINITIONS = {
     options: {
       ...COMMON_OPTIONS,
       scale: { ...COMMON_OPTIONS.scale, default: 1.5 },
-      arrivalDelay: { type: "number", default: 400, min: 0, step: 50 }
+      arrivalDelay: { type: "number", default: 400, min: 0, step: 50 },
+      moveToken: { type: "boolean", default: true },
+      pickDestination: { type: "boolean", default: true },
+      requireSight: { type: "boolean", default: false }
     },
     build: buildTeleport
   }

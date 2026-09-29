@@ -4,7 +4,7 @@
  * their original order; the first rule whose every criterion matches wins.
  *
  * Criteria (all given ones must match):
- *   key, name, type, attackKind, weaponGroup  string | string[] (any of, case-insensitive)
+ *   key, name, type, attackKind, weaponGroup, baseItem  string | string[] (any of, case-insensitive)
  *   regex                                     "pattern" | { pattern, flags } tested against the name (default flag "i")
  *   traits                                    string | string[] (all required)
  */
@@ -13,7 +13,7 @@ import { isPlainObject } from "./schema.js";
 const lower = (v) => (v === null || v === undefined ? null : String(v).trim().toLowerCase());
 const list = (v) => (Array.isArray(v) ? v : [v]).map(lower);
 
-const SPECIFICITY = { key: 16, name: 8, regex: 4, weaponGroup: 2, traits: 2, attackKind: 1, type: 1 };
+const SPECIFICITY = { key: 16, name: 8, baseItem: 6, regex: 4, weaponGroup: 2, traits: 2, attackKind: 1, type: 1 };
 
 export function specificity(match = {}) {
   let score = 0;
@@ -49,6 +49,7 @@ export function matchRule(rule, descriptors = {}) {
       case "type":
       case "attackKind":
       case "weaponGroup":
+      case "baseItem":
         result = anyOf(key, expected, descriptors[key]);
         break;
       case "regex": {

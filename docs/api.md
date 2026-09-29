@@ -326,6 +326,11 @@ await SVA.automation.rules.importJSON(json);
 
 SVA.automation.presets; // { melee, ranged, onToken, area, aura, teleport } with labels and option schemas
 
+// Teleport helpers used by the teleport preset.
+const point = await SVA.automation.teleport.pickCanvasPoint(); // {x, y} canvas px, or null (right-click/Escape)
+await SVA.automation.teleport.moveToken({ sceneId, tokenId, x, y }); // top-left px, no slide; players go through the GM
+// → { ok: true } | { ok: false, reason: "noGM" | "denied" | "missing" | "invalid" | "failed" }
+
 // Feed an event yourself (e.g. from a module for a system without an adapter).
 SVA.automation.handle({
   type: "attack",

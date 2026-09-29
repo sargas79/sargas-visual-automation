@@ -17,6 +17,7 @@
  * - Default rules for the system live in rules/<system-id>.json (see
  *   rules/README.md); `rulePackUrl` points there by default.
  */
+import { MODULE_ID } from "../../constants.js";
 import { SystemAdapter } from "../../shared/adapter.js";
 import { ATTACK_KINDS, EVENT_TYPES, OUTCOMES } from "../../shared/events.js";
 
@@ -24,6 +25,22 @@ export default class TemplateAdapter extends SystemAdapter {
   /** Must equal Foundry's `game.system.id`. */
   static id = "template-system";
   static label = "Template System";
+
+  /**
+   * Optional: runs during Foundry's `init` for every registered adapter class (active or not), before any
+   * instance exists. Register this system's settings here so they appear in the settings UI.
+   */
+  static init() {
+    if (!this.isActive()) return; // don't add settings to worlds of other systems
+    game.settings.register(MODULE_ID, "templateSystemExample", {
+      name: "Example setting",
+      scope: "world",
+      config: false, // set true (and localize name/hint) for a real setting
+      type: Boolean,
+      default: true,
+      svaGroup: "systems"
+    });
+  }
 
   /** Hook ids registered in register(), removed in unregister(). */
   #hooks = [];
@@ -57,6 +74,7 @@ export default class TemplateAdapter extends SystemAdapter {
       traits: [],
       attackKind: null, // ATTACK_KINDS.MELEE | ATTACK_KINDS.RANGED | ATTACK_KINDS.THROWN
       weaponGroup: null,
+      baseItem: null, // base weapon/item this is a variant of, e.g. "longsword"
       range: null,
       area: null, // { shape: AREA_SHAPES.BURST, size: 20 }
       damageTypes: [],
@@ -75,6 +93,7 @@ export default class TemplateAdapter extends SystemAdapter {
     if (!item) return;
     const descriptors = this.getItemDescriptors(item);
     this.ctx.emit({
+      id: `${message.id}:${EVENT_TYPES.ATTACK}`, // stable occurrence id: the core never plays the same id twice
       type: EVENT_TYPES.ATTACK,
       source: { tokenId: message.speaker?.token ?? null, actorId: message.speaker?.actor ?? null },
       targets: [...game.user.targets].map((t) => ({ tokenId: t.id, outcome: OUTCOMES.SUCCESS })),

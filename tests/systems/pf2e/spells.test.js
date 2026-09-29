@@ -216,7 +216,9 @@ describe("areas (v14 Regions)", () => {
     Hooks.callAll("createRegion", doc, {}, "user1");
     expect(emit).toHaveBeenCalledTimes(1);
     Hooks.callAll("deleteRegion", doc, {}, "user1");
+    expect(emit.mock.calls[0][0].id).toBe("reg1:areaPlaced");
     expect(emit.mock.calls[1][0]).toMatchObject({
+      id: "reg1:effectRemoved",
       type: EVENT_TYPES.EFFECT_REMOVED,
       effectUuid: doc.uuid,
       itemUuid: spell.uuid

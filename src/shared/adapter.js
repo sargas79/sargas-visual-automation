@@ -21,6 +21,15 @@ export class SystemAdapter {
   }
 
   /**
+   * Optional init-time hook, called once for every registered class during the automation area's `init`
+   * (or right away when the class is registered after that), whether or not the adapter is active. Register
+   * settings here so they exist before the settings UI is built; check `this.isActive()` first to skip work
+   * in other systems. No instance exists yet: `register()` runs later, on `ready`, for the active adapter only.
+   * @param {object} _api the shared SVA api
+   */
+  static init(_api) {}
+
+  /**
    * @param {{api: object, emit: (event: object) => void}} ctx
    *   emit: hand a (partial) AutomationEvent to the core; `systemId` is filled in automatically.
    */
@@ -57,6 +66,7 @@ export class SystemAdapter {
       traits: [],
       attackKind: null,
       weaponGroup: null,
+      baseItem: null,
       range: null,
       area: null,
       damageTypes: [],

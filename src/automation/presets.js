@@ -254,21 +254,34 @@ function buildAura(ctx) {
   return assemble(preSteps(recipe, sourceId), main, [], null);
 }
 
-function buildTeleport(ctx) {
+/** Where a teleport lands: the placed area's origin, else `options.destination` ({x, y} canvas px), else null. */
+export function teleportDestination(event, options = {}) {
+  const point = event?.area?.origin ?? options?.destination ?? null;
+  return point && Number.isFinite(point.x) && Number.isFinite(point.y) ? { x: point.x, y: point.y } : null;
+}
+
+/**
+ * Teleport in two phases: `departure` (sound, cast, vanish on the source) and `arrival` (appear at the destination).
+ * With `{ moving: true }` the vanish waits until it finishes (the token is moved between the two phases, see
+ * ./teleport.js) and the arrival has no `arrivalDelay`; otherwise both phases play as one sequence.
+ */
+export function buildTeleportPhases(ctx, { moving = false } = {}) {
   const { event, sourceId } = ctx;
   const recipe = recipeForOutcome(ctx.recipe, event.outcome);
   const opts = recipe.options ?? {};
   const scale = opts.scale ?? 1.5;
-  const steps = preSteps(recipe, sourceId, { onSource: false });
+  const departureSteps = preSteps(recipe, sourceId, { onSource: false });
+  const arrivalSteps = [];
   const departure = getStage(recipe, "onSource");
   const arrival = getStage(recipe, "onTarget");
   const departFile = departure?.animation ?? recipe.animation;
   if (sourceId && departFile) {
     const o = { ...opts, ...departure?.options };
-    steps.push(effectStep(makeEffect(departFile, o, { atLocation: tokenAnchor(sourceId), scaleToObject: scale })));
+    const effect = makeEffect(departFile, o, { atLocation: tokenAnchor(sourceId), scaleToObject: scale });
+    departureSteps.push(effectStep(effect, moving ? (o.waitUntilFinished ?? 0) : undefined));
   }
-  const point = event.area?.origin ?? opts.destination ?? null;
-  const dest = point ? { x: point.x, y: point.y } : tokenAnchor(ctx.targets[0]?.tokenId);
+  const point = teleportDestination(event, opts);
+  const dest = point ?? tokenAnchor(ctx.targets[0]?.tokenId);
   const arriveFile = arrival?.animation ?? recipe.animation;
   if (dest && arriveFile) {
     const o = { ...opts, ...arrival?.options };
@@ -278,9 +291,15 @@ function buildTeleport(ctx) {
           return { size: { width: side, height: side, gridUnits: true } };
         })()
       : { scaleToObject: scale };
-    steps.push(effectStep(makeEffect(arriveFile, o, { atLocation: dest, ...sizing, delay: opts.arrivalDelay ?? 400 })));
+    const delay = moving ? 0 : (opts.arrivalDelay ?? 400);
+    arrivalSteps.push(effectStep(makeEffect(arriveFile, o, { atLocation: dest, ...sizing, delay })));
   }
-  return steps;
+  return { departure: departureSteps, arrival: arrivalSteps };
+}
+
+function buildTeleport(ctx) {
+  const { departure, arrival } = buildTeleportPhases(ctx);
+  return [...departure, ...arrival];
 }
 
 /* ------------------------------------------------------------------------ */
@@ -338,7 +357,10 @@ const DEFINITIONS = {
     options: {
       ...COMMON_OPTIONS,
       scale: { ...COMMON_OPTIONS.scale, default: 1.5 },
-      arrivalDelay: { type: "number", default: 400, min: 0, step: 50 }
+      arrivalDelay: { type: "number", default: 400, min: 0, step: 50 },
+      moveToken: { type: "boolean", default: true },
+      pickDestination: { type: "boolean", default: true },
+      requireSight: { type: "boolean", default: false }
     },
     build: buildTeleport
   }

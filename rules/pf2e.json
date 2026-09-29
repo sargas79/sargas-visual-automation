@@ -707,6 +707,11 @@
         "version": 1,
         "preset": "teleport",
         "animation": "jb2a.misty_step.01.blue",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.blue"
+          }
+        },
         "options": {},
         "triggers": ["cast"]
       }
@@ -723,7 +728,78 @@
       "recipe": {
         "version": 1,
         "preset": "teleport",
-        "animation": "jb2a.misty_step.02.blue",
+        "animation": "jb2a.misty_step.01.purple",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.purple"
+          }
+        },
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-abundant-step",
+      "label": "Abundant Step",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "abundant-step",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.yellow",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.yellow"
+          }
+        },
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-dimensional-assault",
+      "label": "Dimensional Assault",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "dimensional-assault",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.dark_purple",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.dark_purple"
+          }
+        },
+        "options": {},
+        "triggers": ["cast"]
+      }
+    },
+    {
+      "id": "spell-dimensional-disappearance",
+      "label": "Dimensional Disappearance",
+      "enabled": true,
+      "priority": 100,
+      "match": {
+        "key": "dimensional-disappearance",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.dark_black",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.dark_black"
+          }
+        },
         "options": {},
         "triggers": ["cast"]
       }
@@ -2083,8 +2159,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "longsword",
-        "type": "weapon"
+        "baseItem": "longsword"
       },
       "recipe": {
         "version": 1,
@@ -2100,8 +2175,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "greatsword",
-        "type": "weapon"
+        "baseItem": "greatsword"
       },
       "recipe": {
         "version": 1,
@@ -2117,8 +2191,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "shortsword",
-        "type": "weapon"
+        "baseItem": "shortsword"
       },
       "recipe": {
         "version": 1,
@@ -2134,8 +2207,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "rapier",
-        "type": "weapon"
+        "baseItem": "rapier"
       },
       "recipe": {
         "version": 1,
@@ -2151,8 +2223,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "scimitar",
-        "type": "weapon"
+        "baseItem": "scimitar"
       },
       "recipe": {
         "version": 1,
@@ -2168,8 +2239,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "falchion",
-        "type": "weapon"
+        "baseItem": "falchion"
       },
       "recipe": {
         "version": 1,
@@ -2185,8 +2255,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "katana",
-        "type": "weapon"
+        "baseItem": "katana"
       },
       "recipe": {
         "version": 1,
@@ -2202,8 +2271,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "scythe",
-        "type": "weapon"
+        "baseItem": "scythe"
       },
       "recipe": {
         "version": 1,
@@ -2219,8 +2287,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "sickle",
-        "type": "weapon"
+        "baseItem": "sickle"
       },
       "recipe": {
         "version": 1,
@@ -2236,8 +2303,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "battle-axe",
-        "type": "weapon"
+        "baseItem": "battle-axe"
       },
       "recipe": {
         "version": 1,
@@ -2253,8 +2319,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "greataxe",
-        "type": "weapon"
+        "baseItem": "greataxe"
       },
       "recipe": {
         "version": 1,
@@ -2270,8 +2335,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "hatchet",
-        "type": "weapon"
+        "baseItem": "hatchet"
       },
       "recipe": {
         "version": 1,
@@ -2287,8 +2351,7 @@
       "enabled": true,
       "priority": 85,
       "match": {
-        "key": "hatchet",
-        "type": "weapon",
+        "baseItem": "hatchet",
         "attackKind": "thrown"
       },
       "recipe": {
@@ -2305,8 +2368,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "club",
-        "type": "weapon"
+        "baseItem": "club"
       },
       "recipe": {
         "version": 1,
@@ -2322,8 +2384,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "greatclub",
-        "type": "weapon"
+        "baseItem": "greatclub"
       },
       "recipe": {
         "version": 1,
@@ -2339,8 +2400,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "mace",
-        "type": "weapon"
+        "baseItem": "mace"
       },
       "recipe": {
         "version": 1,
@@ -2356,8 +2416,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "maul",
-        "type": "weapon"
+        "baseItem": "maul"
       },
       "recipe": {
         "version": 1,
@@ -2373,8 +2432,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "warhammer",
-        "type": "weapon"
+        "baseItem": "warhammer"
       },
       "recipe": {
         "version": 1,
@@ -2390,8 +2448,7 @@
       "enabled": true,
       "priority": 85,
       "match": {
-        "key": "light-hammer",
-        "type": "weapon",
+        "baseItem": "light-hammer",
         "attackKind": "thrown"
       },
       "recipe": {
@@ -2408,8 +2465,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "staff",
-        "type": "weapon"
+        "baseItem": "staff"
       },
       "recipe": {
         "version": 1,
@@ -2425,8 +2481,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "bo-staff",
-        "type": "weapon"
+        "baseItem": "bo-staff"
       },
       "recipe": {
         "version": 1,
@@ -2442,8 +2497,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "glaive",
-        "type": "weapon"
+        "baseItem": "glaive"
       },
       "recipe": {
         "version": 1,
@@ -2459,8 +2513,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "halberd",
-        "type": "weapon"
+        "baseItem": "halberd"
       },
       "recipe": {
         "version": 1,
@@ -2476,8 +2529,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "spear",
-        "type": "weapon"
+        "baseItem": "spear"
       },
       "recipe": {
         "version": 1,
@@ -2493,8 +2545,7 @@
       "enabled": true,
       "priority": 85,
       "match": {
-        "key": "spear",
-        "type": "weapon",
+        "baseItem": "spear",
         "attackKind": "thrown"
       },
       "recipe": {
@@ -2511,8 +2562,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "javelin",
-        "type": "weapon"
+        "baseItem": "javelin"
       },
       "recipe": {
         "version": 1,
@@ -2528,8 +2578,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "dagger",
-        "type": "weapon"
+        "baseItem": "dagger"
       },
       "recipe": {
         "version": 1,
@@ -2545,8 +2594,7 @@
       "enabled": true,
       "priority": 85,
       "match": {
-        "key": "dagger",
-        "type": "weapon",
+        "baseItem": "dagger",
         "attackKind": "thrown"
       },
       "recipe": {
@@ -2563,8 +2611,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "shuriken",
-        "type": "weapon"
+        "baseItem": "shuriken"
       },
       "recipe": {
         "version": 1,
@@ -2580,8 +2627,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "chakri",
-        "type": "weapon"
+        "baseItem": "chakri"
       },
       "recipe": {
         "version": 1,
@@ -2597,8 +2643,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "boomerang",
-        "type": "weapon"
+        "baseItem": "boomerang"
       },
       "recipe": {
         "version": 1,
@@ -2614,8 +2659,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "sling",
-        "type": "weapon"
+        "baseItem": "sling"
       },
       "recipe": {
         "version": 1,
@@ -2631,8 +2675,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "longbow",
-        "type": "weapon"
+        "baseItem": "longbow"
       },
       "recipe": {
         "version": 1,
@@ -2648,8 +2691,7 @@
       "enabled": true,
       "priority": 80,
       "match": {
-        "key": "shortbow",
-        "type": "weapon"
+        "baseItem": "shortbow"
       },
       "recipe": {
         "version": 1,

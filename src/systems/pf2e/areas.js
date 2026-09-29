@@ -156,6 +156,7 @@ export function eventFromRegion(doc, { userId } = {}) {
   area.documentUuid = doc.uuid ?? null;
   const { item, descriptors } = originDescriptors(flags.origin, flags.areaShape, area);
   return {
+    id: doc.id ? `${doc.id}:${EVENT_TYPES.AREA_PLACED}` : null,
     type: EVENT_TYPES.AREA_PLACED,
     source: sourceFrom(flags.origin),
     targets: tokensInside(doc),
@@ -176,6 +177,7 @@ export function removalFromRegion(doc, { userId } = {}) {
   if (!placed) return null;
   return {
     ...placed,
+    id: doc.id ? `${doc.id}:${EVENT_TYPES.EFFECT_REMOVED}` : null,
     type: EVENT_TYPES.EFFECT_REMOVED,
     targets: [],
     effectUuid: doc.uuid ?? null
@@ -191,6 +193,7 @@ export function eventFromTemplate(doc, { userId } = {}) {
   area.documentUuid = doc.uuid ?? null;
   const { item, descriptors } = originDescriptors(origin, doc.flags.pf2e.areaType ?? null, area);
   return {
+    id: doc.id ? `${doc.id}:${EVENT_TYPES.AREA_PLACED}` : null,
     type: EVENT_TYPES.AREA_PLACED,
     source: sourceFrom(origin),
     targets: [],

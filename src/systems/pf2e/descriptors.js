@@ -172,6 +172,7 @@ export function describeItem(item, context = {}) {
     traits,
     attackKind: null,
     weaponGroup: null,
+    baseItem: null,
     range: null,
     area: null,
     damageTypes: [],
@@ -189,8 +190,11 @@ export function describeItem(item, context = {}) {
       d.range = weaponRange(item);
       d.damageTypes = weaponDamageTypes(item);
       if (item.type === "melee" && sys.area?.type && sys.action === "area-fire") d.area = mapArea(sys.area);
-      // Extra field, not part of the ItemDescriptors contract (yet): base weapon, e.g. "longsword".
-      d.baseItem = item.baseType ?? sys.baseItem ?? (NATURAL_BASE_TYPES.includes(d.key) ? d.key : null);
+      // Base weapon, e.g. "longsword" for a +1 Striking Longsword or a named magic longsword.
+      // VERIFY(pf2e): NPC attacks (type "melee") without a linked weapon have no baseType; their slug is the
+      // closest thing (a "Spear" strike has the slug "spear"), so it is used as the base item.
+      d.baseItem =
+        item.baseType ?? sys.baseItem ?? (item.type === "melee" || NATURAL_BASE_TYPES.includes(d.key) ? d.key : null);
       break;
     }
     case "spell": {

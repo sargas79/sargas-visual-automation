@@ -70,14 +70,14 @@ SVA.automation.explain(item);
 
 A recipe picks a **preset** and a JB2A animation:
 
-| Preset     | Used for                                                          | Plays                                                                |
-| ---------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `melee`    | Melee strikes, unarmed and natural attacks                        | A swing from the attacker onto each target                           |
-| `ranged`   | Bows, crossbows, thrown weapons, spell attacks, rays, projectiles | A projectile from the source to each target, scaled to the distance  |
-| `onToken`  | Save spells, buffs, healing                                       | An effect on each target (or on the caster)                          |
-| `area`     | Bursts, cones, lines and emanations                               | An animation fitted to the placed template / area                    |
-| `aura`     | Effects and conditions that last                                  | A persistent looping effect on the token until the effect is removed |
-| `teleport` | Misty Step and similar                                            | A vanish at the start and an appear at the destination               |
+| Preset     | Used for                                                          | Plays                                                                                 |
+| ---------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `melee`    | Melee strikes, unarmed and natural attacks                        | A swing from the attacker onto each target                                            |
+| `ranged`   | Bows, crossbows, thrown weapons, spell attacks, rays, projectiles | A projectile from the source to each target, scaled to the distance                   |
+| `onToken`  | Save spells, buffs, healing                                       | An effect on each target (or on the caster)                                           |
+| `area`     | Bursts, cones, lines and emanations                               | An animation fitted to the placed template / area                                     |
+| `aura`     | Effects and conditions that last                                  | A persistent looping effect on the token until the effect is removed                  |
+| `teleport` | Misty Step, Translocate and similar                               | A vanish, the token moves to the destination (click it on the canvas), then an appear |
 
 Recipes can add **stages** (`cast` on the caster, `projectile`, `impact`, `onSource`, `onTarget`) and **per-outcome overrides**: a different animation on a critical hit, a miss that lands beside the target, no impact on a failure, and so on.
 
@@ -109,13 +109,13 @@ The recipe is stored in the item's flags, so it travels with the item when you c
 
 A world rule matches items and gives them a recipe. Use rules to change the default animation of many items at once (all fire spells, all bows, one spell by its slug).
 
-| Field    | Meaning                                                                                                                                                                                                        |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Label    | Your name for the rule.                                                                                                                                                                                        |
-| Enabled  | Disabled rules are ignored.                                                                                                                                                                                    |
-| Priority | Higher wins when several world rules match.                                                                                                                                                                    |
-| Match    | Any combination of: **key** (PF2e slug, e.g. `electric-arc`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**. |
-| Recipe   | Same editor as the item configuration.                                                                                                                                                                         |
+| Field    | Meaning                                                                                                                                                                                                                                                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Label    | Your name for the rule.                                                                                                                                                                                                                                                   |
+| Enabled  | Disabled rules are ignored.                                                                                                                                                                                                                                               |
+| Priority | Higher wins when several world rules match.                                                                                                                                                                                                                               |
+| Match    | Any combination of: **key** (PF2e slug, e.g. `electric-arc`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**, **base item** (e.g. `longsword`: every longsword variant). |
+| Recipe   | Same editor as the item configuration.                                                                                                                                                                                                                                    |
 
 - **Which rule matches?** Drop an item on the manager (or pick one) to see the winning recipe and every candidate.
 - **Export** saves all world rules to a JSON file; **Import** loads such a file (share rule sets between worlds). Rules round-trip without changes.

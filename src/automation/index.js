@@ -3,7 +3,8 @@
  * See docs/architecture.md "Automation core" for the contract.
  *
  * Lifecycle (called by src/main.js):
- *   init(api)   - register settings, attach api.systems / api.automation, register built-in adapters
+ *   init(api)   - register settings, attach api.systems / api.automation, register built-in adapters and call
+ *                 every registered adapter class's static init(api)
  *   ready(api)  - activate the adapter for the current game system and load its rule pack
  */
 import { MODULE_ID } from "../constants.js";
@@ -41,6 +42,7 @@ export function init(api) {
   /** (Re)load the active adapter's rule pack into the "system" tier. */
   api.automation.reloadRulePack = () => loadRulePack(api.systems.active, api.automation.rules);
   for (const AdapterClass of BUILTIN_ADAPTERS) api.systems.register(AdapterClass);
+  api.systems.initAll();
 }
 
 export async function ready(api) {

@@ -9,7 +9,7 @@ const jb2a = new Set(JSON.parse(readFileSync(new URL("./jb2a-paths.json", import
 
 const PRESETS = ["melee", "ranged", "onToken", "area", "aura", "teleport"];
 const TRIGGERS = ["attack", "damage", "cast", "save", "healing", "areaPlaced", "effectApplied"];
-const MATCH_KEYS = ["key", "name", "regex", "type", "traits", "attackKind", "weaponGroup"];
+const MATCH_KEYS = ["key", "name", "regex", "type", "traits", "attackKind", "weaponGroup", "baseItem"];
 /** PF2e WEAPON_GROUPS (src/module/item/weapon/values.ts, pf2e-8.5.1). */
 const WEAPON_GROUPS = [
   "axe",
@@ -59,6 +59,7 @@ function matches(match, d) {
   if (match.traits && !match.traits.every((t) => d.traits.includes(t))) return false;
   if (match.attackKind && match.attackKind !== d.attackKind) return false;
   if (match.weaponGroup && match.weaponGroup !== d.weaponGroup) return false;
+  if (match.baseItem && match.baseItem !== d.baseItem) return false;
   return true;
 }
 function resolve(d) {
@@ -147,11 +148,32 @@ describe("rules/pf2e.json", () => {
     expect(resolve(make())?.id).toBe(id);
   });
 
+  it("matches every variant of a base weapon", () => {
+    const named = { ...describeItem(weapons.longsword()), name: "Holy Avenger", key: "holy-avenger" };
+    expect(named.baseItem).toBe("longsword");
+    expect(resolve(named)?.id).toBe("weapon-longsword");
+  });
+
   it("falls back by weapon group and traits", () => {
-    const homebrew = { ...describeItem(weapons.longsword()), key: "homebrew-blade" };
+    const homebrew = { ...describeItem(weapons.longsword()), key: "homebrew-blade", baseItem: null };
     expect(resolve(homebrew)?.id).toBe("group-sword");
     const unknownFire = { ...describeItem(spells.ignition()), key: "homebrew-flare" };
     expect(resolve(unknownFire)?.id).toBe("fallback-fire-attack");
+  });
+
+  it("teleport spells vanish, move and appear on CAST", () => {
+    for (const key of [
+      "translocate",
+      "dimension-door",
+      "abundant-step",
+      "dimensional-assault",
+      "dimensional-disappearance"
+    ]) {
+      const rule = pack.rules.find((r) => r.match.key === key);
+      expect(rule?.recipe, key).toMatchObject({ preset: "teleport", triggers: [EVENT_TYPES.CAST] });
+      expect(rule.recipe.animation, key).toMatch(/^jb2a\.misty_step\.01\./);
+      expect(rule.recipe.stages.onTarget.animation, key).toMatch(/^jb2a\.misty_step\.02\./);
+    }
   });
 
   it("healing rules react to HEALING events", () => {

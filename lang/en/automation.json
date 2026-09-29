@@ -42,7 +42,17 @@
         "shape": "Area shape",
         "size": "Area size",
         "radius": "Aura radius",
-        "arrivalDelay": "Arrival delay (ms)"
+        "arrivalDelay": "Arrival delay (ms)",
+        "moveToken": "Move the token",
+        "pickDestination": "Click to pick the destination",
+        "requireSight": "Destination must be in sight"
+      },
+      "Teleport": {
+        "Pick": "Click the teleport destination (right-click or Escape to cancel).",
+        "Cancelled": "Teleport cancelled.",
+        "NoGM": "No GM is connected to move the token.",
+        "Denied": "The token could not be moved.",
+        "Blocked": "The destination is not in sight."
       },
       "Sources": {
         "item": "Item",

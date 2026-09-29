@@ -62,7 +62,8 @@
         "type": { "$ref": "#/$defs/stringOrList" },
         "traits": { "$ref": "#/$defs/stringOrList" },
         "attackKind": { "$ref": "#/$defs/stringOrList" },
-        "weaponGroup": { "$ref": "#/$defs/stringOrList" }
+        "weaponGroup": { "$ref": "#/$defs/stringOrList" },
+        "baseItem": { "$ref": "#/$defs/stringOrList" }
       }
     },
     "stage": {

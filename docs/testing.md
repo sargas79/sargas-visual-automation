@@ -187,17 +187,21 @@ Roll everything from the **Player** client unless noted, with the named tokens s
 
 ### 8.3 Effects, auras, healing, multi-target
 
-| #     | Check                                                                            | Expected result                                                     |
-| ----- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 8.3.1 | [ ] Cast **Bless** (effect applied to Caster).                                   | Persistent aura on Caster, sized to the emanation, on both clients. |
-| 8.3.2 | [ ] Reload both clients.                                                         | The Bless aura is restored.                                         |
-| 8.3.3 | [ ] Remove the Bless effect from the actor.                                      | The aura ends on both clients; its name was `aura:<actorId>:bless`. |
-| 8.3.4 | [ ] Cast the **Shield** cantrip, then let the effect expire / remove it.         | Shield starts and stops with the effect.                            |
-| 8.3.5 | [ ] Apply a condition (e.g. Frightened) with condition markers enabled/disabled. | Marker only when the setting is on.                                 |
-| 8.3.6 | [ ] **Heal** (1 action) on Fighter; **Heal** 3-action burst on several allies.   | Healing animation on each healed token.                             |
-| 8.3.7 | [ ] **Battle Medicine** and **Healing Potion**.                                  | Healing animation on the healed token.                              |
-| 8.3.8 | [ ] Strike or spell with **3 targets** selected.                                 | One sequence per target with a small stagger.                       |
-| 8.3.9 | [ ] Area spell with 3 tokens inside the area.                                    | Area animation once, plus an impact on each token inside.           |
+| #      | Check                                                                               | Expected result                                                                                                                     |
+| ------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 8.3.1  | [ ] Cast **Bless** (effect applied to Caster).                                      | Persistent aura on Caster, sized to the emanation, on both clients.                                                                 |
+| 8.3.2  | [ ] Reload both clients.                                                            | The Bless aura is restored.                                                                                                         |
+| 8.3.3  | [ ] Remove the Bless effect from the actor.                                         | The aura ends on both clients; its name was `aura:<actorId>:bless`.                                                                 |
+| 8.3.4  | [ ] Cast the **Shield** cantrip, then let the effect expire / remove it.            | Shield starts and stops with the effect.                                                                                            |
+| 8.3.5  | [ ] Apply a condition (e.g. Frightened) with condition markers enabled/disabled.    | Marker only when the setting is on.                                                                                                 |
+| 8.3.6  | [ ] **Heal** (1 action) on Fighter; **Heal** 3-action burst on several allies.      | Healing animation on each healed token.                                                                                             |
+| 8.3.7  | [ ] **Battle Medicine** and **Healing Potion**.                                     | Healing animation on the healed token.                                                                                              |
+| 8.3.8  | [ ] Strike or spell with **3 targets** selected.                                    | One sequence per target with a small stagger.                                                                                       |
+| 8.3.9  | [ ] Area spell with 3 tokens inside the area.                                       | Area animation once, plus an impact on each token inside.                                                                           |
+| 8.3.10 | [ ] GM: cast **Translocate** from Caster, click a free square.                      | "Click the destination" notice; vanish on Caster, the token jumps (no slide) to the clicked square, appear there - on both clients. |
+| 8.3.11 | [ ] Player client: cast **Translocate** with the player's own token (GM connected). | Same as 8.3.10; the GM applies the move.                                                                                            |
+| 8.3.12 | [ ] Player: cast it again, right-click (or Escape) instead of clicking.             | "Teleport cancelled"; nothing plays, the token stays.                                                                               |
+| 8.3.13 | [ ] Player: cast it with no GM connected.                                           | Vanish plays, warning "No GM is connected", the token stays.                                                                        |
 
 ## 9. UI
 

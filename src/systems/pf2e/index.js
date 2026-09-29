@@ -15,12 +15,31 @@ import { EFFECT_ITEM_TYPES, eventFromEffectItem } from "./effects.js";
 /** World setting: animate PF2e conditions (effects are always animated). */
 export const SETTING_CONDITIONS = "pf2eConditionEvents";
 
+/** Register the PF2e world settings. Called from Pf2eAdapter.init during Foundry's `init`. */
+export function registerSettings() {
+  game.settings?.register(MODULE_ID, SETTING_CONDITIONS, {
+    name: "SVA.Pf2e.Settings.ConditionEvents.Name",
+    hint: "SVA.Pf2e.Settings.ConditionEvents.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    svaGroup: "systems"
+  });
+}
+
 /** How many handled ids to remember for de-duplication. */
 const SEEN_LIMIT = 200;
 
 export default class Pf2eAdapter extends SystemAdapter {
   static id = "pf2e";
   static label = "Pathfinder Second Edition";
+
+  /** Init-time hook (SystemAdapter.init): register PF2e settings while Foundry's `init` hook runs. */
+  static init() {
+    if (!this.isActive()) return;
+    registerSettings();
+  }
 
   constructor(ctx) {
     super(ctx);
@@ -49,29 +68,7 @@ export default class Pf2eAdapter extends SystemAdapter {
     this._on("deleteItem", (item, options, userId) =>
       this.onEffectItem(item, options, userId, EVENT_TYPES.EFFECT_REMOVED)
     );
-    this._registerSettings();
     this._unregisterSheet = registerSheetControls(this.ctx?.api);
-  }
-
-  _registerSettings() {
-    const settings = game.settings;
-    if (!settings) return;
-    try {
-      settings.get(MODULE_ID, SETTING_CONDITIONS);
-      return; // already registered
-    } catch {
-      // not registered yet
-    }
-    // VERIFY(v14): register() runs on "ready"; registering a world setting this late works but it is only listed in
-    // the settings config after this point (fine: the dialog is opened later).
-    settings.register(MODULE_ID, SETTING_CONDITIONS, {
-      name: "SVA.Pf2e.Settings.ConditionEvents.Name",
-      hint: "SVA.Pf2e.Settings.ConditionEvents.Hint",
-      scope: "world",
-      config: true,
-      type: Boolean,
-      default: true
-    });
   }
 
   _conditionsEnabled() {

@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000012",
+  "_key": "!macros!svaExample000012",
+  "name": "Bomb Throw",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/hazard.svg",
+  "command": "/**\n * SVA example: Bomb Throw\n * Lobs a bomb at every target: it bursts into shrapnel, explodes, and leaves a cracked, smoking\n * patch of ground that fades over a few seconds.\n *\n * Usage: select the thrower, target one or more tokens, run.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst COLOR = \"black\"; // black, blue, green, grey, red (bomb and shrapnel share colours)\nconst FILES = {\n  bomb: `jb2a.throwable.throw.bomb.01.${COLOR}`,\n  shrapnel: `jb2a.explosion.shrapnel.bomb.01.${COLOR}`,\n  blast: \"jb2a.explosion.08.dark_orange\",\n  scorch: \"jb2a.impact.ground_crack.orange\"\n};\n\nconst thrower = canvas.tokens.controlled[0] ?? token;\nconst targets = [...game.user.targets];\nif (!thrower) return ui.notifications.warn(\"Select the throwing token.\");\nif (!targets.length) return ui.notifications.warn(\"Target at least one token.\");\nconst sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));\n\nconst runs = [];\nfor (const target of targets) {\n  const seq = SVA.sequence();\n  seq.effect().file(FILES.bomb).atLocation(thrower).stretchTo(target).waitUntilFinished(-150);\n  seq\n    .effect()\n    .file(FILES.scorch)\n    .atLocation(target)\n    .layer(\"belowTokens\")\n    .scaleToObject(2)\n    .scaleIn(0.1, 120, { ease: \"easeOutExpo\" })\n    .duration(5000)\n    .fadeOut(3200, { ease: \"easeInSine\" });\n  seq.effect().file(FILES.shrapnel).atLocation(target).scaleToObject(1.2);\n  seq.effect().file(FILES.blast).atLocation(target).scaleToObject(1.8).delay(100);\n  runs.push(seq.play());\n  await sleep(650 + Math.random() * 350);\n}\nawait Promise.all(runs);\n",
+  "folder": null,
+  "sort": 1200000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

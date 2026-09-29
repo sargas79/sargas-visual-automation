@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000016",
+  "_key": "!macros!svaExample000016",
+  "name": "Weapon Throw and Return",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/combat.svg",
+  "command": "/**\n * SVA example: Weapon Throw and Return\n * Throws a weapon at every target and brings it back to the thrower's hand, like a returning\n * dagger or a thrown warhammer. Targets are hit one after another.\n *\n * Usage: select the thrower, target one or more tokens, run. Change WEAPON below.\n * Hold SHIFT while clicking the macro to make the throws miss.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst WEAPONS = {\n  dagger: {\n    go: \"jb2a.dagger.throw.01.white\",\n    back: \"jb2a.dagger.return.01.white\"\n  },\n  hammer: { go: \"jb2a.hammer.throw\", back: \"jb2a.hammer.return\" }\n};\nconst WEAPON = \"dagger\"; // \"dagger\" | \"hammer\"\n// How early the return starts, in ms before the throw ends (more negative = earlier, positive = pause).\nconst RETURN_OFFSET_MS = -700;\n\nconst thrower = canvas.tokens.controlled[0] ?? token;\nconst targets = [...game.user.targets];\nif (!thrower) return ui.notifications.warn(\"Select the throwing token.\");\nif (!targets.length) return ui.notifications.warn(\"Target at least one token.\");\nconst missed = [\"ShiftLeft\", \"ShiftRight\"].some((code) => game.keyboard.downKeys.has(code));\nconst { go, back } = WEAPONS[WEAPON] ?? WEAPONS.dagger;\n\nconst seq = SVA.sequence();\nfor (const target of targets) {\n  seq.effect().file(go).atLocation(thrower).stretchTo(target).missed(missed).waitUntilFinished(RETURN_OFFSET_MS);\n  // The return file is drawn from the thrower to the target and animates back towards the thrower.\n  seq.effect().file(back).atLocation(thrower).stretchTo(target).missed(missed).waitUntilFinished();\n}\nawait seq.play();\n",
+  "folder": null,
+  "sort": 1600000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

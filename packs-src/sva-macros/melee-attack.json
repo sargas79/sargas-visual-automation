@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000002",
+  "_key": "!macros!svaExample000002",
+  "name": "Melee Attack (Advanced)",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/sword.svg",
+  "command": "/**\n * SVA example: Melee Attack (Advanced)\n * A configurable weapon swing from the selected token to every target, with optional\n * trail, impact and blood. Targets out of reach get a thrown weapon (with return) instead.\n *\n * Usage: select the attacker, target one or more tokens, run.\n * Hold SHIFT while clicking the macro to play it as a miss.\n * Edit CONFIG below to change the weapon, colours and options. Browse paths with SVA.ui.openBrowser().\n *\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer or Automated Animations needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst CONFIG = {\n  weapon: \"jb2a.melee_attack.01.shortsword.01\", // any jb2a.melee_attack.* entry\n  trail: \"jb2a.melee_attack.01.trail.01.blueyellow\", // null for no trail\n  impact: \"jb2a.impact.001.orange\", // null for no impact\n  impactScale: 1.3,\n  blood: true,\n  reachFt: 5, // targets further than this get the thrown fallback\n  thrown: {\n    go: \"jb2a.dagger.throw.01.white\",\n    back: \"jb2a.dagger.return.01.white\"\n  }, // null to always swing\n  staggerMs: 700 // pause between targets\n};\n\nconst attacker = canvas.tokens.controlled[0] ?? token;\nconst targets = [...game.user.targets];\nif (!attacker) return ui.notifications.warn(\"Select the attacking token.\");\nif (!targets.length) return ui.notifications.warn(\"Target at least one token.\");\n\nconst missed = [\"ShiftLeft\", \"ShiftRight\"].some((code) => game.keyboard.downKeys.has(code));\nconst sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));\n\n/** Edge-to-edge distance in scene units, so large creatures are \"in reach\" like on the table. */\nfunction gapInFeet(a, b) {\n  const measured = canvas.grid.measurePath([a.center, b.center]).distance;\n  const sizeBonus =\n    ((Math.max(a.document.width, a.document.height) + Math.max(b.document.width, b.document.height)) / 2 - 1) *\n    canvas.scene.grid.distance;\n  return Math.max(0, measured - sizeBonus);\n}\n\nfunction addImpact(seq, target) {\n  if (missed) return;\n  if (CONFIG.impact) seq.effect().file(CONFIG.impact).atLocation(target).scaleToObject(CONFIG.impactScale).zIndex(3);\n  if (CONFIG.blood) {\n    seq\n      .effect()\n      .file(\"jb2a.liquid.splash_side.red\")\n      .atLocation(target)\n      .rotateTowards(attacker)\n      .rotate(180)\n      .scaleToObject(1.5)\n      .zIndex(2);\n  }\n}\n\nconst runs = [];\nfor (const target of targets) {\n  const seq = SVA.sequence();\n  const inReach = !CONFIG.thrown || gapInFeet(attacker, target) <= CONFIG.reachFt;\n\n  if (inReach) {\n    const flip = Math.random() < 0.5; // swing from either side for variety\n    if (CONFIG.trail) {\n      const trail = seq.effect().file(CONFIG.trail).atLocation(attacker).stretchTo(target).missed(missed).zIndex(1);\n      if (flip) trail.mirrorY();\n    }\n    const swing = seq\n      .effect()\n      .file(CONFIG.weapon)\n      .atLocation(attacker)\n      .stretchTo(target)\n      .missed(missed)\n      .zIndex(2)\n      .waitUntilFinished(-900);\n    if (flip) swing.mirrorY();\n  } else {\n    seq.effect().file(CONFIG.thrown.go).atLocation(attacker).stretchTo(target).missed(missed).waitUntilFinished(-650);\n  }\n\n  addImpact(seq, target);\n  if (!inReach) seq.effect().file(CONFIG.thrown.back).atLocation(attacker).stretchTo(target);\n\n  runs.push(seq.play());\n  await sleep(CONFIG.staggerMs);\n}\nawait Promise.all(runs);\n",
+  "folder": null,
+  "sort": 200000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

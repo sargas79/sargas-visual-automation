@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000004",
+  "_key": "!macros!svaExample000004",
+  "name": "Flask Throw",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/acid.svg",
+  "command": "/**\n * SVA example: Flask Throw\n * Throws an alchemical flask at every target: the glass shatters and a burst of the chosen\n * element sprays away from the thrower. Pick the element in ELEMENT below.\n *\n * Usage: select the thrower, target one or more tokens, run.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst ELEMENT = \"frost\"; // \"frost\" | \"poison\" | \"arcane\"\nconst ELEMENTS = {\n  frost: {\n    flask: \"jb2a.throwable.throw.flask.02.blue\",\n    shards: [\"jb2a.side_impact.part.fast.ice_shard.blue\", \"jb2a.side_impact.part.slow.snowflake.blue\"],\n    tint: \"#9fd3ff\"\n  },\n  poison: {\n    flask: \"jb2a.throwable.throw.flask.01.black\",\n    shards: [\"jb2a.side_impact.part.slow.poison.greenyellow\", \"jb2a.side_impact.part.smoke.greenyellow.01\"],\n    tint: \"#b8ff7a\"\n  },\n  arcane: {\n    flask: \"jb2a.throwable.throw.flask.02.purple\",\n    shards: [\"jb2a.side_impact.part.slow.star.pinkyellow\", \"jb2a.side_impact.part.slow.spiral.pinkpurple\"],\n    tint: \"#e3a6ff\"\n  }\n};\nconst style = ELEMENTS[ELEMENT] ?? ELEMENTS.frost;\n\nconst thrower = canvas.tokens.controlled[0] ?? token;\nconst targets = [...game.user.targets];\nif (!thrower) return ui.notifications.warn(\"Select the throwing token.\");\nif (!targets.length) return ui.notifications.warn(\"Target at least one token.\");\nconst sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));\n\n/** Adds a side-spray effect at the target, pointing away from the thrower. */\nfunction spray(seq, target, file, scale, { mirror = false, tint = null } = {}) {\n  const fx = seq.effect().file(file).atLocation(target).rotateTowards(thrower).rotate(180).scale(scale);\n  if (mirror) fx.mirrorY();\n  if (tint) fx.tint(tint);\n  return fx;\n}\n\nconst runs = [];\nfor (const target of targets) {\n  const seq = SVA.sequence();\n  seq.effect().file(style.flask).atLocation(thrower).stretchTo(target).waitUntilFinished(-150);\n  spray(seq, target, \"jb2a.explosion.side_fracture.flask.02\", 0.5);\n  spray(seq, target, style.shards[0], 0.45);\n  spray(seq, target, style.shards[1], 0.35, { mirror: true });\n  spray(seq, target, \"jb2a.smoke.puff.side.02.white\", 0.6, {\n    mirror: true,\n    tint: style.tint\n  });\n  seq\n    .effect()\n    .file(\"jb2a.smoke.puff.ring.01.white\")\n    .atLocation(target)\n    .scale(0.4)\n    .rotate(Math.random() * 360)\n    .tint(style.tint);\n  runs.push(seq.play());\n  await sleep(700);\n}\nawait Promise.all(runs);\n",
+  "folder": null,
+  "sort": 400000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

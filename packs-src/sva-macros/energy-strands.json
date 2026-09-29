@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000015",
+  "_key": "!macros!svaExample000015",
+  "name": "Energy Strands Toggle",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/radiation.svg",
+  "command": "/**\n * SVA example: Energy Strands Toggle\n * Crackling strands of energy swirl around each selected token (a base layer under the token and\n * an overlay above it). Run again to fade them out.\n *\n * Usage: select tokens, run. Change COLOR below.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\n// blue, grey, blueorange, dark_green, dark_red, dark_purple, dark_purple02, orange, pinkyellow, purple\nconst COLOR = \"dark_red\";\nconst SCALE = 1.6;\nconst FADE_MS = 1000;\n\nconst tokens = canvas.tokens.controlled;\nif (!tokens.length) return ui.notifications.warn(\"Select at least one token.\");\nconst sceneId = canvas.scene.id;\n\nfor (const tok of tokens) {\n  const name = `sva-energy-strands:${tok.id}`;\n  if (SVA.effects.list({ sceneId, name }).length) {\n    await SVA.effects.end({ name, sceneId });\n    continue;\n  }\n  const seq = SVA.sequence();\n  seq\n    .effect()\n    .file(`jb2a.energy_strands.complete.${COLOR}.01`)\n    .attachTo(tok.id)\n    .scaleToObject(SCALE)\n    .layer(\"belowTokens\")\n    .fadeIn(FADE_MS, { ease: \"easeOutCubic\" })\n    .fadeOut(FADE_MS, { ease: \"easeOutCubic\" })\n    .persist(true)\n    .name(name);\n  seq\n    .effect()\n    .file(`jb2a.energy_strands.overlay.${COLOR}.01`)\n    .attachTo(tok.id)\n    .scaleToObject(SCALE)\n    .fadeIn(FADE_MS, { ease: \"easeOutCubic\" })\n    .fadeOut(FADE_MS, { ease: \"easeOutCubic\" })\n    .persist(true)\n    .name(name);\n  await seq.play();\n}\n",
+  "folder": null,
+  "sort": 1500000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

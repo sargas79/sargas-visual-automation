@@ -249,6 +249,40 @@ Open the compendium **SVA Example Macros** and import all macros. For each macro
 | 10.16 | [ ] Weapon Throw and Return                              | Dagger thrown to each target and returns to the thrower.                                           |
 | 10.17 | [ ] Run all of the above **with Sequencer uninstalled**. | Everything works. No `Sequencer is not defined` errors.                                            |
 
+## 11. D&D 5e adapter
+
+Run this section in a separate world `sva-qa-5e` with the **dnd5e** system (6.x for Foundry v14; note the version), the same **QA Grid** scene, the same two clients and Sequencer / Automated Animations disabled. Take items from the SRD 2024 compendiums (`Spells (SRD)`, `Equipment (SRD)`) so their identifiers match `rules/dnd5e.json`.
+
+- **Fighter** (player): Longsword, Longbow, Dagger, Javelin, Unarmed Strike, Potion of Healing.
+- **Caster** (player): Fire Bolt, Eldritch Blast, Sacred Flame, Magic Missile, Guiding Bolt, Cure Wounds, Healing Word, Bless, Shield, Burning Hands, Thunderwave, Misty Step, Shatter, Fireball, Lightning Bolt, Spirit Guardians.
+- **Beast** (NPC, GM only): a creature with Bite and Claws (e.g. Wolf, Brown Bear).
+- **Target A / B / C** (NPCs, GM only) 1, 6 and 18 squares east of Fighter; give Target A **AC 12** and Target B **AC 20**.
+
+| #     | Check                                                                                                    | Expected result                                                                                                             |
+| ----- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| 11.1  | [ ] Console: `SVA.systems.active?.id`; module settings show **D&D 5e: animate conditions**.              | `"dnd5e"`; the setting exists (and is absent in the PF2e world).                                                            |
+| 11.2  | [ ] Fighter **Longsword** attack vs Target A (hit), vs Target B (miss), and until a natural 20.          | Sword swing onto Target A; a miss beside Target B; the crit variant on the natural 20. A natural 1 always misses.           |
+| 11.3  | [ ] **Longbow** vs Target B (6 squares), hit then miss.                                                  | Arrow from Fighter to Target B; the miss lands beside it.                                                                   |
+| 11.4  | [ ] **Dagger** with attack mode **Thrown**, then **One-Handed**.                                         | Thrown dagger to the target; then a melee dagger animation.                                                                 |
+| 11.5  | [ ] **Javelin** thrown, **Unarmed Strike**, a **+1 Longsword** or **Sun Blade**.                         | Javelin throw; unarmed strike; the variant uses the longsword animation (`baseItem`).                                       |
+| 11.6  | [ ] GM: Beast **Bite** and **Claws** vs Fighter.                                                         | Bite and claw animations.                                                                                                   |
+| 11.7  | [ ] Roll **damage** after each hit.                                                                      | No second swing (weapon rules only trigger on `attack`). Exactly one event per chat card (Debug logging).                   |
+| 11.8  | [ ] Attack with Targets A **and** B targeted (roll 15).                                                  | One swing per target: hit on A (AC 12), miss on B (AC 20).                                                                  |
+| 11.9  | [ ] **Fire Bolt**, **Eldritch Blast**, **Guiding Bolt** vs Target B: hit and miss.                       | Projectile per attack roll, miss lands beside. Only one animation per cast (the usage card does not animate attack spells). |
+| 11.10 | [ ] **Magic Missile** with Targets A, B, C targeted; **Sacred Flame** on Target A.                       | 3 missiles on use; Sacred Flame on Target A on use (before the save).                                                       |
+| 11.11 | [ ] Target A rolls the **Sacred Flame** save from the card (GM client).                                  | One `save` event from the GM client (Debug logging), target = Target A, outcome success/failure vs the DC.                  |
+| 11.12 | [ ] **Fireball**: place the template (a Region on v14) over Targets A and B.                             | Projectile to the center, explosion sized to the 20 ft radius; impacts on the tokens inside.                                |
+| 11.13 | [ ] **Burning Hands** (cone) in 4 directions; **Thunderwave** (cube); **Lightning Bolt** (line).         | Cone aligned with the template each time; square sized to 15 ft; line along the template, full length.                      |
+| 11.14 | [ ] **Cure Wounds** and **Healing Word** on Fighter; Fighter drinks a **Potion of Healing** (no target). | Healing animation on Fighter, once (on the healing roll, not on the usage card).                                            |
+| 11.15 | [ ] **Bless** on Fighter and Target C, then apply its effect from the card to both.                      | Bless intro on both on use; a persistent "Blessed" aura on each creature once the effect is applied.                        |
+| 11.16 | [ ] End **Bless** concentration (delete the Concentrating effect).                                       | dnd5e removes the Blessed effects; both auras end on both clients.                                                          |
+| 11.17 | [ ] **Spirit Guardians**: cast (concentration), reload both clients, then end concentration.             | Spirit ring aura on Caster sized to 15 ft, restored after reload, ended with concentration.                                 |
+| 11.18 | [ ] **Shield** (reaction) with a target selected.                                                        | Shield plays on Caster, not on the target.                                                                                  |
+| 11.19 | [ ] **Misty Step**: click a free square; then again from the Player client with the GM connected.        | Vanish, token jumps to the clicked square, appear there. Don't press dnd5e's own Teleport button as well.                   |
+| 11.20 | [ ] Toggle **Prone** / **Frightened** on Target A with the conditions setting on, then off.              | Frightened marker only while the setting is on; Prone has no rule (nothing plays, no error).                                |
+| 11.21 | [ ] Open a weapon, a spell and a potion sheet.                                                           | An **Animation** header control opens the item configuration.                                                               |
+| 11.22 | [ ] `SVA.automation.explain(fromUuidSync("<Fireball uuid>"), { eventType: "areaPlaced" })`               | Winner `spell-fireball` from the system rule pack.                                                                          |
+
 ## Results table template
 
 Copy this into the release PR and fill it in. Use `PASS`, `FAIL (#issue)` or `N/A (reason)`.
@@ -282,6 +316,7 @@ Copy this into the release PR and fill it in. Use `PASS`, `FAIL (#issue)` or `N/
 | 8.3 PF2e effects, healing, multi |           |               |       |
 | 9. UI                            |           |               |       |
 | 10. Example macros               |           |               |       |
+| 11. D&D 5e adapter (dnd5e x.y.z) |           |               |       |
 
 **Failures:** list issue numbers.
 **Blockers for release:** yes / no.

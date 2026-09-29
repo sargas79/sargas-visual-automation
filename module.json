@@ -2,7 +2,7 @@
   "id": "sargas-visual-automation",
   "title": "Sargas Visual Automation",
   "description": "Plays and automates JB2A animations directly - no Sequencer or Automated Animations required.",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "authors": [
     {
       "name": "Diego Vescovini",
@@ -13,7 +13,9 @@
     "minimum": "14",
     "verified": "14"
   },
-  "esmodules": ["src/main.js"],
+  "esmodules": [
+    "src/main.js"
+  ],
   "languages": [
     {
       "lang": "en",
@@ -90,5 +92,7 @@
   "readme": "https://github.com/sargas79/sargas-visual-automation#readme",
   "manifest": "https://github.com/sargas79/sargas-visual-automation/releases/latest/download/module.json",
   "download": "",
-  "styles": ["styles/sva.css"]
+  "styles": [
+    "styles/sva.css"
+  ]
 }

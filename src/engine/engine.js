@@ -1,6 +1,7 @@
 import { log } from "../logger.js";
 import { normalizeEffect } from "../shared/descriptors.js";
 import { resolveFile, resolvePreloadList } from "./files.js";
+import { planCapacity } from "./pool.js";
 
 /**
  * @typedef {object} EffectHandle
@@ -66,10 +67,35 @@ export class EffectEngine {
    * @param {import("./texture-cache.js").TextureCache} options.textures
    * @param {EngineEnvironment} options.env
    */
-  constructor({ api, textures, env }) {
+  /** Debug counters (#19). */
+  counters = { played: 0, skipped: 0, evicted: 0, failed: 0, peak: 0 };
+
+  /**
+   * @param {object} options
+   * @param {object} options.api                                        Module api (for api.db).
+   * @param {import("./texture-cache.js").TextureCache} options.textures
+   * @param {EngineEnvironment} options.env
+   * @param {() => number} [options.maxEffects]                          Budget of simultaneous effects.
+   */
+  constructor({ api, textures, env, maxEffects = () => Infinity }) {
     this.api = api;
     this.textures = textures;
     this.env = env;
+    this.maxEffects = maxEffects;
+  }
+
+  /** Make room for a new effect within the budget; false when it must be skipped. */
+  #makeRoom(descriptor) {
+    const active = [...this.#records.values()].map((r) => ({ id: r.id, persist: !!r.descriptor.persist }));
+    const plan = planCapacity({ active, max: this.maxEffects(), incomingPersist: !!descriptor.persist });
+    for (const id of plan.evict) {
+      const record = this.#records.get(id);
+      if (!record) continue;
+      this.counters.evicted++;
+      log.debug(`Effect budget reached, ending ${id}`);
+      this.#cancel(record);
+    }
+    return !plan.skip;
   }
 
   /**
@@ -86,19 +112,24 @@ export class EffectEngine {
       return finishedHandle(effect);
     }
     const existing = this.#records.get(descriptor.id);
-    if (existing) return existing.handle;
+    if (existing && !existing.cancelled && !existing.endRequest && !existing.sprite?.ending) return existing.handle;
+    // An older copy that is ending (e.g. dropped by a scene change while loading) is replaced.
+    if (existing) this.#cancel(existing);
 
     const reason = skipReason(descriptor, {
       ready: this.env.isReady(),
       sceneId: this.env.sceneId(),
       userId: this.env.userId()
     });
-    if (reason) {
-      log.debug(`Skipping effect ${descriptor.id}: ${reason}`);
+    if (reason || !this.#makeRoom(descriptor)) {
+      this.counters.skipped++;
+      log.debug(`Skipping effect ${descriptor.id}: ${reason ?? "effect budget reached"}`);
       return finishedHandle(descriptor);
     }
 
     const record = this.#createRecord(descriptor);
+    this.counters.played++;
+    this.counters.peak = Math.max(this.counters.peak, this.#records.size);
     try {
       const [prepared] = await Promise.all([this.#prepare(descriptor), (this.env.wait ?? wait)(descriptor.delay ?? 0)]);
       record.instance = prepared.instance;
@@ -121,10 +152,17 @@ export class EffectEngine {
       if (record.endRequest) sprite.requestEnd(record.endRequest);
       this.#ensureTicker();
     } catch (err) {
+      this.counters.failed++;
       log.warn(`Effect ${descriptor.id} could not play`, err);
       this.#remove(record);
     }
     return record.handle;
+  }
+
+  /** Stop an effect right away (it is removed now if shown, or as soon as it finishes loading). */
+  #cancel(record) {
+    record.cancelled = true;
+    if (record.sprite?.display) this.#remove(record);
   }
 
   /** Resolve the file (closest distance variant when stretched) and get a texture instance. */
@@ -165,7 +203,7 @@ export class EffectEngine {
   #remove(record) {
     if (record.removed) return;
     record.removed = true;
-    this.#records.delete(record.id);
+    if (this.#records.get(record.id) === record) this.#records.delete(record.id);
     try {
       record.sprite?.destroy();
     } catch (err) {
@@ -219,10 +257,8 @@ export class EffectEngine {
   async end(id, { immediate = false } = {}) {
     const record = this.#records.get(id);
     if (!record) return;
-    if (immediate) {
-      record.cancelled = true;
-      if (record.sprite?.display) this.#remove(record);
-    } else if (record.sprite?.display) record.sprite.requestEnd({ immediate: false });
+    if (immediate) this.#cancel(record);
+    else if (record.sprite?.display) record.sprite.requestEnd({ immediate: false });
     else record.endRequest = { immediate: false };
     return record.handle.finished;
   }
@@ -230,6 +266,29 @@ export class EffectEngine {
   /** End every effect. */
   async endAll({ immediate = false } = {}) {
     await Promise.all([...this.#records.keys()].map((id) => this.end(id, { immediate })));
+  }
+
+  /**
+   * Canvas tear down (scene change): remove every effect synchronously, before Foundry destroys the canvas groups.
+   * Effects still loading are dropped when their load completes.
+   */
+  tearDown() {
+    for (const record of [...this.#records.values()]) this.#cancel(record);
+    this.#stopTicker();
+  }
+
+  /** Debug counters: effects, textures (cache / video elements). */
+  stats() {
+    const records = [...this.#records.values()];
+    return {
+      active: records.length,
+      mounted: records.filter((r) => r.sprite?.display).length,
+      loading: records.filter((r) => !r.sprite).length,
+      persistent: records.filter((r) => r.descriptor.persist).length,
+      max: this.maxEffects(),
+      ...this.counters,
+      textures: this.textures.stats()
+    };
   }
 
   /**

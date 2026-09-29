@@ -2,9 +2,17 @@
   "SVA": {
     "Engine": {
       "Settings": {
+        "MaxEffects": {
+          "Name": "Maximum simultaneous animations",
+          "Hint": "When this many animations are playing, the oldest short animation is removed to make room. Persistent animations (auras) are never removed."
+        },
         "CacheSize": {
           "Name": "Animation cache size",
           "Hint": "How many animation files are kept loaded in memory. Higher values avoid reloading, lower values save memory."
+        },
+        "DebugOverlay": {
+          "Name": "Show animation debug overlay",
+          "Hint": "Display counters (active animations, cached files, video elements, FPS) in the corner of the canvas."
         }
       }
     }

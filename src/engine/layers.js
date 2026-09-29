@@ -17,6 +17,7 @@
  * Interface and overlay are drawn above lighting and fog, so their visibility is handled by ./visibility.js.
  */
 import { LAYERS } from "../shared/descriptors.js";
+import { ObjectPool } from "./pool.js";
 
 /** PrimaryCanvasGroup.SORT_LAYERS in v14, used when the canvas is not available (tests). */
 export const DEFAULT_SORT_LAYERS = Object.freeze({ SCENE: 0, TILES: 500, DRAWINGS: 600, TOKENS: 700, WEATHER: 1000 });
@@ -61,7 +62,26 @@ export function effectElevation({ layer, base = 0, tokenElevations = [] }) {
   return Math.max(base, ...els);
 }
 
-/** PIXI glue: creates display objects and owns the interface / overlay containers. */
+/** Put a released display object back into its initial state (it keeps no texture). */
+function resetDisplay(display) {
+  display.texture = PIXI.Texture.EMPTY;
+  display.position.set(0, 0);
+  display.scale.set(1, 1);
+  display.anchor.set(0.5, 0.5);
+  display.rotation = 0;
+  display.alpha = 1;
+  display.tint = 0xffffff;
+  display.visible = true;
+  display.name = null;
+  display.svaGroup = null;
+  return true;
+}
+
+function destroyDisplay(display) {
+  if (!display.destroyed) display.destroy({ children: true, texture: false, baseTexture: false });
+}
+
+/** PIXI glue: creates display objects (pooled) and owns the interface / overlay containers. */
 export class LayerManager {
   /** @type {Record<string, PIXI.Container|null>} */
   #containers = { interface: null, overlay: null };
@@ -97,23 +117,43 @@ export class LayerManager {
    */
   create(texture, descriptor) {
     const placement = layerPlacement(descriptor.layer, this.sortLayers);
-    let display;
+    const display = this.#pools[placement.group === "primary" ? "primary" : "sprite"].acquire(texture);
+    display.name = `sva:${descriptor.id}`;
     if (placement.group === "primary") {
-      display = new foundry.canvas.primary.PrimarySpriteMesh({ texture, name: `sva:${descriptor.id}` });
       display.sortLayer = placement.sortLayer;
       display.sort = descriptor.zIndex ?? 0;
       canvas.primary.addChild(display);
     } else {
-      display = new PIXI.Sprite(texture);
-      display.name = `sva:${descriptor.id}`;
       display.zIndex = descriptor.zIndex ?? 0;
       this.#container(placement.group).addChild(display);
     }
-    display.anchor.set(0.5, 0.5);
-    display.eventMode = "none";
     display.svaGroup = placement.group;
     return display;
   }
+
+  /** Sprite pooling (#19): display objects are reset and reused instead of re-allocated. */
+  #pools = {
+    primary: new ObjectPool({
+      create: (texture) => new foundry.canvas.primary.PrimarySpriteMesh({ texture }),
+      prepare: (mesh, texture) => {
+        mesh.texture = texture;
+        mesh.eventMode = "none";
+      },
+      reset: (mesh) => resetDisplay(mesh),
+      destroy: (mesh) => destroyDisplay(mesh),
+      isAlive: (mesh) => !mesh.destroyed
+    }),
+    sprite: new ObjectPool({
+      create: (texture) => new PIXI.Sprite(texture),
+      prepare: (sprite, texture) => {
+        sprite.texture = texture;
+        sprite.eventMode = "none";
+      },
+      reset: (sprite) => resetDisplay(sprite),
+      destroy: (sprite) => destroyDisplay(sprite),
+      isAlive: (sprite) => !sprite.destroyed
+    })
+  };
 
   /** Set the elevation of a primary-group effect (no-op elsewhere). */
   setElevation(display, elevation) {
@@ -122,15 +162,22 @@ export class LayerManager {
     }
   }
 
-  /** Remove and destroy a display object created by `create` (the texture belongs to the texture cache). */
+  /** Remove a display object created by `create` and return it to its pool (the texture belongs to the cache). */
   release(display) {
     if (!display || display.destroyed) return;
     display.parent?.removeChild(display);
-    display.destroy({ children: true, texture: false, baseTexture: false });
+    this.#pools[display.svaGroup === "primary" ? "primary" : "sprite"].release(display);
   }
 
-  /** Drop our containers (canvas tear down). */
+  poolStats() {
+    return Object.fromEntries(
+      Object.entries(this.#pools).map(([name, pool]) => [name, { free: pool.size, ...pool.counters }])
+    );
+  }
+
+  /** Drop pooled objects and our containers (canvas tear down). */
   tearDown() {
+    for (const pool of Object.values(this.#pools)) pool.clear();
     for (const [group, c] of Object.entries(this.#containers)) {
       if (c && !c.destroyed) {
         c.parent?.removeChild(c);

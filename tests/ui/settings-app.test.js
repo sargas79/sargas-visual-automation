@@ -43,7 +43,7 @@ describe("settings panel and menus", () => {
     const context = await api.ui.openSettings()._prepareContext({});
     const ids = context.groups.map((g) => g.id);
     expect(ids).toEqual(["performance", "client"]);
-    expect(context.groups[1].fields.map((f) => f.key)).toEqual(["uiSceneControl"]);
+    expect(context.groups[1].fields.map((f) => f.key)).toEqual(["uiSceneControl", "uiTokenHud"]);
   });
 
   it("adds the browser button to the token controls unless disabled", async () => {

@@ -1,0 +1,104 @@
+<section class="sva-overview-scroll">
+  {{#if unavailable}}
+    <p class="sva-empty">{{localize "SVA.UI.ItemConfig.NoAutomation"}}</p>
+  {{else}}
+    {{#if dbUnavailable}}
+      <p class="sva-overview-notice">
+        <i class="fa-solid fa-triangle-exclamation" inert></i>
+        {{localize "SVA.UI.Browser.Unavailable"}}
+      </p>
+    {{/if}}
+    {{#if empty}}
+      <p class="sva-empty">{{localize "SVA.UI.Overview.Empty"}}</p>
+    {{/if}}
+    {{#each groups}}
+      <section class="sva-overview-group" data-group="{{id}}">
+        <h3 class="sva-overview-group-title">
+          {{localize labelKey}}
+          <span class="sva-muted">({{count}})</span>
+        </h3>
+        <ol class="sva-overview-rows">
+          {{#each rows}}
+            <li class="{{view.rowClass}}" data-item-id="{{id}}">
+              <div class="{{view.thumbClass}}" data-tooltip="{{animation}}">
+                <i class="fa-solid fa-wand-magic-sparkles sva-overview-placeholder" inert></i>
+                {{#if thumbnail}}<img src="{{thumbnail}}" loading="lazy" alt="" />{{/if}}
+              </div>
+              <div class="sva-overview-item">
+                <div class="sva-overview-name">
+                  {{#if img}}<img src="{{img}}" alt="" class="sva-overview-item-img" />{{/if}}
+                  <strong>{{name}}</strong>
+                  {{#if hasOwnRecipe}}
+                    <i class="fa-solid fa-pen-to-square sva-active" data-tooltip="SVA.UI.ItemConfig.HasCustom"></i>
+                  {{/if}}
+                </div>
+                {{#if found}}
+                  <div class="sva-overview-animation">
+                    <code>{{animation}}</code>
+                    {{#if missing}}
+                      <i
+                        class="fa-solid fa-circle-exclamation sva-overview-missing"
+                        data-tooltip="SVA.UI.Overview.Missing"
+                      ></i>
+                    {{/if}}
+                  </div>
+                {{/if}}
+                <div class="sva-overview-meta">
+                  <span class="sva-badge sva-source-{{source}}" data-tooltip="{{reason}}">{{localize sourceKey}}</span>
+                  {{#if ruleId}}<code class="sva-muted">{{ruleId}}</code>{{/if}}
+                  {{#if presetLabel}}<span class="sva-muted">{{presetLabel}}</span>{{/if}}
+                  {{#each triggerKeys}}
+                    <span class="sva-overview-trigger"><i class="fa-solid fa-bolt" inert></i>
+                      {{localize labelKey}}</span>
+                  {{/each}}
+                </div>
+              </div>
+              <div class="sva-overview-actions">
+                <button
+                  type="button"
+                  class="sva-icon-button"
+                  data-action="preview"
+                  data-tooltip="SVA.UI.Overview.Preview"
+                  {{disabled view.noPreview}}
+                >
+                  <i class="fa-solid fa-play" inert></i>
+                </button>
+                {{#if canEdit}}
+                  <button
+                    type="button"
+                    class="sva-icon-button"
+                    data-action="change"
+                    data-tooltip="SVA.UI.Overview.Change"
+                  >
+                    <i class="fa-solid fa-film" inert></i>
+                  </button>
+                  <button type="button" class="sva-icon-button" data-action="edit" data-tooltip="SVA.UI.Overview.Edit">
+                    <i class="fa-solid fa-sliders" inert></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="sva-icon-button"
+                    data-action="reset"
+                    data-tooltip="SVA.UI.Overview.Reset"
+                    {{disabled view.noReset}}
+                  >
+                    <i class="fa-solid fa-rotate-left" inert></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="{{view.toggleClass}}"
+                    data-action="toggleDisabled"
+                    data-tooltip="{{view.toggleTooltip}}"
+                    aria-pressed="{{view.pressed}}"
+                  >
+                    <i class="fa-solid {{view.toggleIcon}}" inert></i>
+                  </button>
+                {{/if}}
+              </div>
+            </li>
+          {{/each}}
+        </ol>
+      </section>
+    {{/each}}
+  {{/if}}
+</section>

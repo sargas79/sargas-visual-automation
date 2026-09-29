@@ -1,0 +1,42 @@
+<header class="sva-overview-header">
+  <div class="sva-item-header">
+    {{#if actor.img}}<img src="{{actor.img}}" alt="" class="sva-item-img" />{{/if}}
+    <div class="sva-item-title">
+      <h2>{{actor.name}}</h2>
+      {{#if counts}}
+        <span class="sva-muted">
+          {{localize
+            "SVA.UI.Overview.Counts"
+            total=counts.total
+            animated=counts.animated
+            none=counts.none
+            disabled=counts.disabled
+          }}
+        </span>
+      {{/if}}
+    </div>
+  </div>
+  <div class="sva-overview-toolbar">
+    <label class="sva-search">
+      <i class="fa-solid fa-magnifying-glass" inert></i>
+      <input
+        type="search"
+        name="query"
+        value="{{state.query}}"
+        placeholder="{{localize 'SVA.UI.Overview.SearchPlaceholder'}}"
+        aria-label="{{localize 'SVA.UI.Overview.SearchPlaceholder'}}"
+        autocomplete="off"
+      />
+    </label>
+    <button type="button" class="sva-icon-button" data-action="clearSearch" data-tooltip="SVA.UI.Browser.ClearSearch">
+      <i class="fa-solid fa-xmark" inert></i>
+    </button>
+    <select name="filter" aria-label="{{localize 'SVA.UI.Overview.Filter'}}">
+      {{selectOptions filters selected=state.filter}}
+    </select>
+    <label class="checkbox sva-overview-showall" data-tooltip="SVA.UI.Overview.ShowAllHint">
+      <input type="checkbox" name="showAll" {{checked state.showAll}} />
+      {{localize "SVA.UI.Overview.ShowAll"}}
+    </label>
+  </div>
+</header>

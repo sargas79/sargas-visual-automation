@@ -105,6 +105,31 @@ Tick **Disable automation** to silence an item. Click **Reset** to remove the it
 
 The recipe is stored in the item's flags, so it travels with the item when you copy it to another actor or export it to a compendium.
 
+## Animation overview
+
+See at a glance which animation every spell, strike, action, consumable and effect of a character plays, and change it.
+
+Open it for an actor (you must own it, or be the GM) in any of these ways:
+
+- **Token HUD**: right-click the token, then click the **Animation overview** button (wand icon) in the right column.
+- **Actor sheet**: the **Animations** control in the sheet header.
+- **Token controls** (left toolbar): select a token, then click **Animation overview of the selected token**.
+- Macro: `SVA.ui.openActorOverview(actor)`, for example `SVA.ui.openActorOverview(canvas.tokens.controlled[0].actor)`.
+
+Items are grouped (spells, strikes and weapons, actions, feats, consumables, effects, conditions). Each row shows the JB2A thumbnail and path of the animation that plays, its preset, **where it comes from** (item recipe, world rule, system rule pack, generic fallback, or no recipe; hover the badge for the reason), and the **trigger** that fires it (attack, cast, area placed…). A warning icon next to the path means that path isn't in your JB2A database (for example a Patreon-only animation with the free JB2A).
+
+Use the search box (name, path, preset, source or trigger) and the **Show** filter (with animation, without animation, own item recipe, disabled). **Include other items** also lists equipment and other items that usually never animate.
+
+Row buttons:
+
+- **Preview**: plays the animation locally (only you see it) from this actor's selected token, or one of its tokens on the scene, to your current targets.
+- **Change**: opens the animation browser; the animation you pick is saved as the item's own recipe. The preset, options and stages that applied before are kept, only the animation changes. If nothing applied, SVA creates a recipe that fits the item (ranged for ranged attacks, area for area spells, on-token otherwise).
+- **Edit**: opens the full item configuration (see above).
+- **Reset**: removes the item's own recipe; rules apply again.
+- **Disable / Enable** automation for that item.
+
+The list updates by itself when items or world rules change. The token HUD button can be turned off per client in the settings (**Animation overview button on the token HUD**).
+
 ## Rules manager
 
 **Game Settings → Configure Settings → Sargas Visual Automation → Rules manager** (GM only).

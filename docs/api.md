@@ -382,7 +382,12 @@ SVA.systems.register(MyAdapterClass); // see adapter-guide.md
 SVA.ui.openBrowser({ onPick: (path) => console.log(path) }); // animation browser, optionally as a picker
 SVA.ui.openItemConfig(item); // the item's Animation configuration
 SVA.ui.openRulesManager(); // world rules
+SVA.ui.openSettings(); // grouped settings panel
+SVA.ui.openActorOverview(actor); // every item of an actor: its animation, source and trigger; preview/change/reset
+SVA.ui.openActorOverview(canvas.tokens.controlled[0]?.actor); // e.g. for the selected token
 ```
+
+`openActorOverview` returns the window (one per actor; calling it again focuses it) or `null` without an actor. It uses `SVA.automation.explain` for every item, so it works for any system with an adapter.
 
 ## Hooks
 

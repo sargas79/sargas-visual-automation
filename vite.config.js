@@ -1,8 +1,10 @@
-import { copyFileSync, cpSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, cpSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
 const BUNDLE = "scripts/main.js";
+/** Runtime folders shipped as-is next to the bundle. */
+const STATIC_DIRS = ["lang", "rules", "templates", "styles", "packs"];
 
 /** Copies static module files into dist/ and points module.json at the bundle. */
 function foundryModuleFiles() {
@@ -13,7 +15,9 @@ function foundryModuleFiles() {
       const manifest = JSON.parse(readFileSync("module.json", "utf8"));
       manifest.esmodules = [BUNDLE];
       writeFileSync(resolve(outDir, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);
-      cpSync("lang", resolve(outDir, "lang"), { recursive: true });
+      for (const dir of STATIC_DIRS) {
+        if (existsSync(dir)) cpSync(dir, resolve(outDir, dir), { recursive: true });
+      }
       for (const file of ["README.md", "LICENSE"]) {
         try {
           copyFileSync(file, resolve(outDir, file));

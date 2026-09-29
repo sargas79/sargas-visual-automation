@@ -16,6 +16,12 @@ describe("module entry point", () => {
     expect(api).toMatchObject({ version: "1.2.3", ready: false });
   });
 
+  it("publishes the API as globalThis.SVA", async () => {
+    await loadModule();
+    Hooks.callAll("init");
+    expect(globalThis.SVA).toBe(game.modules.get(MODULE_ID).api);
+  });
+
   it("registers the debug setting on init", async () => {
     await loadModule();
     Hooks.callAll("init");
@@ -29,7 +35,7 @@ describe("module entry point", () => {
     Hooks.callAll("init");
     Hooks.callAll("ready");
     const api = game.modules.get(MODULE_ID).api;
-    expect(api.ready).toBe(true);
+    await vi.waitFor(() => expect(api.ready).toBe(true));
     expect(onReady).toHaveBeenCalledWith(api);
   });
 });

@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.0 - 2026-09-29
+
+> PF2e has been tested live on Foundry v14. The animation overview and the D&D 5e and GURPS adapters are new and not yet tested in Foundry; checklist in `docs/testing.md` (9.14-9.26, sections 11 and 12).
+
+### Added
+
+- **Animation overview** (#74): see and change the animation of every spell, strike, action and effect of a character.
+  - Shows the JB2A thumbnail and path, the preset, where the animation comes from and what triggers it.
+  - Per item: Preview, Change (pick in the animation browser), Edit, Reset, Disable/Enable.
+  - Opens from the token HUD, the actor sheet header, the token controls, or `SVA.ui.openActorOverview(actor)`.
+- **D&D 5e adapter** (#46) for dnd5e 6.x on Foundry 14.
+  - Events: casts (usage cards), attacks (hit/miss/crit per target against AC), damage and healing, saves, spell areas (Regions) and active effects, including concentration.
+  - Default rule pack of 212 rules (SRD spells, all base weapons, potions, class features, conditions).
+- **GURPS adapter** (#47) for GURPS Game Aid 0.18.
+  - Reads GGA's chat cards: melee/ranged/thrown attacks, spells, healing, and damage linked to the previous attack.
+  - Default rule pack of 128 rules (weapon families, unarmed and natural attacks, firearms, common GURPS Magic spells).
+
 ## 0.2.1 - 2026-09-29
 
 ### Fixed

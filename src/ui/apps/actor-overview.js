@@ -55,7 +55,7 @@ export function getActorOverviewClass() {
       const key = String(actorKey(actor) ?? "actor").replace(/[^\w-]/g, "-");
       super({ id: `sva-actor-overview-${key}`, ...options });
       this.actor = actor;
-      this.state = { query: "", filter: "all", showAll: false };
+      this.viewState = { query: "", filter: "all", showAll: false };
       /** Cached rows; null = rebuild on next render. */
       this.rows = null;
     }
@@ -115,15 +115,15 @@ export function getActorOverviewClass() {
       const db = api?.db;
       if (db?.ready && typeof db.ready.then === "function") await db.ready;
       context.actor = { name: this.actor?.name ?? "", img: this.actor?.img ?? "" };
-      context.state = this.state;
+      context.state = this.viewState;
       context.filters = Object.fromEntries(FILTERS.map((id) => [id, t(`SVA.UI.Overview.Filters.${id}`)]));
       if (!api?.automation?.explain) return Object.assign(context, { unavailable: true, groups: [] });
       this.rows ??= this.buildRows();
-      const groups = groupRows(this.rows, this.state);
+      const groups = groupRows(this.rows, this.viewState);
       return Object.assign(context, {
         groups,
         empty: !groups.length,
-        counts: summarize(this.rows, this.state),
+        counts: summarize(this.rows, this.viewState),
         dbUnavailable: db?.available === false
       });
     }
@@ -151,7 +151,7 @@ export function getActorOverviewClass() {
         input.addEventListener("input", () => {
           clearTimeout(this.#searchTimer);
           this.#searchTimer = setTimeout(() => {
-            this.state.query = input.value;
+            this.viewState.query = input.value;
             this.render({ parts: ["list"] });
           }, SEARCH_DEBOUNCE_MS);
         });
@@ -160,7 +160,7 @@ export function getActorOverviewClass() {
       if (filter && !filter.dataset.svaBound) {
         filter.dataset.svaBound = "1";
         filter.addEventListener("change", () => {
-          this.state.filter = filter.value;
+          this.viewState.filter = filter.value;
           this.render();
         });
       }
@@ -168,7 +168,7 @@ export function getActorOverviewClass() {
       if (showAll && !showAll.dataset.svaBound) {
         showAll.dataset.svaBound = "1";
         showAll.addEventListener("change", () => {
-          this.state.showAll = showAll.checked;
+          this.viewState.showAll = showAll.checked;
           this.render();
         });
       }
@@ -297,7 +297,7 @@ export function getActorOverviewClass() {
     }
 
     static #onClearSearch() {
-      this.state.query = "";
+      this.viewState.query = "";
       const input = this.element?.querySelector("input[name=query]");
       if (input) input.value = "";
       this.render({ parts: ["list"] });

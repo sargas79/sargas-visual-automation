@@ -93,7 +93,7 @@ describe("actor animation overview app", () => {
     expect(context.groups[1].rows[0]).toMatchObject({ name: "Sword", found: false, source: "none" });
     expect(context.counts).toEqual({ total: 2, animated: 1, none: 1, disabled: 0 });
 
-    app.state.showAll = true;
+    app.viewState.showAll = true;
     const all = await app._prepareContext({});
     expect(all.groups.map((g) => g.id)).toEqual(["spell", "weapon", "other"]);
   });
@@ -172,7 +172,7 @@ describe("actor animation overview app", () => {
     app._onFirstRender({}, {});
     // _onFirstRender needs an element for the thumbnail error listener.
     await app._prepareContext({});
-    app.rendered = true;
+    app.render();
     const render = vi.spyOn(app, "render");
 
     fire("updateItem", { parent: { id: "other", uuid: "Actor.other" } });

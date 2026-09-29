@@ -13,7 +13,15 @@ import { LAYERS } from "../shared/descriptors.js";
 import { effectElevation } from "./layers.js";
 import { addOffset, angleTo, computeScale, parseTint, resolveAnchor, templateOf, toRadians } from "./math.js";
 import { computeStretch, missedOffset, seededRandom } from "./stretch.js";
-import { computeTimeline, DEFAULT_END_FADE, endRequestedAt, legAt, sampleEnvelope, videoStep } from "./timeline.js";
+import {
+  computeTimeline,
+  DEFAULT_END_FADE,
+  endRequestedAt,
+  hasOutro,
+  legAt,
+  sampleEnvelope,
+  videoStep
+} from "./timeline.js";
 import { isEffectVisible, tokenState } from "./visibility.js";
 
 /** How often (ms) a point-anchored effect re-tests the user's vision. */
@@ -58,7 +66,7 @@ export class EffectSprite {
     this.resolved = resolved;
     this.instance = instance;
     this.ctx = context;
-    this.timeline = computeTimeline(descriptor, instance.duration);
+    this.timeline = computeTimeline(descriptor, instance.duration, resolved?.markers);
     this.elapsed = 0;
     this.endAt = this.timeline.total;
     this.fadeOut = descriptor.fadeOut;
@@ -146,7 +154,7 @@ export class EffectSprite {
   #stepVideo() {
     const video = this.video;
     if (!video) return;
-    const step = videoStep(this.timeline, video.currentTime * 1000);
+    const step = videoStep(this.timeline, video.currentTime * 1000, { ending: this.ending });
     if (!step) return;
     if (step.seek !== undefined) video.currentTime = step.seek / 1000;
     if (step.play && video.paused) video.play().catch(() => {});
@@ -289,9 +297,19 @@ export class EffectSprite {
 
   /** Start ending: fade out (or stop right away when immediate). */
   requestEnd({ immediate = false } = {}) {
-    if (!(this.fadeOut?.duration > 0)) this.fadeOut = { duration: DEFAULT_END_FADE };
-    this.endAt = endRequestedAt({ elapsed: this.elapsed, endAt: this.endAt, immediate, fadeOut: this.fadeOut });
+    // Marker loops end with their outro (plus fadeOut if the effect has one); others fade out.
+    if (!hasOutro(this.timeline) && !(this.fadeOut?.duration > 0)) this.fadeOut = { duration: DEFAULT_END_FADE };
+    this.endAt = endRequestedAt({
+      elapsed: this.elapsed,
+      endAt: this.endAt,
+      immediate,
+      fadeOut: this.fadeOut,
+      timeline: this.timeline,
+      videoTime: this.video ? this.video.currentTime * 1000 : undefined
+    });
     this.ending = true;
+    // Leave the loop: let the video run into the outro.
+    if (this.video?.paused && hasOutro(this.timeline)) this.video.play().catch(() => {});
   }
 
   destroy() {

@@ -27,14 +27,33 @@ export const VIDEO_EPSILON = 17;
  * @property {boolean} persist
  * @property {number} legs        2 for a stretched `returnTrip` (out, then back to the source), else 1.
  * @property {number} legDuration Wall ms of one leg (= total / legs).
+ * @property {{start: number, end: number}|null} loop  Persistent effects with JB2A `_markers.loop`: video ms of the
+ *   loop segment. Playback is intro [playStart, loop.start) → loop [loop.start, loop.end) repeated → on end(),
+ *   outro [loop.end, playEnd].
  */
+
+/** Shortest loop segment (ms) worth honoring; shorter markers are ignored. */
+export const MIN_LOOP = 50;
+
+/**
+ * Loop segment for a persistent effect, clamped into [playStart, playEnd]; null when markers are missing or unusable.
+ * @param {{loop?: {start: number, end: number}}|null} markers  ResolvedFile.markers
+ */
+export function loopSegment(markers, playStart, playEnd) {
+  const loop = markers?.loop;
+  if (!loop || !Number.isFinite(loop.start) || !Number.isFinite(loop.end)) return null;
+  const start = clamp(loop.start, playStart, playEnd);
+  const end = clamp(loop.end, start, playEnd);
+  return end - start >= MIN_LOOP ? { start, end } : null;
+}
 
 /**
  * @param {import("../shared/descriptors.js").EffectDescriptor} effect
  * @param {number} videoDuration  Length of the file in ms (0 for images).
+ * @param {object|null} [markers] ResolvedFile.markers (used for persistent effects).
  * @returns {Timeline}
  */
-export function computeTimeline(effect, videoDuration) {
+export function computeTimeline(effect, videoDuration, markers = null) {
   const rate = effect.playbackRate > 0 ? effect.playbackRate : 1;
   const persist = !!effect.persist;
   const forced = effect.duration > 0 ? effect.duration : null;
@@ -52,15 +71,29 @@ export function computeTimeline(effect, videoDuration) {
       repeat: false,
       persist,
       legs,
-      legDuration: leg
+      legDuration: leg,
+      loop: null
     };
   }
   const playStart = clamp(effect.startTime ?? 0, 0, videoDuration);
   const playEnd = clamp(videoDuration - (effect.endTime ?? 0), playStart, videoDuration);
   const segment = (playEnd - playStart) / rate;
   const leg = persist ? Infinity : (forced ?? segment);
-  const repeat = persist || leg > segment + VIDEO_EPSILON;
-  return { isStatic, rate, playStart, playEnd, segment, total: leg * legs, repeat, persist, legs, legDuration: leg };
+  const loop = persist ? loopSegment(markers, playStart, playEnd) : null;
+  const repeat = !loop && (persist || leg > segment + VIDEO_EPSILON);
+  return {
+    isStatic,
+    rate,
+    playStart,
+    playEnd,
+    segment,
+    total: leg * legs,
+    repeat,
+    persist,
+    legs,
+    legDuration: leg,
+    loop
+  };
 }
 
 /** Which leg (0 = out, 1 = return) is playing at `elapsed`. */
@@ -73,10 +106,13 @@ export function legAt(timeline, elapsed) {
  * What to do with the video this frame.
  * @param {Timeline} timeline
  * @param {number} videoTime  Current video time in ms.
+ * @param {{ending?: boolean}} [state]  ending: end() was requested (a marker loop lets the outro play).
  * @returns {{seek?: number, play?: boolean, pause?: boolean}|null}  null = nothing to do.
  */
-export function videoStep(timeline, videoTime) {
+export function videoStep(timeline, videoTime, { ending = false } = {}) {
   if (timeline.isStatic) return null;
+  const loop = timeline.loop;
+  if (loop && !ending && videoTime >= loop.end - 1) return { seek: loop.start, play: true };
   if (videoTime < timeline.playEnd - 1) return null;
   if (timeline.repeat) return { seek: timeline.playStart, play: true };
   return { pause: true };
@@ -84,17 +120,31 @@ export function videoStep(timeline, videoTime) {
 
 /**
  * Wall time at which an effect should disappear after end() is requested.
+ * - immediate: now;
+ * - marker loop: when the outro has played (rest of the clip from the current video time);
+ * - otherwise: after a fade out (its duration, or DEFAULT_END_FADE), never later than already planned.
  * @param {object} params
  * @param {number} params.elapsed        Now (wall ms).
  * @param {number} params.endAt          Current planned end (wall ms, may be Infinity).
  * @param {boolean} [params.immediate]
  * @param {{duration: number}} [params.fadeOut]
+ * @param {Timeline} [params.timeline]
+ * @param {number} [params.videoTime]    Current video time in ms.
  * @returns {number}
  */
-export function endRequestedAt({ elapsed, endAt, immediate, fadeOut }) {
+export function endRequestedAt({ elapsed, endAt, immediate, fadeOut, timeline, videoTime }) {
   if (immediate) return elapsed;
+  if (timeline?.loop && Number.isFinite(videoTime)) {
+    const outro = Math.max(0, timeline.playEnd - videoTime) / timeline.rate;
+    return Math.min(endAt, elapsed + outro);
+  }
   const fade = fadeOut?.duration > 0 ? fadeOut.duration : DEFAULT_END_FADE;
   return Math.min(endAt, elapsed + fade);
+}
+
+/** Does ending this effect play an outro (instead of the default fade)? */
+export function hasOutro(timeline) {
+  return !!timeline?.loop;
 }
 
 /**

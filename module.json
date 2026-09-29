@@ -13,9 +13,7 @@
     "minimum": "14",
     "verified": "14"
   },
-  "esmodules": [
-    "src/main.js"
-  ],
+  "esmodules": ["src/main.js"],
   "languages": [
     {
       "lang": "en",
@@ -92,7 +90,5 @@
   "readme": "https://github.com/sargas79/sargas-visual-automation#readme",
   "manifest": "https://github.com/sargas79/sargas-visual-automation/releases/latest/download/module.json",
   "download": "",
-  "styles": [
-    "styles/sva.css"
-  ]
+  "styles": ["styles/sva.css"]
 }

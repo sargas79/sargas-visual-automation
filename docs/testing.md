@@ -1,4 +1,4 @@
-# Manual QA checklist (Foundry v14 + PF2e + JB2A)
+# Manual QA checklist (Foundry v14 + PF2e / GURPS + JB2A)
 
 Unit tests (`npm test`) cover everything that can run without Foundry. This checklist covers what can only be checked in a real Foundry v14 world: rendering, sockets, flags, PF2e hooks and the UI. Run it before every release and paste the [results table](#results-table-template) into the release PR.
 
@@ -249,6 +249,36 @@ Open the compendium **SVA Example Macros** and import all macros. For each macro
 | 10.16 | [ ] Weapon Throw and Return                              | Dagger thrown to each target and returns to the thrower.                                           |
 | 10.17 | [ ] Run all of the above **with Sequencer uninstalled**. | Everything works. No `Sequencer is not defined` errors.                                            |
 
+## 11. GURPS adapter
+
+Run in a separate world `sva-qa-gurps` with the **GURPS 4e Game Aid** system (`gurps`, note the version), the same **QA Grid** scene and two clients. Check `SVA.systems.active?.id` is `"gurps"`.
+
+Actors (owned by the player unless noted), each with a token:
+
+- **Knight**: Broadsword (Swing and Thrust rows), Large Knife (melee and a Thrown ranged row), Composite Bow, Punch/Kick, First Aid skill.
+- **Wizard**: spells Fireball (and its ranged attack row, as imported from GCS), Explosive Fireball, Lightning, Ice Dart, Minor Healing, Shield, Blink, Create Fire, Light, Darkness.
+- **Gunner**: Pistol and Rifle rows.
+- **Targets A, B** (GM only), 1 and 6 squares away.
+
+| #     | Check                                                                                           | Expected result                                                                                     |
+| ----- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 11.1  | [ ] Knight targets A, clicks the **Broadsword (Swing)** level: success, failure, critical.      | Sword swing onto A; the failure lands beside A; the critical plays the same swing (no extra rule).  |
+| 11.2  | [ ] Roll the **Punch**, **Kick** and **Large Knife** (melee) rows.                              | Fist, kick and dagger animations.                                                                   |
+| 11.3  | [ ] Knight targets B: **Composite Bow**, then **Large Knife (Thrown)**.                         | Arrow, then a thrown dagger, from Knight to B.                                                      |
+| 11.4  | [ ] Gunner targets B: **Pistol**, **Rifle**.                                                    | Bullet animations.                                                                                  |
+| 11.5  | [ ] Chat: `/r [M:Broadsword]` with Knight selected, then as GM `/r [@<knightId>@M:Broadsword]`. | Same as 11.1, from Knight's token both times.                                                       |
+| 11.6  | [ ] Ctrl-click (blind roll) an attack as the player.                                            | The animation plays; it does not reveal hit/miss (plays as a hit).                                  |
+| 11.7  | [ ] After 11.1, click the **damage** link in the attack card.                                   | Nothing plays by default (no duplicate swing). With debug logging, a `damage` event for Broadsword. |
+| 11.8  | [ ] Wizard targets B, rolls the **Fireball** spell (`Sp:Fireball`).                             | Fire charge-up on the Wizard only.                                                                  |
+| 11.9  | [ ] Wizard rolls the **Fireball** ranged attack row vs B; then **Explosive Fireball**.          | Fire bolt to B; explosive: fire beam and explosion.                                                 |
+| 11.10 | [ ] **Lightning**, **Ice Dart** attack rows vs B.                                               | Lightning bolt; ice shard.                                                                          |
+| 11.11 | [ ] **Minor Healing** with no target, then targeting A; **First Aid** targeting A.              | Healing on the Wizard, then on A; First Aid heals A. Only one animation per roll.                   |
+| 11.12 | [ ] **Shield**, **Blink** (click a destination), **Create Fire**, **Light**, **Darkness**.      | Shield on target/caster; Blink vanishes and reappears at the clicked square; fire, light, darkness. |
+| 11.13 | [ ] Fail a spell roll with the world setting **GURPS: failed casts** on, then off.              | On: the spell animation plays. Off: nothing.                                                        |
+| 11.14 | [ ] Roll **Parry**, **Block** and **Dodge**, and a plain skill (Stealth).                       | Nothing plays, no errors.                                                                           |
+| 11.15 | [ ] Open a Broadsword **equipment item** sheet: header **Animation** → set a recipe → roll it.  | The item recipe plays instead of the rule pack's.                                                   |
+| 11.16 | [ ] Two clients: the player rolls 11.1.                                                         | Plays once on each client.                                                                          |
+
 ## Results table template
 
 Copy this into the release PR and fill it in. Use `PASS`, `FAIL (#issue)` or `N/A (reason)`.
@@ -282,6 +312,7 @@ Copy this into the release PR and fill it in. Use `PASS`, `FAIL (#issue)` or `N/
 | 8.3 PF2e effects, healing, multi |           |               |       |
 | 9. UI                            |           |               |       |
 | 10. Example macros               |           |               |       |
+| 11. GURPS adapter                |           |               |       |
 
 **Failures:** list issue numbers.
 **Blockers for release:** yes / no.

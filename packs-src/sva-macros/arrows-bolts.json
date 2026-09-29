@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000013",
+  "_key": "!macros!svaExample000013",
+  "name": "Arrows and Bolts",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/target.svg",
+  "command": "/**\n * SVA example: Arrows and Bolts\n * Shoots an arrow (or a crossbow bolt) from the selected token to every target. SVA picks the\n * 5/15/30/60/90 ft file closest to the real distance and stretches it from token to token.\n *\n * Usage: select the archer, target one or more tokens, run.\n * Hold SHIFT while clicking the macro to make the shots miss.\n * Requires: Sargas Visual Automation + JB2A. No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst AMMO = \"arrow\"; // \"arrow\" | \"bolt\"\nconst COLOR = \"white\"; // white, blue, green, pink, purple, red\nconst VOLLEY_MS = 250; // delay between shots when several tokens are targeted\n// White arrows come in two designs (01, 02); the other colours have one.\nconst FILE =\n  AMMO === \"bolt\"\n    ? `jb2a.bolt.physical.${COLOR}`\n    : COLOR === \"white\"\n      ? \"jb2a.arrow.physical.white.02\"\n      : `jb2a.arrow.physical.${COLOR}`;\n\nconst archer = canvas.tokens.controlled[0] ?? token;\nconst targets = [...game.user.targets];\nif (!archer) return ui.notifications.warn(\"Select the shooting token.\");\nif (!targets.length) return ui.notifications.warn(\"Target at least one token.\");\nconst missed = [\"ShiftLeft\", \"ShiftRight\"].some((code) => game.keyboard.downKeys.has(code));\n\nconst seq = SVA.sequence();\ntargets.forEach((target, i) => {\n  seq\n    .effect()\n    .file(FILE)\n    .atLocation(archer)\n    .stretchTo(target)\n    .missed(missed)\n    .delay(i * VOLLEY_MS);\n});\nawait seq.play();\n",
+  "folder": null,
+  "sort": 1300000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

@@ -133,7 +133,7 @@ Open it from the **Animation browser** button in the module settings (and in the
 
 ## Example macros
 
-The compendium **SVA Example Macros** contains 16 ready-to-use macros that show what the [macro API](api.md) can do: projectiles and thrown weapons, flasks and bombs, melee attacks, toggleable auras and shields, and a spike trap. Import them (right-click the compendium → Import All) and read each macro's header comment for what to select or target. They work without Sequencer.
+The compendium **SVA Example Macros** contains 16 ready-to-use macros that show what the [macro API](api.md) can do: projectiles and thrown weapons, flasks and bombs, melee attacks, toggleable auras and shields, and a spike trap. Import them (right-click the compendium → Import All) and read each macro's header comment for what to select or target. They work without Sequencer. See [Example macros](macros.md) for the full list.
 
 ## Settings
 

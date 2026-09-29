@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000006",
+  "_key": "!macros!svaExample000006",
+  "name": "Whirl Toggle",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/daze.svg",
+  "command": "/**\n * SVA example: Whirl Toggle\n * A whirling circle under each selected token: intro, then a persistent loop that follows the\n * token. Run again to stop it; the outro plays as it ends.\n *\n * Usage: select tokens, run.\n * Requires: Sargas Visual Automation + JB2A (Patreon). No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst KIND = \"whirl\";\nconst COLOR = \"blue\"; // blue, green, orange, purple, red, red02, yellow, dark_black\nconst SCALE = 1.5;\nconst base = `jb2a.template_circle.${KIND}`;\n\nconst tokens = canvas.tokens.controlled;\nif (!tokens.length) return ui.notifications.warn(\"Select at least one token.\");\nconst sceneId = canvas.scene.id;\n\nfor (const tok of tokens) {\n  const name = `sva-${KIND}:${tok.id}`;\n  const seq = SVA.sequence();\n  if (SVA.effects.list({ sceneId, name }).length) {\n    // Stop the loop and play the outro in its place.\n    await SVA.effects.end({ name, sceneId });\n    seq.effect().file(`${base}.outro.${COLOR}`).attachTo(tok.id).scaleToObject(SCALE).layer(\"belowTokens\");\n    await seq.play();\n    continue;\n  }\n  seq\n    .effect()\n    .file(`${base}.intro.${COLOR}`)\n    .attachTo(tok.id)\n    .scaleToObject(SCALE)\n    .layer(\"belowTokens\")\n    .waitUntilFinished(-1000);\n  seq\n    .effect()\n    .file(`${base}.loop.${COLOR}`)\n    .attachTo(tok.id)\n    .scaleToObject(SCALE)\n    .layer(\"belowTokens\")\n    .fadeIn(500)\n    .fadeOut(500)\n    .persist(true)\n    .name(name);\n  await seq.play();\n}\n",
+  "folder": null,
+  "sort": 600000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

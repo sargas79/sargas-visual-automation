@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000009",
+  "_key": "!macros!svaExample000009",
+  "name": "Shield Toggle",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/shield.svg",
+  "command": "/**\n * SVA example: Shield Toggle\n * A shimmering magical shield around each selected token. It follows the token, survives a\n * reload, and bursts when you run the macro again.\n *\n * Usage: select tokens, run.\n * Requires: Sargas Visual Automation + JB2A. No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst COLOR = \"blue\"; // blue, green, purple, red, yellow\nconst SCALE = 1.5;\nconst BURST_ON_END = true; // play the \"explode\" outro instead of a plain fade\n\nconst tokens = canvas.tokens.controlled;\nif (!tokens.length) return ui.notifications.warn(\"Select at least one token.\");\nconst sceneId = canvas.scene.id;\n\nfor (const tok of tokens) {\n  const name = `sva-shield:${tok.id}`;\n  const seq = SVA.sequence();\n  if (SVA.effects.list({ sceneId, name }).length) {\n    await SVA.effects.end({ name, sceneId });\n    if (BURST_ON_END) {\n      seq.effect().file(`jb2a.shield.01.outro_explode.${COLOR}`).attachTo(tok.id).scaleToObject(SCALE);\n      await seq.play();\n    }\n    continue;\n  }\n  // The \"complete\" file contains intro, loop and outro; persist() keeps it in the loop.\n  seq\n    .effect()\n    .file(`jb2a.shield.01.complete.01.${COLOR}`)\n    .attachTo(tok.id)\n    .scaleToObject(SCALE)\n    .fadeOut(BURST_ON_END ? 200 : 600)\n    .persist(true)\n    .name(name);\n  await seq.play();\n}\n",
+  "folder": null,
+  "sort": 900000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

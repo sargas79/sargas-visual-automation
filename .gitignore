@@ -11,3 +11,6 @@ coverage/
 jb2a_patreon/
 JB2A_DnD5e/
 *.zip
+
+# Compiled compendium packs (built from packs-src/ by npm run build:packs).
+packs/

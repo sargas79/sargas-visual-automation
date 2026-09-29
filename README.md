@@ -25,6 +25,7 @@ https://github.com/sargas79/sargas-visual-automation/releases/latest/download/mo
 - [User guide](docs/user-guide.md): installation, JB2A, configuring items, rules manager, settings, troubleshooting
 - [Macro & module API](docs/api.md): `SVA.sequence()`, `SVA.effects`, `SVA.db`, `SVA.engine`, `SVA.automation`, hooks
 - [Adapter guide](docs/adapter-guide.md): adding a game system (D&D 5e, GURPS, …)
+- [Example macros](docs/macros.md): the 16 macros of the SVA Example Macros compendium
 - [Manual QA checklist](docs/testing.md): in-Foundry test script for releases
 - [Architecture & contracts](docs/architecture.md): for contributors
 

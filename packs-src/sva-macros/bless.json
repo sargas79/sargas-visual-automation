@@ -1,0 +1,19 @@
+{
+  "_id": "svaExample000005",
+  "_key": "!macros!svaExample000005",
+  "name": "Bless Toggle",
+  "type": "script",
+  "scope": "global",
+  "img": "icons/svg/angel.svg",
+  "command": "/**\n * SVA example: Bless Toggle\n * Blesses every targeted token (or the selected ones if nothing is targeted): a golden intro,\n * then a persistent glow that follows the token. Run again on a blessed token to end it.\n * The glow is saved in the scene, so it survives a reload.\n *\n * Usage: target (or select) tokens, run.\n * Requires: Sargas Visual Automation + JB2A. No Sequencer needed.\n */\nconst SVA = game.modules.get(\"sargas-visual-automation\")?.api;\nif (!SVA?.ready) return ui.notifications.error(\"Sargas Visual Automation is not ready.\");\n\nconst COLOR = \"yellow\"; // \"yellow\" | \"blue\" | \"green\" | \"purple\"\nconst tokens = game.user.targets.size ? [...game.user.targets] : canvas.tokens.controlled;\nif (!tokens.length) return ui.notifications.warn(\"Target or select at least one token.\");\n\nconst sceneId = canvas.scene.id;\nfor (const target of tokens) {\n  const name = `sva-bless:${target.id}`;\n  if (SVA.effects.list({ sceneId, name }).length) {\n    await SVA.effects.end({ name, sceneId });\n    continue;\n  }\n  const seq = SVA.sequence();\n  seq\n    .effect()\n    .file(`jb2a.bless.200px.intro.${COLOR}`)\n    .attachTo(target.id)\n    .scaleToObject(1.5)\n    .layer(\"belowTokens\")\n    .waitUntilFinished(-500);\n  seq\n    .effect()\n    .file(`jb2a.bless.200px.loop.${COLOR}`)\n    .attachTo(target.id)\n    .scaleToObject(1.5)\n    .layer(\"belowTokens\")\n    .fadeIn(300)\n    .fadeOut(1000)\n    .persist(true)\n    .name(name);\n  await seq.play();\n}\n",
+  "folder": null,
+  "sort": 500000,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "sargas-visual-automation": {
+      "example": true
+    }
+  }
+}

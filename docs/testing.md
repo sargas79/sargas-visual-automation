@@ -233,7 +233,7 @@ Open the compendium **SVA Example Macros** and import all macros. For each macro
 | 10.8  | [ ] Magic Circle Toggle                                  | Persistent magic circle under the token; toggles off.                                              |
 | 10.9  | [ ] Shield Toggle                                        | Persistent shield attached to the token; toggles off.                                              |
 | 10.10 | [ ] Energy Field Toggle                                  | Two layers (below + above token); both end together.                                               |
-| 10.11 | [ ] Molten Earth Shield                                  | Two layers; both end together.                                                                     |
+| 10.11 | [ ] Molten Earth Shield Toggle                           | Two layers; both end together.                                                                     |
 | 10.12 | [ ] Bomb Throw                                           | Bomb, shrapnel, explosion, ground crack.                                                           |
 | 10.13 | [ ] Arrows and Bolts                                     | Arrow (or bolt) to each target, correct distance variant.                                          |
 | 10.14 | [ ] Dodecahedron Toggle                                  | Two layers; toggles off.                                                                           |

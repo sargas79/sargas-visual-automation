@@ -1,1 +1,516 @@
-/* Sargas Visual Automation styles. Owned by src/ui (#36-#39). Prefix every class with .sva- */
+/* Sargas Visual Automation styles. Owned by src/ui (#36-#39). Prefix every class with .sva-
+ * Colors come from Foundry theme variables (with fallbacks) so light and dark themes both work. */
+
+.sva-app {
+  --sva-border: var(--color-border, rgb(127 127 127 / 40%));
+  --sva-muted: var(--color-text-secondary, rgb(127 127 127));
+  --sva-accent: var(--color-warm-2, var(--color-text-hyperlink, #ff6400));
+  --sva-surface: color-mix(in srgb, currentcolor 6%, transparent);
+  --sva-surface-strong: color-mix(in srgb, currentcolor 12%, transparent);
+  --sva-gap: 0.5rem;
+}
+
+.sva-app .sva-muted {
+  color: var(--sva-muted);
+}
+
+.sva-app .sva-empty {
+  padding: 1rem;
+  color: var(--sva-muted);
+  font-style: italic;
+  text-align: center;
+}
+
+.sva-app .sva-badge {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--sva-accent);
+  border-radius: 1rem;
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.sva-app .sva-active {
+  color: var(--sva-accent);
+}
+
+.sva-app .sva-icon-button,
+.sva-app .sva-card-actions button,
+.sva-app .sva-tree-toggle {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 1.75rem;
+  padding: 0 0.35rem;
+}
+
+/* ---------- Animation browser (#36) ---------- */
+
+.sva-browser .window-content {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--sva-gap);
+  padding: var(--sva-gap);
+  overflow: hidden;
+}
+
+.sva-browser .sva-browser-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--sva-gap);
+}
+
+.sva-browser .sva-search {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sva-browser .sva-search input {
+  flex: 1;
+}
+
+.sva-browser .sva-toggle {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.sva-browser .sva-tree {
+  overflow-y: auto;
+  border-right: 1px solid var(--sva-border);
+  padding-right: 0.25rem;
+}
+
+.sva-browser .sva-tree-row {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.sva-browser .sva-tree-row:hover {
+  background: var(--sva-surface);
+}
+
+.sva-browser .sva-tree-row.sva-selected {
+  background: var(--sva-surface-strong);
+  font-weight: bold;
+}
+
+.sva-browser .sva-tree-toggle {
+  height: 1.4rem;
+  border: none;
+  background: none;
+}
+
+.sva-browser .sva-tree-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.sva-browser .sva-grid-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--sva-gap);
+}
+
+.sva-browser .sva-grid-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sva-gap);
+}
+
+.sva-browser .sva-grid-heading {
+  margin: 0;
+  border: none;
+}
+
+.sva-browser .sva-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sva-browser .sva-breadcrumbs li + li::before {
+  content: "›";
+  padding: 0 0.3rem;
+  color: var(--sva-muted);
+}
+
+.sva-browser .sva-breadcrumbs a {
+  cursor: pointer;
+}
+
+.sva-browser .sva-hint {
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.sva-browser .sva-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-auto-rows: min-content;
+  flex: 1;
+  gap: var(--sva-gap);
+  overflow-y: auto;
+  align-content: start;
+}
+
+.sva-browser .sva-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--sva-border);
+  border-radius: 4px;
+  background: var(--sva-surface);
+  overflow: hidden;
+}
+
+.sva-browser .sva-card:hover {
+  border-color: var(--sva-accent);
+}
+
+.sva-browser .sva-card-media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 10;
+  background: rgb(0 0 0 / 55%);
+  cursor: pointer;
+}
+
+.sva-browser .sva-card-media img,
+.sva-browser .sva-card-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+}
+
+.sva-browser .sva-card-media video {
+  position: absolute;
+  inset: 0;
+}
+
+.sva-browser .sva-card-placeholder {
+  font-size: 2rem;
+  color: rgb(255 255 255 / 60%);
+}
+
+.sva-browser .sva-card-name {
+  padding: 0.2rem 0.35rem 0;
+  overflow: hidden;
+  font-size: var(--font-size-12, 0.75rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sva-browser .sva-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  padding: 0.2rem;
+}
+
+.sva-browser .sva-card-actions button {
+  height: 1.5rem;
+  line-height: 1;
+}
+
+.sva-browser .sva-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sva-gap);
+}
+
+.sva-browser .sva-pager button {
+  flex: 0 0 auto;
+  width: 2rem;
+}
+
+/* ---------- Recipe form + item recipe editor (#37) ---------- */
+
+.sva-item-config .window-content {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sva-gap);
+  overflow: hidden;
+}
+
+.sva-item-config .sva-item-config-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--sva-gap);
+}
+
+.sva-item-config .sva-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.sva-app .sva-item-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sva-gap);
+  padding-bottom: var(--sva-gap);
+  border-bottom: 1px solid var(--sva-border);
+}
+
+.sva-app .sva-item-img {
+  width: 40px;
+  height: 40px;
+  border: none;
+  object-fit: contain;
+}
+
+.sva-app .sva-item-title {
+  flex: 1;
+}
+
+.sva-app .sva-item-title h2 {
+  margin: 0;
+  border: none;
+}
+
+.sva-app .sva-disable-toggle {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.sva-app .sva-match {
+  margin-bottom: var(--sva-gap);
+  padding: var(--sva-gap);
+  border: 1px solid var(--sva-border);
+  border-radius: 4px;
+  background: var(--sva-surface);
+}
+
+.sva-app .sva-match h3 {
+  margin: 0 0 0.25rem;
+  border: none;
+  font-size: var(--font-size-14, 0.875rem);
+}
+
+.sva-app .sva-match p {
+  margin: 0.2rem 0;
+}
+
+.sva-app .sva-inline-button {
+  width: auto;
+}
+
+.sva-app .sva-candidates {
+  margin: 0.25rem 0;
+  padding-left: 1.2rem;
+}
+
+.sva-app .sva-candidate.sva-matched {
+  font-weight: bold;
+}
+
+.sva-app .sva-candidate.sva-winner {
+  color: var(--sva-accent);
+  font-weight: bold;
+}
+
+.sva-app .sva-recipe-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sva-app .sva-path-field button {
+  flex: 0 0 auto;
+  width: 2rem;
+}
+
+.sva-app .sva-json {
+  width: 100%;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.sva-app .sva-section {
+  padding: 0.25rem 0;
+  border-top: 1px solid var(--sva-border);
+}
+
+.sva-app .sva-section summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.sva-app .sva-subrecipe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0.35rem 0;
+}
+
+.sva-app .sva-subrecipe-label {
+  font-weight: bold;
+}
+
+.sva-app .sva-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.15rem 0.5rem;
+}
+
+.sva-app .sva-footer {
+  display: flex;
+  gap: var(--sva-gap);
+  padding-top: var(--sva-gap);
+}
+
+.sva-app .sva-footer button {
+  flex: 1;
+}
+
+/* ---------- Rules manager (#38) ---------- */
+
+.sva-rules-manager .window-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--sva-gap);
+  padding: var(--sva-gap);
+  overflow: hidden;
+}
+
+.sva-rules-manager .sva-rules-panel,
+.sva-rules-manager .sva-rule-editor {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--sva-gap);
+}
+
+.sva-rules-manager .sva-rule-editor {
+  padding-left: var(--sva-gap);
+  border-left: 1px solid var(--sva-border);
+}
+
+.sva-rules-manager .sva-rule-form {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.sva-rules-manager .sva-rule-form h3 {
+  margin-top: 0;
+}
+
+.sva-app .sva-toolbar {
+  display: flex;
+  gap: var(--sva-gap);
+}
+
+.sva-app .sva-toolbar button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.sva-rules-manager .sva-rules-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.sva-rules-manager .sva-rules-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+}
+
+.sva-rules-manager .sva-rules-table th,
+.sva-rules-manager .sva-rules-table td {
+  padding: 0.2rem 0.3rem;
+  border-bottom: 1px solid var(--sva-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.sva-rules-manager .sva-rules-table a {
+  cursor: pointer;
+}
+
+.sva-rules-manager .sva-rule-disabled {
+  opacity: 0.55;
+}
+
+.sva-rules-manager .sva-row-actions {
+  white-space: nowrap;
+}
+
+.sva-app .sva-small {
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.sva-rules-manager .sva-tester h3 {
+  margin: 0 0 0.25rem;
+}
+
+.sva-rules-manager .sva-drop-zone {
+  padding: 0.75rem;
+  border: 2px dashed var(--sva-border);
+  border-radius: 6px;
+  color: var(--sva-muted);
+  text-align: center;
+}
+
+.sva-rules-manager .sva-drop-zone.sva-drag-over {
+  border-color: var(--sva-accent);
+  color: var(--sva-accent);
+}
+
+.sva-rules-manager .sva-test-img {
+  width: 24px;
+  height: 24px;
+  border: none;
+  vertical-align: middle;
+}
+
+/* ---------- Settings panel (#39) ---------- */
+
+.sva-settings-panel .window-content {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sva-gap);
+  overflow: hidden;
+}
+
+.sva-settings-panel .sva-settings-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--sva-gap);
+}
+
+.sva-settings-panel .sva-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.sva-settings-panel .sva-settings-group {
+  margin-bottom: var(--sva-gap);
+}
+
+.sva-settings-panel .sva-settings-group .hint .sva-badge {
+  margin-left: 0.35rem;
+  font-style: normal;
+}

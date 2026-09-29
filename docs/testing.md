@@ -209,12 +209,16 @@ Roll everything from the **Player** client unless noted, with the named tokens s
 | ---- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | 9.1  | [ ] Open the **Animation browser** (`SVA.ui.openBrowser()` or its toolbar/settings button).     | Tree + search + thumbnail grid.                                                                 |
 | 9.2  | [ ] Search "fire bolt", hover a thumbnail.                                                      | Hover plays a video preview.                                                                    |
+| 9.2a | [ ] First browser use after installing JB2A: console "Indexed N JB2A thumbnails"; reload.       | N ≈ 6600 (Patreon 0.9.3); no new walk after the reload (cached).                                |
+| 9.2b | [ ] Browse `jb2a.template_circle` (many animations without a JB2A thumbnail).                   | Cards get a captured frame when visible; failures show "No preview".                            |
 | 9.3  | [ ] Find `jb2a.shield.01.complete.01.blue` in < 3 clicks, **Copy path**.                        | Clipboard contains the dot path.                                                                |
 | 9.4  | [ ] **Play on selected token**.                                                                 | Plays on the selected token.                                                                    |
 | 9.5  | [ ] Add and remove a favourite, reopen the window.                                              | Favourites persist.                                                                             |
 | 9.6  | [ ] Open a PF2e item sheet (longsword): header control **Animation**.                           | Opens the item config.                                                                          |
 | 9.7  | [ ] Pick a preset, a JB2A path (via the browser picker), a colour, per-outcome overrides; save. | Next Strike uses the new animation **without reload**.                                          |
 | 9.8  | [ ] **Preview** button with a token selected and one targeted.                                  | Plays locally only.                                                                             |
+| 9.8a | [ ] Item config open on two clients (GM + Player owner); save a new animation on one.           | The other editor reloads it; with unsaved edits it shows the Reload / Keep notice.              |
+| 9.8b | [ ] Sound section: click the file button next to **Sound file**, pick an audio file.            | Foundry file browser (audio only); the path lands in the field.                                 |
 | 9.9  | [ ] **Rules manager**: add, edit, disable, delete a world rule.                                 | Changes apply immediately.                                                                      |
 | 9.10 | [ ] Rules manager "which rule matches" for an item.                                             | Same answer as `SVA.automation.explain(item)`.                                                  |
 | 9.11 | [ ] **Export** rules, delete them all, **Import** the file.                                     | Rules are identical after the round-trip.                                                       |

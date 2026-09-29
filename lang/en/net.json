@@ -1,1 +1,31 @@
-{}
+{
+  "SVA": {
+    "Net": {
+      "NoGM": "No GM is connected: persistent animation changes cannot be saved.",
+      "Settings": {
+        "MinTriggerRole": {
+          "Name": "Minimum role to trigger animations",
+          "Hint": "Users below this role cannot play or broadcast animations (automation and macros). Gamemasters are always allowed."
+        },
+        "EffectsDisabled": {
+          "Name": "Disable animations on this client",
+          "Hint": "Do not render any Sargas Visual Automation effect on this computer. Other players are not affected."
+        },
+        "ReducedMotion": {
+          "Name": "Reduced motion",
+          "Hint": "Skip non-essential motion: screen-wide effects, return trips and scale-in/out animations. Persistent effects are kept."
+        },
+        "Volume": {
+          "Name": "Animation sound volume",
+          "Hint": "Volume multiplier for sounds played by animation sequences on this computer."
+        }
+      },
+      "Roles": {
+        "Player": "Player",
+        "Trusted": "Trusted Player",
+        "Assistant": "Assistant GM",
+        "Gamemaster": "Gamemaster"
+      }
+    }
+  }
+}

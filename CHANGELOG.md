@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.0 - 2026-09-29
+
+> Still not tested in a live Foundry world: 560 unit and integration tests pass, but the `docs/testing.md` checklist has not been run.
+
+### Added
+
+- **Teleport moves the token** (#65). Vanish, then the move (no slide), then appear. The destination is the placed area, `options.destination`, or a click on the canvas (right-click or Escape cancels). Players' moves are applied by the GM, only for tokens they own. New PF2e rules: Translocate, Dimension Door, Abundant Step, Dimensional Assault, Dimensional Disappearance.
+- **Essential effects** (#66): `EffectDescriptor.essential` and a `.essential()` builder setter. Reduced motion keeps the effects that show the result and skips decorative ones.
+- **Rule matching by base item** (#63): `match.baseItem`. The PF2e weapon rules use it, so named magic weapons get their base weapon's animation.
+- **Thumbnail index** (#67): coverage in the animation browser goes from 64% to 83.5%. Other cards show a captured video frame or a placeholder.
+- **Item editor sync** (#68): the editor reloads when the item changes elsewhere, or keeps your edits with a notice. The sound field has a file picker.
+- **Adapter `static init(api)`** (#64) so adapters register settings during Foundry `init`.
+
+### Fixed
+
+- Duplicate events: events now carry ids, so a repeated or late message never animates the same action twice (#62).
+- Healing spells (Heal, Soothe, Breath of Life, Lay on Hands) and Spiritual Armament no longer animate twice. PF2e sends a cast card and a roll for one action, and both used to trigger the animation.
+
 ## 0.1.0 - 2026-09-29
 
 First release. Sargas Visual Automation plays and automates JB2A animations on Foundry VTT **v14** without Sequencer or Automated Animations.

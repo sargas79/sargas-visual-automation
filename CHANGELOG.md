@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1 - 2026-09-29
+
+### Fixed
+
+- The animation overview and the animation browser no longer crash on open in Foundry v14 ("Cannot set property state of #<ApplicationV2> which has only a getter").
+
 ## 0.3.0 - 2026-09-29
 
 > PF2e has been tested live on Foundry v14. The animation overview and the D&D 5e and GURPS adapters are new and not yet tested in Foundry; checklist in `docs/testing.md` (9.14-9.26, sections 11 and 12).

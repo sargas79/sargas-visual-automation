@@ -30,6 +30,10 @@
         "Favourites": {
           "Name": "Animation browser favourites",
           "Hint": "Database paths starred in the animation browser."
+        },
+        "SceneControl": {
+          "Name": "Animation browser button",
+          "Hint": "Show a button in the token controls (left toolbar) that opens the JB2A animation browser."
         }
       },
       "Recipe": {
@@ -155,6 +159,48 @@
         "Imported": "Imported {count} rule(s).",
         "ImportFailed": "Import failed: {error}",
         "GMOnly": "Only a GM can manage world animation rules."
+      },
+      "Menus": {
+        "Settings": {
+          "Name": "All SVA settings",
+          "Label": "Open settings panel",
+          "Hint": "Every Sargas Visual Automation setting grouped by topic (performance, permissions, systems, your preferences), with explanations."
+        },
+        "Browser": {
+          "Name": "Animation browser",
+          "Label": "Open animation browser",
+          "Hint": "Browse, search and preview every JB2A animation; copy paths or play them on selected tokens."
+        },
+        "Rules": {
+          "Name": "World animation rules",
+          "Label": "Open rules manager",
+          "Hint": "Map items to animations for the whole world, test which rule an item matches and import/export rules as JSON."
+        }
+      },
+      "SettingsPanel": {
+        "Title": "Sargas Visual Automation Settings",
+        "Save": "Save changes",
+        "Saved": "Saved {count} setting(s).",
+        "SaveFailed": "Could not save setting {name}.",
+        "ReloadRequired": "Some changes take effect after reloading Foundry.",
+        "RequiresReload": "Requires a reload",
+        "Empty": "No settings available for your role.",
+        "ScopeWorld": "World",
+        "ScopeClient": "This client",
+        "Groups": {
+          "general": "General",
+          "generalHint": "Core module behaviour.",
+          "automation": "Automation",
+          "automationHint": "How items are matched to animations and when they play.",
+          "performance": "Performance",
+          "performanceHint": "Limits that keep the canvas smooth on slower machines.",
+          "permissions": "Permissions",
+          "permissionsHint": "Who may trigger and broadcast animations.",
+          "systems": "Game systems",
+          "systemsHint": "System adapters and their default rule packs.",
+          "client": "Your preferences",
+          "clientHint": "Only affect this browser/user."
+        }
       }
     }
   }

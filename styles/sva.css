@@ -481,3 +481,36 @@
   border: none;
   vertical-align: middle;
 }
+
+/* ---------- Settings panel (#39) ---------- */
+
+.sva-settings-panel .window-content {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sva-gap);
+  overflow: hidden;
+}
+
+.sva-settings-panel .sva-settings-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--sva-gap);
+}
+
+.sva-settings-panel .sva-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.sva-settings-panel .sva-settings-group {
+  margin-bottom: var(--sva-gap);
+}
+
+.sva-settings-panel .sva-settings-group .hint .sva-badge {
+  margin-left: 0.35rem;
+  font-style: normal;
+}

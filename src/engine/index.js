@@ -7,4 +7,62 @@
  *   setup(api)  - Foundry "setup"
  *   ready(api)  - Foundry "ready" (may be async; areas run in order)
  */
-export function init(_api) {}
+import { DebugOverlay } from "./debug-overlay.js";
+import { EffectEngine } from "./engine.js";
+import { createFoundryEnvironment } from "./environment.js";
+import { LayerManager } from "./layers.js";
+import { ENGINE_SETTINGS, getEngineSetting, registerEngineSettings } from "./settings.js";
+import { TextureCache } from "./texture-cache.js";
+import { foundryTextureBackend } from "./video-backend.js";
+
+/** @type {EffectEngine|null} */
+let engine = null;
+/** @type {LayerManager|null} */
+let layers = null;
+/** @type {DebugOverlay|null} */
+let overlay = null;
+
+export function init(api) {
+  registerEngineSettings({
+    onChange: (key, value) => {
+      if (key === ENGINE_SETTINGS.CACHE_SIZE) engine?.textures.resize(value);
+      if (key === ENGINE_SETTINGS.DEBUG_OVERLAY) overlay?.setEnabled(value);
+    }
+  });
+  const textures = new TextureCache({
+    backend: foundryTextureBackend,
+    max: getEngineSetting(ENGINE_SETTINGS.CACHE_SIZE)
+  });
+  layers = new LayerManager();
+  engine = new EffectEngine({
+    api,
+    textures,
+    env: createFoundryEnvironment(layers),
+    maxEffects: () => getEngineSetting(ENGINE_SETTINGS.MAX_EFFECTS)
+  });
+  overlay = new DebugOverlay(() => engine.stats());
+  overlay.enabled = !!getEngineSetting(ENGINE_SETTINGS.DEBUG_OVERLAY);
+
+  api.engine = {
+    play: (effect) => engine.play(effect),
+    get: (id) => engine.get(id),
+    active: () => engine.active(),
+    end: (id, options) => engine.end(id, options),
+    endAll: (options) => engine.endAll(options),
+    preload: (pathsOrFiles) => engine.preload(pathsOrFiles),
+    /** Debug helpers (not part of the cross-area contract). */
+    debug: {
+      stats: () => engine.stats(),
+      overlay: (enabled = true) => overlay.setEnabled(enabled)
+    }
+  };
+
+  // Scene change: remove effects before Foundry destroys the canvas groups, free sprites and video elements.
+  Hooks.on("canvasTearDown", () => {
+    engine.tearDown();
+    layers.tearDown();
+    overlay.tearDown();
+    engine.textures.clear();
+  });
+  Hooks.on("canvasReady", () => overlay.show());
+}

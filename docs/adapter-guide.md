@@ -27,11 +27,11 @@ system hooks ──► YourAdapter ──this.ctx.emit(event)──► api.autom
 
 Three shared files are your whole contract. Import them; never import anything else from SVA's `src/`:
 
-| File                     | What you use                                                                                                                                                                               |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `src/shared/adapter.js`  | `SystemAdapter`, the base class: `static id`, `static label`, `static isActive()`, `register()`, `unregister()`, `getItemKey(item)`, `getItemDescriptors(item)`, `rulePackUrl`, `this.ctx` |
-| `src/shared/events.js`   | `EVENT_TYPES`, `OUTCOMES`, `AREA_SHAPES`, `ATTACK_KINDS`, `createAutomationEvent`, and the `AutomationEvent` / `ItemDescriptors` typedefs                                                  |
-| `rules/<system-id>.json` | Your default rule pack (plain JSON)                                                                                                                                                        |
+| File                     | What you use                                                                                                                                                                                                   |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/shared/adapter.js`  | `SystemAdapter`, the base class: `static id`, `static label`, `static isActive()`, `static init(api)`, `register()`, `unregister()`, `getItemKey(item)`, `getItemDescriptors(item)`, `rulePackUrl`, `this.ctx` |
+| `src/shared/events.js`   | `EVENT_TYPES`, `OUTCOMES`, `AREA_SHAPES`, `ATTACK_KINDS`, `createAutomationEvent`, and the `AutomationEvent` / `ItemDescriptors` typedefs                                                                      |
+| `rules/<system-id>.json` | Your default rule pack (plain JSON)                                                                                                                                                                            |
 
 Rules for adapters:
 
@@ -57,6 +57,7 @@ export default class Dnd5eAdapter extends SystemAdapter {
 ```
 
 - `static isActive()` defaults to `game.system.id === this.id`. Override it only if you need to check a system version, for example `return super.isActive() && foundry.utils.isNewerVersion(game.system.version, "4.99")`.
+- Optional `static init(api)`: called once for **every** registered adapter class during Foundry's `init` (by the automation area; a class registered later is initialized as soon as it is registered). No instance exists yet. Register your system's settings here (keys prefixed with your system id, e.g. `dnd5eFoo`, optionally `svaGroup: "systems"`), and return early when `!this.isActive()` so other systems' worlds don't get them. The PF2e adapter registers `pf2eConditionEvents` this way.
 - The core constructs your class with `ctx = { api, emit }` on Foundry's `ready`, then calls `register()` once. `ctx.api` is the full SVA API; `ctx.emit` forwards events to the automation core and fills `systemId` for you.
 - Keep every hook id you register so `unregister()` can remove it (tests and hot reload call it). The template shows a `#on(hook, fn)` helper for this.
 

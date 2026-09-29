@@ -17,6 +17,7 @@
  * - Default rules for the system live in rules/<system-id>.json (see
  *   rules/README.md); `rulePackUrl` points there by default.
  */
+import { MODULE_ID } from "../../constants.js";
 import { SystemAdapter } from "../../shared/adapter.js";
 import { ATTACK_KINDS, EVENT_TYPES, OUTCOMES } from "../../shared/events.js";
 
@@ -24,6 +25,22 @@ export default class TemplateAdapter extends SystemAdapter {
   /** Must equal Foundry's `game.system.id`. */
   static id = "template-system";
   static label = "Template System";
+
+  /**
+   * Optional: runs during Foundry's `init` for every registered adapter class (active or not), before any
+   * instance exists. Register this system's settings here so they appear in the settings UI.
+   */
+  static init() {
+    if (!this.isActive()) return; // don't add settings to worlds of other systems
+    game.settings.register(MODULE_ID, "templateSystemExample", {
+      name: "Example setting",
+      scope: "world",
+      config: false, // set true (and localize name/hint) for a real setting
+      type: Boolean,
+      default: true,
+      svaGroup: "systems"
+    });
+  }
 
   /** Hook ids registered in register(), removed in unregister(). */
   #hooks = [];

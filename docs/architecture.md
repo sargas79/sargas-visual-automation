@@ -127,6 +127,7 @@ api.playSequence(descriptor, { broadcast = true })  // Promise<void>
 
 ```js
 api.systems.register(AdapterClass); // built-ins come from src/systems/index.js BUILTIN_ADAPTERS
+api.systems.initAll(); // automation init: calls every class's optional static init(api) once
 api.systems.active; // the active SystemAdapter instance | null
 api.systems.list(); // registered adapter classes
 
@@ -215,9 +216,9 @@ These were added while the areas were built, and are part of the contract from n
   - Adapters include at least `descriptors.key` on `effectRemoved`, because the item is usually already deleted.
   - Optional `AutomationEvent.id`: a stable id of the occurrence (PF2e: `<messageId>:<type>`, `<regionId>:<type>`, `<effectItemId>:<type>`), used for de-duplication.
   - `ItemDescriptors.baseItem` (PF2e weapons), matched by `Rule.match.baseItem` (specificity between `name` and `regex`).
+- **systems:** optional `static init(api)` on `SystemAdapter`, called once per registered class during the automation area's `init` (immediately for classes registered later), active or not. Adapters register their settings there; PF2e registers `pf2eConditionEvents`.
 - **ui:** `api.ui.openSettings()`. Settings may declare `svaGroup` to choose their group in the SVA settings panel.
 
 ### Open follow-ups
 
 - An optional `essential` flag on effects, for reduced motion.
-- A static adapter `init()` hook, so adapters can register settings during `init` (PF2e currently registers on `ready`).

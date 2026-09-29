@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BUILTIN_ADAPTERS } from "../../../src/systems/index.js";
-import Pf2eAdapter from "../../../src/systems/pf2e/index.js";
+import { init as initAutomation } from "../../../src/automation/index.js";
+import Pf2eAdapter, { SETTING_CONDITIONS } from "../../../src/systems/pf2e/index.js";
 import { mapOutcome, tokenIdFromUuid } from "../../../src/systems/pf2e/messages.js";
 import { addV1HeaderButton, addV2HeaderControl } from "../../../src/systems/pf2e/sheet.js";
 import { EVENT_TYPES, OUTCOMES } from "../../../src/shared/events.js";
+import { resetFoundryMock } from "../../setup/foundry-mock.js";
 import {
   checkContext,
   checkRoll,
@@ -215,5 +217,18 @@ describe("item sheet header control", () => {
     const buttons = [];
     addV1HeaderButton({}, { document: { documentName: "Actor" } }, buttons);
     expect(buttons).toHaveLength(0);
+  });
+});
+
+describe("Pf2eAdapter.init", () => {
+  it("registers the PF2e settings during the automation area's init, only in PF2e worlds", () => {
+    const id = `sargas-visual-automation.${SETTING_CONDITIONS}`;
+    initAutomation({});
+    expect(game.settings._configs.get(id)).toMatchObject({ scope: "world", config: true, svaGroup: "systems" });
+
+    resetFoundryMock();
+    game.system.id = "dnd5e";
+    initAutomation({});
+    expect(game.settings._configs.has(id)).toBe(false);
   });
 });

@@ -64,6 +64,40 @@ describe("api.systems registry", () => {
     expect(api.automation.handle).toHaveBeenCalledWith({ type: "attack", systemId: "dummy" });
   });
 
+  it("calls every class's static init(api) once during init, and later registrations immediately", () => {
+    const api = setup();
+    const calls = [];
+    class Early extends SystemAdapter {
+      static id = "early";
+      static init(a) {
+        calls.push(["early", a]);
+      }
+    }
+    class Late extends SystemAdapter {
+      static id = "late";
+      static init(a) {
+        calls.push(["late", a]);
+      }
+    }
+    class Broken extends SystemAdapter {
+      static id = "broken";
+      static init() {
+        throw new Error("boom");
+      }
+    }
+    api.systems.register(Early);
+    api.systems.register(Broken);
+    expect(calls).toEqual([]);
+    api.systems.initAll();
+    api.systems.initAll();
+    expect(calls).toEqual([["early", api]]);
+    api.systems.register(Late);
+    expect(calls).toEqual([
+      ["early", api],
+      ["late", api]
+    ]);
+  });
+
   it("deactivate calls unregister", () => {
     const api = setup();
     api.systems.register(DummyAdapter);

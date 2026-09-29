@@ -5,7 +5,9 @@ import { log } from "../logger.js";
  * System adapter registry - `api.systems`.
  *
  * Adapters are registered as classes (built-ins from src/systems/index.js,
- * third-party ones through `api.systems.register`). On `ready` the first
+ * third-party ones through `api.systems.register`). During the automation
+ * area's `init`, `initAll()` calls every class's static `init(api)` (classes
+ * registered after that are initialized as soon as they are registered). On `ready` the first
  * registered class whose static `isActive()` returns true is instantiated with
  * `{ api, emit }` and its `register()` is called. `emit` forwards (partial)
  * AutomationEvents to `api.automation.handle`, filling in `systemId`.
@@ -18,6 +20,20 @@ export function createSystemsRegistry(api) {
   /** @type {SystemAdapter|null} */
   let active = null;
   let started = false;
+  let initialized = false;
+  /** Classes whose static init() already ran. */
+  const initializedClasses = new Set();
+
+  function initClass(AdapterClass) {
+    if (initializedClasses.has(AdapterClass)) return;
+    initializedClasses.add(AdapterClass);
+    if (typeof AdapterClass.init !== "function") return;
+    try {
+      AdapterClass.init(api);
+    } catch (err) {
+      log.error(`System adapter "${AdapterClass.id}" init() failed`, err);
+    }
+  }
 
   function makeEmit(adapterId) {
     return (partial) => {
@@ -65,6 +81,7 @@ export function createSystemsRegistry(api) {
         return false;
       }
       classes.push(AdapterClass);
+      if (initialized) initClass(AdapterClass);
       if (started && !active && isActiveClass(AdapterClass) && registry.activate()) {
         Promise.resolve(api.automation?.reloadRulePack?.()).catch((err) => log.error("Rule pack failed to load", err));
       }
@@ -79,6 +96,15 @@ export function createSystemsRegistry(api) {
     /** Registered adapter classes (copy). */
     list() {
       return [...classes];
+    },
+
+    /**
+     * Call the static `init(api)` of every registered class (once per class). Called by the automation area's
+     * `init`; later registrations are initialized immediately.
+     */
+    initAll() {
+      initialized = true;
+      for (const AdapterClass of classes) initClass(AdapterClass);
     },
 
     /** Find a registered class by id. */

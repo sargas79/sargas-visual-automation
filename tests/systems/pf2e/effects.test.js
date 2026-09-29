@@ -11,6 +11,7 @@ function setup() {
   const cleric = mockActor("cleric");
   installCanvas({ actors: [fighter, cleric] });
   const emit = vi.fn();
+  Pf2eAdapter.init({});
   const adapter = new Pf2eAdapter({ api: {}, emit });
   adapter.register();
   return { adapter, emit, bless, frightened, fighter };

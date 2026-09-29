@@ -182,3 +182,43 @@ Settings submenu entries are registered in `ui` `init`.
 - Unit tests (Vitest) live in `tests/<area>/*.test.js`. They must not need Foundry, JB2A or network access.
 - Mock other areas through the `api` object. Don't import another area's internals; only use its public surface from this document.
 - Anything that can only be checked in a real Foundry v14 world goes into `docs/testing.md`.
+
+## Contract additions from implementation
+
+These were added while the areas were built, and are part of the contract from now on.
+
+- **API root:** `SVA.SystemAdapter`, `SVA.LAYERS`, `SVA.EVENT_TYPES`, `SVA.OUTCOMES`, `SVA.AREA_SHAPES`, `SVA.ATTACK_KINDS`. Third-party adapters extend `SVA.SystemAdapter`.
+- **db:**
+  - `api.db.findThumbnail(pathOrFile)` (async, probes candidate names). JB2A doesn't list thumbnails, so `thumbnail` is a best guess.
+  - `CatalogEntry.label` and `CatalogEntry.distances` (on distance groups); `ResolvedFile.template.name`.
+  - `resolve(path, {distance, gridDistance})`.
+  - `search` returns distance groups rather than each `05ft`/`15ft`/… variant.
+  - Distance variant: closest in grid squares, ties go to the longer one, default 30 ft.
+- **engine:**
+  - `EffectHandle.duration`: wall ms, `Infinity` when persistent, set once the video is known.
+  - `play()` resolves after `delay`; `endAll({immediate})`.
+  - `api.engine.debug.{stats, overlay}`.
+  - Settings `engineMaxEffects`, `engineCacheSize`, `engineDebugOverlay`.
+- **sequence / effects / net:**
+  - `api.effects.store(sequence)` (called by `playSequence`).
+  - `api.net.off`, `api.net.preload(files)`, `api.net.prefs`.
+  - Ending a stored effect is driven by the scene flag update; `end`/`endAll` also broadcast `end` so unstored named effects end everywhere.
+  - Reduced motion skips `screen`-layer effects and drops `returnTrip`, `scaleIn` and `scaleOut`; persistent effects are always kept.
+- **automation:**
+  - World rules are stored as `{version: 1, rules: []}`.
+  - `explain(item, opts)` returns a trace `{descriptors, disabled, result, candidates[{source, ruleId, label, priority, matched, reasons[]}], reasons}`, where `result` is the `resolveRecipe` shape.
+  - `setItemRecipe(item, null)` clears the item recipe; `rules.importJSON` accepts a string or an object; `rules.exportJSON` returns a string.
+  - Extras: `api.automation.schema`, `reloadRulePack`, `isItemDisabled`, `rules.all/systemRules/setSystemRules`.
+  - Duplicate events are dropped within 1 s.
+- **events:**
+  - `area.origin` is the centre for burst/emanation/square and the apex for cone/line; `area.angle` (degrees) for cones.
+  - Adapters include at least `descriptors.key` on `effectRemoved`, because the item is usually already deleted.
+  - `ItemDescriptors.baseItem` (PF2e weapons).
+- **ui:** `api.ui.openSettings()`. Settings may declare `svaGroup` to choose their group in the SVA settings panel.
+
+### Open follow-ups
+
+- An optional `AutomationEvent.id` (for example the chat message id), to replace the 1 s duplicate window.
+- `Rule.match.baseItem`.
+- An optional `essential` flag on effects, for reduced motion.
+- A static adapter `init()` hook, so adapters can register settings during `init` (PF2e currently registers on `ready`).

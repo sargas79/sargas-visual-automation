@@ -1,0 +1,14 @@
+{
+  "SVA": {
+    "Gurps": {
+      "HeaderButton": "Animation",
+      "ItemConfigUnavailable": "The item animation editor is not available.",
+      "Settings": {
+        "FailedCasts": {
+          "Name": "GURPS: animate failed casts",
+          "Hint": "Play spell and healing animations when the casting or healing roll fails. Failed attacks always play (as a miss)."
+        }
+      }
+    }
+  }
+}

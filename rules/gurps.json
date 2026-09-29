@@ -1,0 +1,2139 @@
+{
+  "$schema": "./rulepack.schema.json",
+  "system": "gurps",
+  "version": 1,
+  "rules": [
+    {
+      "id": "weapon-greatsword",
+      "label": "Greatsword / two-handed sword",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "great ?sword|two[- ]handed sword|claymore|zweih[a�]nder|bastard sword|flamberge",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.greatsword.melee.standard"
+      }
+    },
+    {
+      "id": "weapon-rapier",
+      "label": "Rapier / smallsword",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "rapier|small ?sword|estoc|[e�]p[e�]e|foil",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.rapier.melee.01"
+      }
+    },
+    {
+      "id": "weapon-katana",
+      "label": "Katana",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "katana|nodachi|wakizashi|tachi",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.04.katana"
+      }
+    },
+    {
+      "id": "weapon-scimitar",
+      "label": "Saber / scimitar",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "scimitar|sabre|saber|cutlass|shamshir|tulwar",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.scimitar.melee.01"
+      }
+    },
+    {
+      "id": "weapon-falchion",
+      "label": "Falchion / machete",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "falchion|machete|cleaver|messer",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.falchion.melee.01"
+      }
+    },
+    {
+      "id": "weapon-shortsword",
+      "label": "Shortsword",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "short ?sword|gladius|xiphos",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.shortsword.melee.01"
+      }
+    },
+    {
+      "id": "weapon-greataxe",
+      "label": "Great axe",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "great ?axe|two[- ]handed axe",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.greataxe.melee.standard"
+      }
+    },
+    {
+      "id": "weapon-battleaxe",
+      "label": "Battle axe",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "battle ?axe|war ?axe|bearded axe|dane ?axe",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.battleaxe"
+      }
+    },
+    {
+      "id": "weapon-hatchet",
+      "label": "Hatchet / hand axe",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "hatchet|hand ?axe|tomahawk|throwing axe",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.handaxe.melee.standard"
+      }
+    },
+    {
+      "id": "weapon-maul",
+      "label": "Maul / great hammer",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "\\bmaul\\b|great ?hammer|sledge ?hammer",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.maul.melee.standard"
+      }
+    },
+    {
+      "id": "weapon-warhammer",
+      "label": "Warhammer",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "war ?hammer|lucerne hammer",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.warhammer.melee.01"
+      }
+    },
+    {
+      "id": "weapon-mace",
+      "label": "Mace / morningstar",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "\\bmace\\b|morning ?star",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.mace.melee.01"
+      }
+    },
+    {
+      "id": "weapon-quarterstaff",
+      "label": "Quarterstaff",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "quarterstaff|\\bstaff\\b|\\bbo\\b|\\bjo\\b|walking stick",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.quarterstaff.melee.01"
+      }
+    },
+    {
+      "id": "weapon-greatclub",
+      "label": "Great club / maul-club",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "great ?club|tetsubo|kanabo",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.greatclub.standard.white"
+      }
+    },
+    {
+      "id": "weapon-halberd",
+      "label": "Halberd / poleaxe",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "halberd|pole ?axe|pollaxe|bardiche|voulge",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.halberd.melee.01"
+      }
+    },
+    {
+      "id": "weapon-glaive",
+      "label": "Glaive / naginata",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "glaive|naginata|guisarme|bill\\b",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.glaive.melee.01"
+      }
+    },
+    {
+      "id": "weapon-scythe",
+      "label": "Scythe",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "scythe",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.05.scythe"
+      }
+    },
+    {
+      "id": "weapon-sickle",
+      "label": "Sickle / kama",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "sickle|\\bkama\\b",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.01.sickle"
+      }
+    },
+    {
+      "id": "weapon-chainsaw",
+      "label": "Chainsaw",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "chain ?saw",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.01.sword_chainsaw"
+      }
+    },
+    {
+      "id": "weapon-force-sword",
+      "label": "Force sword / laser sword",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "force sword|laser ?sword|light ?saber|beam sword|energy sword",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.lasersword.melee"
+      }
+    },
+    {
+      "id": "unarmed-punch",
+      "label": "Punch",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "\\bpunch|\\bjab\\b|boxing|brawling|karate|fist",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_generic.creature_attack.fist"
+      }
+    },
+    {
+      "id": "unarmed-kick",
+      "label": "Kick",
+      "priority": 2,
+      "enabled": true,
+      "match": {
+        "regex": "\\bkick|\\bknee|stomp",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.physical.02"
+      }
+    },
+    {
+      "id": "natural-bite",
+      "label": "Bite",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "\\bbite|\\bjaws?\\b|\\bfangs?\\b|\\bteeth\\b",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.bite.200px.red"
+      }
+    },
+    {
+      "id": "natural-claw",
+      "label": "Claws / talons",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "\\bclaws?\\b|\\btalons?\\b|\\brake\\b",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.claws.200px.red"
+      }
+    },
+    {
+      "id": "group-sword-melee",
+      "label": "Sword (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "sword",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.sword.melee.01"
+      }
+    },
+    {
+      "id": "group-knife-melee",
+      "label": "Knife (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "knife",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.dagger.melee.02"
+      }
+    },
+    {
+      "id": "group-axe-melee",
+      "label": "Axe (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "axe",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.greataxe.melee.standard"
+      }
+    },
+    {
+      "id": "group-club-melee",
+      "label": "Club (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "club",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.club.melee.01"
+      }
+    },
+    {
+      "id": "group-hammer-melee",
+      "label": "Hammer (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "hammer",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.02.hammer"
+      }
+    },
+    {
+      "id": "group-flail-melee",
+      "label": "Flail (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "flail",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.01.flail"
+      }
+    },
+    {
+      "id": "group-pick-melee",
+      "label": "Pick (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "pick",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.warhammer.melee.01"
+      }
+    },
+    {
+      "id": "group-polearm-melee",
+      "label": "Polearm (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "polearm",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.halberd.melee.01"
+      }
+    },
+    {
+      "id": "group-spear-melee",
+      "label": "Spear (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "spear",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.spear.melee.01"
+      }
+    },
+    {
+      "id": "group-shield-melee",
+      "label": "Shield (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "shield",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_attack.06.shield"
+      }
+    },
+    {
+      "id": "group-brawling-melee",
+      "label": "Brawling (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "brawling",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.physical.01"
+      }
+    },
+    {
+      "id": "group-bite-melee",
+      "label": "Bite (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "bite",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.bite.200px.red"
+      }
+    },
+    {
+      "id": "group-claw-melee",
+      "label": "Claw (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "claw",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.claws.200px.red"
+      }
+    },
+    {
+      "id": "group-whip-melee",
+      "label": "Whip (melee)",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "whip",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_generic.slashing.one_handed"
+      }
+    },
+    {
+      "id": "thrown-knife",
+      "label": "Thrown knife / dagger",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "knife",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dagger.throw.01"
+      }
+    },
+    {
+      "id": "thrown-axe",
+      "label": "Thrown axe / hatchet",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "axe",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.handaxe.throw.01"
+      }
+    },
+    {
+      "id": "thrown-spear",
+      "label": "Thrown spear / javelin",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "spear",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.javelin.01.throw"
+      }
+    },
+    {
+      "id": "thrown-hammer",
+      "label": "Thrown hammer",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "hammer",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.hammer.throw"
+      }
+    },
+    {
+      "id": "thrown-sword",
+      "label": "Thrown sword",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "sword",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.sword.throw.white"
+      }
+    },
+    {
+      "id": "thrown-dart",
+      "label": "Dart / shuriken",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "dart",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dart.01.throw"
+      }
+    },
+    {
+      "id": "thrown-shield",
+      "label": "Thrown shield",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "shield",
+        "attackKind": "thrown"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.shield_attack.ranged.throw"
+      }
+    },
+    {
+      "id": "thrown-shuriken",
+      "label": "Shuriken / throwing star",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "shuriken|throwing star",
+        "attackKind": ["thrown", "ranged"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.shuriken.01"
+      }
+    },
+    {
+      "id": "thrown-rock",
+      "label": "Thrown rock / stone",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "regex": "\\brock\\b|\\bstone\\b|\\bpebble",
+        "attackKind": ["thrown", "ranged"],
+        "type": "weapon"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.slingshot"
+      }
+    },
+    {
+      "id": "thrown-boulder",
+      "label": "Thrown boulder",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "boulder",
+        "attackKind": ["thrown", "ranged"],
+        "type": "weapon"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.boulder.toss.01"
+      }
+    },
+    {
+      "id": "thrown-grenade",
+      "label": "Grenade",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "grenade|dynamite",
+        "attackKind": ["thrown", "ranged"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.throwable.throw.grenade",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.explosion.01.orange"
+          }
+        }
+      }
+    },
+    {
+      "id": "thrown-molotov",
+      "label": "Molotov cocktail / flask",
+      "priority": 2,
+      "enabled": true,
+      "match": {
+        "regex": "molotov|firebomb|alchemist'?s fire|flask",
+        "attackKind": ["thrown", "ranged"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.throwable.throw.flask",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.fire.01.orange"
+          }
+        }
+      }
+    },
+    {
+      "id": "ranged-bow",
+      "label": "Bow",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "bow",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.arrow.physical.white"
+      }
+    },
+    {
+      "id": "ranged-fire-arrow",
+      "label": "Fire arrow",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "bow",
+        "traits": "burn",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.arrow.fire.orange"
+      }
+    },
+    {
+      "id": "ranged-crossbow",
+      "label": "Crossbow",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "crossbow",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bolt.physical.white"
+      }
+    },
+    {
+      "id": "ranged-sling",
+      "label": "Sling",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "sling",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.slingshot"
+      }
+    },
+    {
+      "id": "ranged-blowpipe",
+      "label": "Blowpipe",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "blowpipe|blowgun",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dart.01.throw"
+      }
+    },
+    {
+      "id": "ranged-pistol",
+      "label": "Pistol / revolver",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "pistol|revolver|derringer|handgun|\\bcolt\\b|glock|luger",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.01.orange"
+      }
+    },
+    {
+      "id": "ranged-rifle",
+      "label": "Rifle / musket",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "rifle|musket|carbine|arquebus",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.02.orange"
+      }
+    },
+    {
+      "id": "ranged-sniper",
+      "label": "Sniper rifle",
+      "priority": 2,
+      "enabled": true,
+      "match": {
+        "regex": "sniper|anti-materiel|elephant gun",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.Snipe.orange"
+      }
+    },
+    {
+      "id": "ranged-shotgun",
+      "label": "Shotgun",
+      "priority": 2,
+      "enabled": true,
+      "match": {
+        "regex": "shotgun|blunderbuss",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.03.orange"
+      }
+    },
+    {
+      "id": "ranged-automatic",
+      "label": "SMG / machine gun",
+      "priority": 3,
+      "enabled": true,
+      "match": {
+        "regex": "\\bsmg\\b|submachine|machine ?gun|assault rifle|\\buzi\\b|ak-?47|m-?16",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.01.orange",
+        "options": {
+          "stagger": 100
+        }
+      }
+    },
+    {
+      "id": "group-firearm",
+      "label": "Firearm",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "firearm",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.01.orange"
+      }
+    },
+    {
+      "id": "ranged-laser",
+      "label": "Laser",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "laser",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.lasershot.red"
+      }
+    },
+    {
+      "id": "ranged-blaster",
+      "label": "Blaster / plasma",
+      "priority": 1,
+      "enabled": true,
+      "match": {
+        "regex": "blaster|plasma|ray ?gun|phaser",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.lasershot.blue"
+      }
+    },
+    {
+      "id": "ranged-flamethrower",
+      "label": "Flamethrower",
+      "priority": 2,
+      "enabled": true,
+      "match": {
+        "regex": "flame ?thrower",
+        "attackKind": ["ranged", "melee"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.fire_jet.orange"
+      }
+    },
+    {
+      "id": "group-bomb-ranged",
+      "label": "Bomb / grenade launcher",
+      "priority": 0,
+      "enabled": true,
+      "match": {
+        "weaponGroup": "bomb",
+        "attackKind": "ranged"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.throwable.throw.grenade",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.explosion.01.orange"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-explosive-fireball",
+      "label": "Explosive Fireball",
+      "priority": 6,
+      "enabled": true,
+      "match": {
+        "regex": "^explosive fireball\\b",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.fireball.beam.orange",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.fireball.explosion.orange"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-fireball",
+      "label": "Fireball",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^fireball\\b",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.fire_bolt.orange",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.fire.01.orange"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-explosive-lightning",
+      "label": "Explosive Lightning / Ball of Lightning",
+      "priority": 6,
+      "enabled": true,
+      "match": {
+        "regex": "^(explosive lightning|ball of lightning)\\b",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.lightning_bolt.narrow.blue",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.lightning_ball.blue"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-lightning",
+      "label": "Lightning",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^lightning\\b",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.lightning_bolt.narrow.blue",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.static_electricity.01.blue"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-ice-dart",
+      "label": "Ice Dart / Ice Sphere",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(ice dart|ice sphere|frostbite ray)\\b",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spell_projectile.ice_shard.blue",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact_themed.ice_shard.blue"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-stone-missile",
+      "label": "Stone Missile",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(stone missile|rock missile|explosive stone)\\b",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spell_projectile.earth.01",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.boulder.01"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-acid-ball",
+      "label": "Acid Ball / Acid Jet",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(acid ball|acid jet|acid spit)\\b",
+        "attackKind": ["ranged", "thrown", "melee"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.ranged.01.projectile.01.dark_green",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.liquid.splash.green"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-flame-jet",
+      "label": "Flame Jet",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^flame jet\\b",
+        "attackKind": ["ranged", "melee"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.fire_jet.orange"
+      }
+    },
+    {
+      "id": "spell-sound-jet",
+      "label": "Sound Jet / Thunderclap",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(sound jet|thunderclap)\\b",
+        "attackKind": ["ranged", "melee"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spell_projectile.sound.01"
+      }
+    },
+    {
+      "id": "spell-winged-knife",
+      "label": "Winged Knife / Blade missile",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(winged knife|flying dagger)\\b",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.dagger.throw.01"
+      }
+    },
+    {
+      "id": "spell-deathtouch",
+      "label": "Deathtouch",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^deathtouch\\b"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.magical.01.dark_purple",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.dark_purple"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-shocking-touch",
+      "label": "Shocking Touch",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^shocking touch\\b"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.magical.01.blue",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.static_electricity.01.blue"
+          }
+        }
+      }
+    },
+    {
+      "id": "cast-missile-fire",
+      "label": "Fire missile (cast)",
+      "priority": 4,
+      "enabled": true,
+      "match": {
+        "regex": "^(explosive )?fireball\\b|^flame jet\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.fire.01",
+        "options": {
+          "target": "source"
+        }
+      }
+    },
+    {
+      "id": "cast-missile-lightning",
+      "label": "Lightning missile (cast)",
+      "priority": 4,
+      "enabled": true,
+      "match": {
+        "regex": "^(explosive )?lightning\\b|^ball of lightning\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.static_electricity.01.blue",
+        "options": {
+          "target": "source"
+        }
+      }
+    },
+    {
+      "id": "cast-missile-ice",
+      "label": "Ice missile (cast)",
+      "priority": 4,
+      "enabled": true,
+      "match": {
+        "regex": "^(ice dart|ice sphere|frostbite ray)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.ice.01",
+        "options": {
+          "target": "source"
+        }
+      }
+    },
+    {
+      "id": "cast-missile-earth",
+      "label": "Stone missile (cast)",
+      "priority": 4,
+      "enabled": true,
+      "match": {
+        "regex": "^(stone missile|rock missile|explosive stone)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.earth.01",
+        "options": {
+          "target": "source"
+        }
+      }
+    },
+    {
+      "id": "spell-minor-healing",
+      "label": "Minor Healing",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^minor healing\\b"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.green",
+        "outcomes": {
+          "failure": {
+            "animation": "jb2a.smoke.puff.centered.grey"
+          }
+        },
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-major-healing",
+      "label": "Major / Great Healing",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(major|great) healing\\b"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cure_wounds.400px.green",
+        "outcomes": {
+          "failure": {
+            "animation": "jb2a.smoke.puff.centered.grey"
+          }
+        },
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-regeneration",
+      "label": "Regeneration / Restoration",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(instant )?(regeneration|restoration)\\b"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.burst.greenorange",
+        "outcomes": {
+          "failure": {
+            "animation": "jb2a.smoke.puff.centered.grey"
+          }
+        },
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-cure-disease",
+      "label": "Cure Disease / Neutralize Poison",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(cure disease|relieve sickness|neutralize poison|stop bleeding)\\b"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.yellow",
+        "outcomes": {
+          "failure": {
+            "animation": "jb2a.smoke.puff.centered.grey"
+          }
+        },
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "skill-first-aid",
+      "label": "First Aid / Esoteric Medicine",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(first aid|esoteric medicine|physician)\\b"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.green",
+        "outcomes": {
+          "failure": {
+            "animation": "jb2a.smoke.puff.centered.grey"
+          }
+        },
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "healing-generic",
+      "label": "Healing (generic)",
+      "priority": -5,
+      "enabled": true,
+      "match": {
+        "traits": "healing"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.healing_generic.200px.green",
+        "outcomes": {
+          "failure": {
+            "animation": "jb2a.smoke.puff.centered.grey"
+          }
+        },
+        "triggers": ["healing"]
+      }
+    },
+    {
+      "id": "spell-shield",
+      "label": "Shield",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^shield\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shield.01.complete"
+      }
+    },
+    {
+      "id": "spell-missile-shield",
+      "label": "Missile Shield",
+      "priority": 6,
+      "enabled": true,
+      "match": {
+        "regex": "^(missile shield|reverse missiles)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shield.02.complete"
+      }
+    },
+    {
+      "id": "spell-armor",
+      "label": "Armor / Iron Arm",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(armor|iron arm|toughen)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shield.03.complete"
+      }
+    },
+    {
+      "id": "spell-fire-shield",
+      "label": "Resist Fire / Fireproof",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(resist fire|fireproof|resist cold|resist lightning)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.shield_themed.above.fire"
+      }
+    },
+    {
+      "id": "spell-blink",
+      "label": "Blink",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^blink\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.blue",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.blue"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-teleport",
+      "label": "Teleport",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(teleport|blink other|great teleport|trace teleport)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "teleport",
+        "animation": "jb2a.misty_step.01.purple",
+        "stages": {
+          "onTarget": {
+            "animation": "jb2a.misty_step.02.purple"
+          }
+        }
+      }
+    },
+    {
+      "id": "spell-create-fire",
+      "label": "Create Fire / Ignite Fire",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(create fire|ignite fire|shape fire)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.flames.01.orange"
+      }
+    },
+    {
+      "id": "spell-heat",
+      "label": "Heat / Burning Touch",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(heat|burning touch|smoke)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.impact.fire.01.orange"
+      }
+    },
+    {
+      "id": "spell-darkness",
+      "label": "Darkness / Blackout",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(darkness|blackout|shadow)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.darkness.black"
+      }
+    },
+    {
+      "id": "spell-light",
+      "label": "Light / Continual Light",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(light|continual light|bright vision|glow)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.dancing_light.yellow"
+      }
+    },
+    {
+      "id": "spell-flash",
+      "label": "Flash",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(flash|sunbolt|sunlight)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.impact.yellow"
+      }
+    },
+    {
+      "id": "spell-sleep",
+      "label": "Sleep / Mass Sleep",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(mass )?sleep\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.sleep.symbol.pink"
+      }
+    },
+    {
+      "id": "spell-daze",
+      "label": "Daze / Stun",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(daze|mass daze|stun|foolishness)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.dizzy_stars.200px.yellow"
+      }
+    },
+    {
+      "id": "spell-fear",
+      "label": "Fear / Terror / Panic",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(fear|terror|panic)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.icon.fear.dark_purple"
+      }
+    },
+    {
+      "id": "spell-detect-magic",
+      "label": "Detect Magic / Analyze Magic",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(detect magic|analyze magic|see secrets|mage sight)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.detect_magic.circle.blue"
+      }
+    },
+    {
+      "id": "spell-haste",
+      "label": "Haste / Great Haste",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(great )?haste\\b|^agility\\b|^might\\b|^vigor\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.swirling_sparkles.01.yellow"
+      }
+    },
+    {
+      "id": "spell-curse",
+      "label": "Curse / Pestilence",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(curse|pestilence|decay|rotting death|steal (vitality|energy|health))\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.energy_strands.complete.dark_purple"
+      }
+    },
+    {
+      "id": "spell-lightning-strike",
+      "label": "Lightning Stare / Call Lightning",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(call lightning|lightning stare|thunderbolt)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.lightning_strike.blue"
+      }
+    },
+    {
+      "id": "spell-entangle",
+      "label": "Entangle / Snare",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(entangle|snare|hinder|tangle growth|bind)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.entangle.green"
+      }
+    },
+    {
+      "id": "spell-wind",
+      "label": "Windstorm / Wall of Wind",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(windstorm|wall of wind|create air|purify air|wind)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.wind_lines.01"
+      }
+    },
+    {
+      "id": "spell-dispel",
+      "label": "Dispel Magic / Counterspell",
+      "priority": 5,
+      "enabled": true,
+      "match": {
+        "regex": "^(dispel magic|counterspell|remove curse|suspend magic)\\b",
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.icon.runes.blue"
+      }
+    },
+    {
+      "id": "cast-college-fire",
+      "label": "Fire college (cast)",
+      "priority": -8,
+      "enabled": true,
+      "match": {
+        "type": "spell",
+        "traits": "fire"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.fire.01",
+        "options": {
+          "target": "source"
+        },
+        "outcomes": {
+          "criticalFailure": {
+            "animation": "jb2a.smoke.puff.centered.dark_black"
+          }
+        }
+      }
+    },
+    {
+      "id": "cast-college-water",
+      "label": "Water college (cast)",
+      "priority": -8,
+      "enabled": true,
+      "match": {
+        "type": "spell",
+        "traits": "water"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.water.02",
+        "options": {
+          "target": "source"
+        },
+        "outcomes": {
+          "criticalFailure": {
+            "animation": "jb2a.smoke.puff.centered.dark_black"
+          }
+        }
+      }
+    },
+    {
+      "id": "cast-college-earth",
+      "label": "Earth college (cast)",
+      "priority": -8,
+      "enabled": true,
+      "match": {
+        "type": "spell",
+        "traits": "earth"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.earth.01",
+        "options": {
+          "target": "source"
+        },
+        "outcomes": {
+          "criticalFailure": {
+            "animation": "jb2a.smoke.puff.centered.dark_black"
+          }
+        }
+      }
+    },
+    {
+      "id": "cast-college-air",
+      "label": "Air college (cast)",
+      "priority": -8,
+      "enabled": true,
+      "match": {
+        "type": "spell",
+        "traits": "air"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.01.blue",
+        "options": {
+          "target": "source"
+        },
+        "outcomes": {
+          "criticalFailure": {
+            "animation": "jb2a.smoke.puff.centered.dark_black"
+          }
+        }
+      }
+    },
+    {
+      "id": "cast-college-necromantic",
+      "label": "Necromantic college (cast)",
+      "priority": -8,
+      "enabled": true,
+      "match": {
+        "type": "spell",
+        "traits": "necromantic"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.dark.01",
+        "options": {
+          "target": "source"
+        },
+        "outcomes": {
+          "criticalFailure": {
+            "animation": "jb2a.smoke.puff.centered.dark_black"
+          }
+        }
+      }
+    },
+    {
+      "id": "cast-college-light-and-darkness",
+      "label": "Light and darkness college (cast)",
+      "priority": -8,
+      "enabled": true,
+      "match": {
+        "type": "spell",
+        "traits": "light and darkness"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.01.yellow",
+        "options": {
+          "target": "source"
+        },
+        "outcomes": {
+          "criticalFailure": {
+            "animation": "jb2a.smoke.puff.centered.dark_black"
+          }
+        }
+      }
+    },
+    {
+      "id": "cast-generic",
+      "label": "Spell (cast)",
+      "priority": -10,
+      "enabled": true,
+      "match": {
+        "type": "spell"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "onToken",
+        "animation": "jb2a.cast_generic.01.blue",
+        "options": {
+          "target": "source"
+        },
+        "outcomes": {
+          "criticalFailure": {
+            "animation": "jb2a.smoke.puff.centered.dark_black"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-spell-missile",
+      "label": "Spell missile (any)",
+      "priority": -4,
+      "enabled": true,
+      "match": {
+        "traits": "spell",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.magic_missile.purple",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.003.dark_purple"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-burn-ranged",
+      "label": "Burning attack (ranged)",
+      "priority": -3,
+      "enabled": true,
+      "match": {
+        "traits": "burn",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.fire_bolt.orange",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.fire.01.orange"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-cor-ranged",
+      "label": "Corrosive attack (ranged)",
+      "priority": -3,
+      "enabled": true,
+      "match": {
+        "traits": "cor",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.ranged.01.projectile.01.dark_green",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.liquid.splash.green"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-tox-ranged",
+      "label": "Toxic attack (ranged)",
+      "priority": -3,
+      "enabled": true,
+      "match": {
+        "traits": "tox",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.spell_projectile.poison.greenyellow",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact_themed.poison.greenyellow"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-fat-ranged",
+      "label": "Fatigue attack (ranged)",
+      "priority": -3,
+      "enabled": true,
+      "match": {
+        "traits": "fat",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.eldritch_blast.dark_purple"
+      }
+    },
+    {
+      "id": "fallback-explosive-ranged",
+      "label": "Explosive attack (ranged)",
+      "priority": -2,
+      "enabled": true,
+      "match": {
+        "traits": "explosive",
+        "attackKind": ["ranged", "thrown"]
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.bullet.02.orange",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.explosion.04.orange"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-cr-ranged",
+      "label": "Crushing attack (ranged, no weapon group)",
+      "priority": -6,
+      "enabled": true,
+      "match": {
+        "traits": "cr",
+        "attackKind": "ranged",
+        "type": "weapon"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "ranged",
+        "animation": "jb2a.slingshot"
+      }
+    },
+    {
+      "id": "fallback-burn-melee",
+      "label": "Burning attack (melee)",
+      "priority": -3,
+      "enabled": true,
+      "match": {
+        "traits": "burn",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_generic.slash.01.orange",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact.fire.01.orange"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-cor-melee",
+      "label": "Corrosive attack (melee)",
+      "priority": -3,
+      "enabled": true,
+      "match": {
+        "traits": "cor",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.magical.01.green",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.liquid.splash.green"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-tox-melee",
+      "label": "Toxic attack (melee)",
+      "priority": -3,
+      "enabled": true,
+      "match": {
+        "traits": "tox",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.unarmed_strike.magical.01.green",
+        "stages": {
+          "impact": {
+            "animation": "jb2a.impact_themed.poison.greenyellow"
+          }
+        }
+      }
+    },
+    {
+      "id": "fallback-cut-melee",
+      "label": "Cutting attack (melee)",
+      "priority": -6,
+      "enabled": true,
+      "match": {
+        "traits": "cut",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_generic.slashing.one_handed"
+      }
+    },
+    {
+      "id": "fallback-imp-melee",
+      "label": "Impaling / piercing attack (melee)",
+      "priority": -6,
+      "enabled": true,
+      "match": {
+        "traits": "imp",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_generic.piercing.one_handed"
+      }
+    },
+    {
+      "id": "fallback-cr-melee",
+      "label": "Crushing attack (melee)",
+      "priority": -6,
+      "enabled": true,
+      "match": {
+        "traits": "cr",
+        "attackKind": "melee"
+      },
+      "recipe": {
+        "version": 1,
+        "preset": "melee",
+        "animation": "jb2a.melee_generic.bludgeoning.one_handed"
+      }
+    }
+  ]
+}

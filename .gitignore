@@ -1,3 +1,13 @@
 node_modules/
 dist/
 coverage/
+
+# JB2A media must never be committed (CC BY-NC-SA, Patreon content).
+# SVA only references the files of the installed JB2A module at runtime.
+*.webm
+*.webp
+*.ogg
+*.mp4
+jb2a_patreon/
+JB2A_DnD5e/
+*.zip

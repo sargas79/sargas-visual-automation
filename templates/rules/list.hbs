@@ -1,0 +1,122 @@
+<section class="sva-rules-panel">
+  {{#if unavailable}}
+    <p class="sva-empty">{{localize "SVA.UI.ItemConfig.NoAutomation"}}</p>
+  {{else}}
+    <div class="sva-toolbar">
+      <button type="button" data-action="addRule">
+        <i class="fa-solid fa-plus" inert></i>
+        {{localize "SVA.UI.Rules.Add"}}
+      </button>
+      <button type="button" data-action="importRules">
+        <i class="fa-solid fa-file-import" inert></i>
+        {{localize "SVA.UI.Rules.Import"}}
+      </button>
+      <button type="button" data-action="exportRules">
+        <i class="fa-solid fa-file-export" inert></i>
+        {{localize "SVA.UI.Rules.Export"}}
+      </button>
+      <input type="file" class="sva-import-input" accept=".json,application/json" hidden />
+    </div>
+
+    <div class="sva-rules-scroll">
+      <table class="sva-rules-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>{{localize "SVA.UI.Rules.Label"}}</th>
+            <th>{{localize "SVA.UI.Rules.Match"}}</th>
+            <th>{{localize "SVA.UI.Rules.Recipe"}}</th>
+            <th>{{localize "SVA.UI.Rules.Priority"}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each rows}}
+            <tr class="{{rowClass}}" data-rule-id="{{id}}">
+              <td>
+                <button
+                  type="button"
+                  class="sva-icon-button"
+                  data-action="toggleRule"
+                  data-tooltip="SVA.UI.Rules.Toggle"
+                  aria-pressed="{{enabled}}"
+                >
+                  <i class="fa-solid {{toggleIcon}}" inert></i>
+                </button>
+              </td>
+              <td>
+                <a data-action="editRule">{{label}}</a>
+                <div class="sva-muted sva-small">{{id}}</div>
+              </td>
+              <td class="sva-small">{{matchText}}</td>
+              <td class="sva-small">{{preset}} <code>{{animation}}</code></td>
+              <td>{{priority}}</td>
+              <td class="sva-row-actions">
+                <button type="button" class="sva-icon-button" data-action="editRule" data-tooltip="SVA.UI.Rules.Edit">
+                  <i class="fa-solid fa-pen" inert></i>
+                </button>
+                <button
+                  type="button"
+                  class="sva-icon-button"
+                  data-action="duplicateRule"
+                  data-tooltip="SVA.UI.Rules.Duplicate"
+                >
+                  <i class="fa-solid fa-copy" inert></i>
+                </button>
+                <button
+                  type="button"
+                  class="sva-icon-button"
+                  data-action="deleteRule"
+                  data-tooltip="SVA.UI.Rules.Delete"
+                >
+                  <i class="fa-solid fa-trash" inert></i>
+                </button>
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="6" class="sva-empty">{{localize "SVA.UI.Rules.Empty"}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+    <section class="sva-tester">
+      <h3>{{localize "SVA.UI.Rules.Tester"}}</h3>
+      <div class="sva-drop-zone">
+        <i class="fa-solid fa-hand-pointer" inert></i>
+        {{localize "SVA.UI.Rules.DropHint"}}
+      </div>
+      {{#if test}}
+        <div class="sva-match">
+          <p>
+            {{#if test.itemImg}}<img src="{{test.itemImg}}" alt="" class="sva-test-img" />{{/if}}
+            <strong>{{test.itemName}}</strong>
+            →
+            {{localize test.sourceKey}}
+            {{#if test.ruleId}}<code>{{test.ruleId}}</code>{{/if}}
+            {{#if test.preset}}— {{test.preset}}{{/if}}
+            {{#if test.animation}}<code>{{test.animation}}</code>{{/if}}
+            <button type="button" class="sva-icon-button" data-action="clearTest" data-tooltip="SVA.UI.Rules.ClearTest">
+              <i class="fa-solid fa-xmark" inert></i>
+            </button>
+          </p>
+          {{#if test.reason}}<p class="hint">{{test.reason}}</p>{{/if}}
+          {{#if test.candidates.length}}
+            <p class="sva-small">{{localize "SVA.UI.Rules.Candidates"}}</p>
+            <ul class="sva-candidates">
+              {{#each test.candidates}}
+                <li class="{{cssClass}}">
+                  {{label}}
+                  {{#if source}}<span class="sva-muted">({{source}})</span>{{/if}}
+                  {{#if reason}}<span class="sva-muted">— {{reason}}</span>{{/if}}
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div>
+      {{/if}}
+    </section>
+  {{/if}}
+</section>

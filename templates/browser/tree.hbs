@@ -1,0 +1,12 @@
+<nav class="sva-tree" aria-label="{{localize 'SVA.UI.Browser.Tree'}}">
+  {{#each rows}}
+    <div class="{{cssClass}}" data-path="{{path}}" style="padding-left: {{indent}}px">
+      <button type="button" class="sva-tree-toggle" data-action="toggleNode" aria-expanded="{{expanded}}">
+        <i class="fa-solid {{caret}}" inert></i>
+      </button>
+      <a class="sva-tree-label" data-action="selectNode">{{name}}</a>
+    </div>
+  {{else}}
+    <p class="sva-empty">{{localize "SVA.UI.Browser.Unavailable"}}</p>
+  {{/each}}
+</nav>

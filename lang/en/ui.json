@@ -1,1 +1,207 @@
-{}
+{
+  "SVA": {
+    "UI": {
+      "Browser": {
+        "Title": "JB2A Animation Browser",
+        "PickTitle": "Pick an Animation",
+        "Tree": "Animation categories",
+        "SearchPlaceholder": "Search animations (e.g. fire bolt orange)",
+        "ClearSearch": "Clear search",
+        "SearchResults": "Results for \"{query}\"",
+        "NoResults": "No animation matches this search.",
+        "Favourites": "Favourites",
+        "NoFavourites": "No favourites yet. Use the star on an animation to add it.",
+        "EmptyBranch": "This category is empty.",
+        "Unavailable": "The JB2A database is not available. Enable the JB2A module (free or Patreon).",
+        "PickMode": "Picker",
+        "Pick": "Use this animation",
+        "Play": "Play on selected tokens (Shift: show to everyone)",
+        "PlayHint": "Hover to preview · double-click to play or pick",
+        "CopyPath": "Copy database path",
+        "Copied": "Copied {path}",
+        "ToggleFavourite": "Toggle favourite",
+        "Page": "Page {page}",
+        "PageOf": "Page {page} of {pages}",
+        "NoTokens": "Select (control) at least one token to play the animation on.",
+        "NoSequence": "The sequence player is not available.",
+        "PlayFailed": "Could not play {path}. See the console for details."
+      },
+      "Settings": {
+        "Favourites": {
+          "Name": "Animation browser favourites",
+          "Hint": "Database paths starred in the animation browser."
+        },
+        "SceneControl": {
+          "Name": "Animation browser button",
+          "Hint": "Show a button in the token controls (left toolbar) that opens the JB2A animation browser."
+        }
+      },
+      "Recipe": {
+        "Preset": "Preset",
+        "Animation": "Animation",
+        "AnimationHint": "JB2A database path (a partial path picks a random variant). Use the film button to browse.",
+        "Browse": "Browse animations",
+        "Options": "Preset options",
+        "NoSchema": "This preset has no configurable options.",
+        "OptionsExtra": "Additional options (JSON)",
+        "OptionsExtraHint": "Advanced: options not listed above, as a JSON object.",
+        "OptionsJson": "Options (JSON object, optional)",
+        "StagesTitle": "Stages",
+        "StagesHint": "Override the animation of individual stages. Leave empty to use the preset default.",
+        "Stages": {
+          "cast": "Cast",
+          "projectile": "Projectile",
+          "impact": "Impact",
+          "onSource": "On source",
+          "onTarget": "On target"
+        },
+        "OutcomesTitle": "Per-outcome overrides",
+        "OutcomesHint": "Use a different animation or options depending on the degree of success. Empty = same as above.",
+        "Outcomes": {
+          "criticalSuccess": "Critical success",
+          "success": "Success",
+          "failure": "Failure",
+          "criticalFailure": "Critical failure"
+        },
+        "SoundTitle": "Sound",
+        "SoundFile": "Sound file",
+        "SoundVolume": "Volume (0-1)",
+        "SoundDelay": "Delay (ms)",
+        "TriggersTitle": "Triggers",
+        "TriggersHint": "Events that play this recipe. None checked = the preset default.",
+        "Triggers": {
+          "attack": "Attack",
+          "damage": "Damage",
+          "cast": "Cast",
+          "save": "Saving throw",
+          "healing": "Healing",
+          "areaPlaced": "Area placed",
+          "effectApplied": "Effect applied"
+        },
+        "Invalid": "The recipe has errors: {errors}"
+      },
+      "Source": {
+        "item": "Item recipe",
+        "world": "World rule",
+        "system": "System rule pack",
+        "fallback": "Generic fallback",
+        "none": "No recipe"
+      },
+      "ItemConfig": {
+        "Title": "Animation",
+        "TitleFor": "Animation: {name}",
+        "Disabled": "Disable automation",
+        "DisabledOn": "Automation disabled for this item.",
+        "DisabledOff": "Automation enabled for this item.",
+        "CurrentMatch": "Currently used",
+        "NoMatch": "No recipe matches this item.",
+        "HasCustom": "This item has its own recipe, which overrides world and system rules.",
+        "NoCustom": "No item recipe yet: the editor starts from the matched recipe. Saving creates an item recipe.",
+        "UseMatched": "Reset editor to the matched recipe",
+        "Preview": "Preview",
+        "PreviewHint": "Play locally from the selected token (or the item actor token) to your targets.",
+        "Clear": "Remove item recipe",
+        "ClearTitle": "Remove item recipe",
+        "ClearConfirm": "Remove the custom animation recipe of {name}? World and system rules apply again.",
+        "Save": "Save",
+        "Saved": "Saved the animation of {name}.",
+        "SaveFailed": "Could not save the recipe. See the console for details.",
+        "NoAutomation": "The automation core is not available.",
+        "NoSourceToken": "Select a token (or place a token of the item owner) to preview from.",
+        "PreviewFailed": "Preview failed. See the console for details."
+      },
+      "Rules": {
+        "Candidates": "Candidate rules",
+        "Title": "Animation Rules (World)",
+        "Add": "Add rule",
+        "Import": "Import JSON",
+        "Export": "Export JSON",
+        "Label": "Label",
+        "Match": "Match",
+        "Recipe": "Recipe",
+        "Priority": "Priority",
+        "PriorityHint": "Higher priority rules are checked first.",
+        "Toggle": "Enable / disable",
+        "Edit": "Edit",
+        "Duplicate": "Duplicate",
+        "Delete": "Delete",
+        "Empty": "No world rules yet. System rule packs and the generic fallback still apply.",
+        "Tester": "Match tester",
+        "DropHint": "Drop an item here to see which recipe and rule it resolves to.",
+        "ClearTest": "Clear result",
+        "DropItemOnly": "Drop an Item (from a sheet, sidebar or compendium).",
+        "NewRule": "New rule",
+        "EditRule": "Edit rule",
+        "Id": "Id",
+        "IdAuto": "Generated when empty",
+        "Enabled": "Enabled",
+        "MatchHint": "All filled criteria must match. Keys and traits come from the system adapter (e.g. PF2e slugs).",
+        "MatchKey": "Item key (slug)",
+        "MatchName": "Exact name",
+        "MatchRegex": "Name regex",
+        "MatchType": "Item type",
+        "MatchTraits": "Traits (all, comma separated)",
+        "MatchAttackKind": "Attack kind",
+        "MatchWeaponGroup": "Weapon group",
+        "Cancel": "Cancel",
+        "Save": "Save rule",
+        "SelectHint": "Select a rule to edit it, or add a new one.",
+        "CopySuffix": "(copy)",
+        "Invalid": "The rule has errors: {errors}",
+        "DuplicateId": "A rule with id {id} already exists.",
+        "Saved": "Saved rule {label}.",
+        "SaveFailed": "Could not save the rule. See the console for details.",
+        "DeleteTitle": "Delete rule",
+        "DeleteConfirm": "Delete the rule <strong>{label}</strong>?",
+        "ImportTitle": "Import rules",
+        "ImportConfirm": "Import {count} rule(s) from {file} into the world rules?",
+        "ImportInvalid": "This file is not a valid rules export: {error}",
+        "Imported": "Imported {count} rule(s).",
+        "ImportFailed": "Import failed: {error}",
+        "GMOnly": "Only a GM can manage world animation rules."
+      },
+      "Menus": {
+        "Settings": {
+          "Name": "All SVA settings",
+          "Label": "Open settings panel",
+          "Hint": "Every Sargas Visual Automation setting grouped by topic (performance, permissions, systems, your preferences), with explanations."
+        },
+        "Browser": {
+          "Name": "Animation browser",
+          "Label": "Open animation browser",
+          "Hint": "Browse, search and preview every JB2A animation; copy paths or play them on selected tokens."
+        },
+        "Rules": {
+          "Name": "World animation rules",
+          "Label": "Open rules manager",
+          "Hint": "Map items to animations for the whole world, test which rule an item matches and import/export rules as JSON."
+        }
+      },
+      "SettingsPanel": {
+        "Title": "Sargas Visual Automation Settings",
+        "Save": "Save changes",
+        "Saved": "Saved {count} setting(s).",
+        "SaveFailed": "Could not save setting {name}.",
+        "ReloadRequired": "Some changes take effect after reloading Foundry.",
+        "RequiresReload": "Requires a reload",
+        "Empty": "No settings available for your role.",
+        "ScopeWorld": "World",
+        "ScopeClient": "This client",
+        "Groups": {
+          "general": "General",
+          "generalHint": "Core module behaviour.",
+          "automation": "Automation",
+          "automationHint": "How items are matched to animations and when they play.",
+          "performance": "Performance",
+          "performanceHint": "Limits that keep the canvas smooth on slower machines.",
+          "permissions": "Permissions",
+          "permissionsHint": "Who may trigger and broadcast animations.",
+          "systems": "Game systems",
+          "systemsHint": "System adapters and their default rule packs.",
+          "client": "Your preferences",
+          "clientHint": "Only affect this browser/user."
+        }
+      }
+    }
+  }
+}

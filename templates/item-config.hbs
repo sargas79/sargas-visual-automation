@@ -1,0 +1,77 @@
+<div class="sva-item-config-body">
+  {{#if unavailable}}
+    <p class="sva-empty">{{localize "SVA.UI.ItemConfig.NoAutomation"}}</p>
+  {{else}}
+    <header class="sva-item-header">
+      {{#if item.img}}<img src="{{item.img}}" alt="" class="sva-item-img" />{{/if}}
+      <div class="sva-item-title">
+        <h2>{{item.name}}</h2>
+        <span class="sva-muted">{{item.type}}</span>
+      </div>
+      <label class="checkbox sva-disable-toggle">
+        <input type="checkbox" name="itemDisabled" {{checked disabled}} />
+        {{localize "SVA.UI.ItemConfig.Disabled"}}
+      </label>
+    </header>
+
+    <div class="sva-scroll">
+      <section class="sva-match">
+        <h3>{{localize "SVA.UI.ItemConfig.CurrentMatch"}}</h3>
+        {{#if resolution.found}}
+          <p>
+            <strong>{{localize resolution.sourceKey}}</strong>
+            {{#if resolution.ruleId}}<code>{{resolution.ruleId}}</code>{{/if}}
+            —
+            {{resolution.preset}}
+            {{#if resolution.animation}}<code>{{resolution.animation}}</code>{{/if}}
+          </p>
+          {{#if resolution.reason}}<p class="hint">{{resolution.reason}}</p>{{/if}}
+        {{else}}
+          <p class="hint">{{localize "SVA.UI.ItemConfig.NoMatch"}}</p>
+        {{/if}}
+        {{#if hasCustom}}
+          <p class="hint">{{localize "SVA.UI.ItemConfig.HasCustom"}}</p>
+        {{else}}
+          <p class="hint">{{localize "SVA.UI.ItemConfig.NoCustom"}}</p>
+        {{/if}}
+        {{#if resolution.candidates.length}}
+          <details>
+            <summary>{{localize "SVA.UI.Rules.Candidates"}}</summary>
+            <ul class="sva-candidates">
+              {{#each resolution.candidates}}
+                <li class="{{cssClass}}">
+                  {{label}}
+                  {{#if source}}<span class="sva-muted">({{source}})</span>{{/if}}
+                  {{#if reason}}<span class="sva-muted">— {{reason}}</span>{{/if}}
+                </li>
+              {{/each}}
+            </ul>
+          </details>
+        {{/if}}
+        {{#if canUseMatched}}
+          <button type="button" class="sva-inline-button" data-action="useMatched">
+            <i class="fa-solid fa-rotate-left" inert></i>
+            {{localize "SVA.UI.ItemConfig.UseMatched"}}
+          </button>
+        {{/if}}
+      </section>
+
+      {{{recipeFormHtml}}}
+    </div>
+
+    <footer class="sva-footer form-footer">
+      <button type="button" data-action="preview" data-tooltip="SVA.UI.ItemConfig.PreviewHint">
+        <i class="fa-solid fa-eye" inert></i>
+        {{localize "SVA.UI.ItemConfig.Preview"}}
+      </button>
+      <button type="button" data-action="clearRecipe" {{disabled noCustom}}>
+        <i class="fa-solid fa-trash" inert></i>
+        {{localize "SVA.UI.ItemConfig.Clear"}}
+      </button>
+      <button type="submit">
+        <i class="fa-solid fa-floppy-disk" inert></i>
+        {{localize "SVA.UI.ItemConfig.Save"}}
+      </button>
+    </footer>
+  {{/if}}
+</div>

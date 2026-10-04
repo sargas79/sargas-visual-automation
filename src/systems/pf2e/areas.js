@@ -24,6 +24,68 @@ function gridScale() {
   return { size, distance, pxToUnits: (px) => (Number(px) / size) * distance };
 }
 
+/** Grid squares for a token base dimension: TokenShapeData mirrors TokenDocument (grid units); pixels otherwise. */
+function tokenSquares(value, size) {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return 1;
+  // No grid is smaller than 20 px and no token is wider than 20 squares, so the magnitude tells the unit apart.
+  return n > 20 ? n / size : n;
+}
+
+/** Center (canvas px) of a region base shape, or null when it has no usable coordinates. */
+export function baseCenter(base, size) {
+  if (!base || typeof base !== "object") return null;
+  const num = (v) => (Number.isFinite(Number(v)) ? Number(v) : null);
+  const x = num(base.x);
+  const y = num(base.y);
+  switch (base.type) {
+    case "token": {
+      if (x === null || y === null) return null;
+      const w = tokenSquares(base.width ?? 1, size);
+      const h = tokenSquares(base.height ?? 1, size);
+      return { x: x + (w * size) / 2, y: y + (h * size) / 2 };
+    }
+    case "rectangle": {
+      if (x === null || y === null) return null;
+      const rad = ((Number(base.rotation ?? 0) || 0) * Math.PI) / 180;
+      const cx = (num(base.width) ?? 0) / 2;
+      const cy = (num(base.height) ?? 0) / 2;
+      return { x: x + cx * Math.cos(rad) - cy * Math.sin(rad), y: y + cx * Math.sin(rad) + cy * Math.cos(rad) };
+    }
+    case "polygon": {
+      const pts = Array.isArray(base.points) ? base.points.map(Number) : [];
+      if (pts.length < 2 || pts.some((n) => !Number.isFinite(n))) return null;
+      let sx = 0;
+      let sy = 0;
+      for (let i = 0; i + 1 < pts.length; i += 2) {
+        sx += pts[i];
+        sy += pts[i + 1];
+      }
+      const n = Math.floor(pts.length / 2);
+      return { x: sx / n, y: sy / n };
+    }
+    default:
+      // circle, cone, line, ellipse, unknown: x/y is the center or the apex.
+      return x === null || y === null ? null : { x, y };
+  }
+}
+
+/** Width of a region base shape in grid squares (1 when unknown), for sizing the emanation around it. */
+function baseWidth(base, size) {
+  if (!base || typeof base !== "object") return 1;
+  switch (base.type) {
+    case "token":
+      return tokenSquares(base.width ?? 1, size);
+    case "rectangle":
+      return Number(base.width) > 0 ? Number(base.width) / size : 1;
+    case "circle":
+    case "ellipse":
+      return Number(base.radius ?? base.radiusX) > 0 ? (2 * Number(base.radius ?? base.radiusX)) / size : 1;
+    default:
+      return 1;
+  }
+}
+
 /** Convert a v14 region shape to the event `area` geometry. */
 export function areaFromShape(shape, pf2eShape) {
   if (!shape) return null;
@@ -72,14 +134,14 @@ export function areaFromShape(shape, pf2eShape) {
       };
     }
     case "emanation": {
-      // Base is a token shape: x/y top-left in px, width/height in grid spaces. VERIFY(v14): base units.
-      const base = shape.base ?? {};
-      const w = Number(base.width ?? 1);
-      const h = Number(base.height ?? 1);
-      const origin = { x: (base.x ?? shape.x ?? 0) + (w * size) / 2, y: (base.y ?? shape.y ?? 0) + (h * size) / 2 };
+      // v14: the base can be any shape but a ring or an emanation (token, circle, rectangle, polygon...).
+      const base = shape.base ?? null;
+      const center = baseCenter(base, size) ?? baseCenter(shape, size);
+      const w = baseWidth(base, size);
       return {
         shape: AREA_SHAPES.EMANATION,
-        origin,
+        // null origin: the recipe falls back to the caster's token (buildArea), which is where an emanation sits.
+        origin: center,
         direction: 0,
         distance: pxToUnits(shape.radius),
         width: w * gridScale().distance

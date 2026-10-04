@@ -22,7 +22,8 @@ describe("effects & conditions", () => {
     const { bless } = setup();
     expect(eventFromEffectItem(bless, EVENT_TYPES.EFFECT_APPLIED, { userId: "user1" })).toMatchObject({
       type: EVENT_TYPES.EFFECT_APPLIED,
-      source: { tokenId: "tok-cleric", actorId: "cleric" },
+      // The source is the affected actor, not the caster in system.context.origin: auras sit on the affected token.
+      source: { tokenId: "tok-fighter", actorId: "fighter" },
       targets: [{ tokenId: "tok-fighter" }],
       itemUuid: bless.uuid,
       effectUuid: bless.uuid,

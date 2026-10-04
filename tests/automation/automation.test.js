@@ -127,6 +127,21 @@ describe("handle()", () => {
     expect(await api.automation.handle({ ...ev, type: "effectRemoved" })).toBe(true);
     expect(effects.end).toHaveBeenCalledWith({ name: "aura:a1:aura-effect" });
   });
+  it("ends an aura that is only playing locally (not stored yet, or no GM to store it)", async () => {
+    const effects = { list: vi.fn(() => []), end: vi.fn(async () => {}) };
+    const aura = fakeItem({
+      name: "Effect: Aura",
+      uuid: "Item.aura",
+      flags: flagged({ recipe: { version: 1, preset: "aura", animation: "jb2a.energy_field.01.blue" } }),
+      sva: { key: "aura-effect", type: "effect" }
+    });
+    const { api } = bootAutomation({ items: [aura], effects });
+    const ev = { type: "effectRemoved", source: { tokenId: "src", actorId: "a1" }, itemUuid: "Item.aura" };
+    expect(await api.automation.handle(ev)).toBe(false);
+    api.engine = { active: () => [{ id: "e1", descriptor: { name: "aura:a1:aura-effect" } }] };
+    expect(await api.automation.handle({ ...ev, effectUuid: "x" })).toBe(true);
+    expect(effects.end).toHaveBeenCalledWith({ name: "aura:a1:aura-effect" });
+  });
 });
 
 describe("preview()", () => {

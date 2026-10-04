@@ -220,10 +220,17 @@ export function createAutomation(api, rules) {
     return sequences.length > 0;
   }
 
+  /** Is an effect with this name stored on the viewed scene, or playing in the local engine (not stored yet,
+   *  or never stored because no GM was online)? */
   function effectExists(name) {
     try {
       const found = api.effects?.list?.({ name });
-      return Array.isArray(found) && found.length > 0;
+      if (Array.isArray(found) && found.length > 0) return true;
+    } catch {
+      // fall through to the live effects
+    }
+    try {
+      return (api.engine?.active?.() ?? []).some((h) => h?.descriptor?.name === name);
     } catch {
       return false;
     }

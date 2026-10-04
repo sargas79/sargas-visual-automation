@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- PF2e: an effect applied to another creature (Haste, Heroism or Courageous Anthem on an ally) animated its aura around the caster instead of the affected creature, and one aura was shared by every creature the caster buffed. The affected actor is now the source of effect events, as in the other adapters, so each creature gets its own aura and it ends when its own effect is removed.
+- An aura started by a `cast` trigger (the default Bless rule) never ended: nothing removes it, since effect removals carry another name. Auras are now persistent only on `effectApplied` / `areaPlaced`; on a cast the loop plays once (or for `options.duration`).
+- An aura that was never saved on the scene (no GM online, or the save still in flight) could not be ended by the effect's removal. The removal now also ends matching live effects.
+- Effects attached to a token whose art is offset (token texture anchor other than the center) were drawn at the anchor point instead of the token's center.
+- PF2e: emanation areas placed as Regions on Foundry v14 could animate in the wrong place. The emanation's center is now computed for any base shape (token, circle, rectangle, polygon) whether its size is stored in grid squares or pixels, and falls back to the caster's token when the base has no usable coordinates.
+
 ## 0.3.1 - 2026-09-29
 
 ### Fixed

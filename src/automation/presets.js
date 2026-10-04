@@ -247,13 +247,15 @@ function buildAura(ctx) {
   const recipe = recipeForOutcome(ctx.recipe, event.outcome);
   const opts = recipe.options ?? {};
   const radius = opts.radius ?? event.descriptors?.area?.size ?? null;
+  // Only an effect (ended by effectRemoved) or a placed area (ended when the area is removed) can end a
+  // persistent aura. On any other trigger (a cast) the loop plays once, or for `options.duration`.
+  const persist = event.type === EVENT_TYPES.EFFECT_APPLIED || event.type === EVENT_TYPES.AREA_PLACED;
   const extra = {
     atLocation: tokenAnchor(sourceId),
     attachTo: { tokenId: sourceId },
-    persist: true,
-    name: auraName(event),
     layer: opts.layer ?? LAYERS.BELOW_TOKENS
   };
+  if (persist) Object.assign(extra, { persist: true, name: auraName(event) });
   if (radius) {
     const side = ((radius / grid.distance) * 2 + ctx.getTokenSize(sourceId)) * (opts.scale ?? 1);
     extra.size = { width: side, height: side, gridUnits: true };

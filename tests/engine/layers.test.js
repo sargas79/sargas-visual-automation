@@ -88,6 +88,15 @@ describe("EffectSprite attachment", () => {
     expect(d.elevation).toBe(20);
   });
 
+  it("attaches to the token center when the art anchor is offset", async () => {
+    const token = createFakeToken({ x: 130, y: 120, w: 100, h: 100 });
+    token.mesh.anchor = { x: 0.3, y: 0.2 };
+    const ctx = createFakeContext({ tokens: { t: token } });
+    const s = sprite({ file: "x/y.webp", attachTo: { tokenId: "t" }, persist: true }, ctx);
+    await s.mount();
+    expect(ctx.layers.displays[0].position).toMatchObject({ x: 150, y: 150 });
+  });
+
   it("ends when the attached token disappears", async () => {
     const ctx = createFakeContext({ tokens: { t: createFakeToken() } });
     const s = sprite({ file: "x/y.webp", attachTo: { tokenId: "t" }, persist: true }, ctx);

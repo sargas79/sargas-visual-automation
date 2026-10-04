@@ -109,7 +109,7 @@ export function soundName(descriptors, { eventType, outcome } = {}) {
   }
   const kind = d.attackKind ?? (traits.includes("thrown") ? ATTACK_KINDS.THROWN : null);
   const miss = outcome === OUTCOMES.FAILURE || outcome === OUTCOMES.CRITICAL_FAILURE;
-  let base = null;
+  let base;
   if (kind === ATTACK_KINDS.MELEE) {
     if (!isWeapon) base = magicName(d);
     else {

@@ -111,6 +111,16 @@ GURPS Game Aid has no item "activities": attacks, spells and skills are rows of 
 - Concentration drives auras: a rule with the `aura` preset on a concentration spell (Spirit Guardians) starts when you begin concentrating and ends when concentration ends. Effects applied from a card (for example "Blessed") and conditions (`prone`, `frightened`…) are matched by their name / status id with type `effect` / `condition`.
 - **Teleport** spells (Misty Step) move your token themselves: click the destination when asked, and don't also use dnd5e's own **Teleport** button on the card.
 
+## Sounds
+
+Automatic animations come with a sound when their recipe has none (world setting **Automatic sounds**, on by default):
+
+- **Attacks** by weapon type: slash, pierce or blunt melee (by weapon group, then damage type), unarmed, bite and claw for creature attacks, bow, crossbow, firearm, thrown.
+- **Criticals** play a heavier variant of the same sound; **misses** a whoosh with no impact (melee and thrown).
+- **Magic** by damage type (fire, cold, electricity, acid, poison, sonic, force, void, vitality, mental, spirit, or a generic one) for casts, spell attacks, saves and areas; **healing** and **buffs** (effects applied) have their own.
+
+The bank shipped with the module (`sounds/*.wav`) is synthesized and deliberately short. To use your own, copy the folder somewhere in your user data, replace the files you want (same names), and set **Sound folder** to that folder. A recipe or rule with its own `sound` is left untouched; `"sound": null` keeps it silent. The **Volume** client setting applies to all of them.
+
 ## Configuring an item
 
 Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condition; for D&D 5e: weapon, spell, feature or consumable; for GURPS: equipment, spell, skill or attack items) and click the **Animation** control in the sheet header. In GURPS, attacks and spells that exist only on the character sheet (no item) are configured with a rule in the [rules manager](#rules-manager) instead.
@@ -201,6 +211,8 @@ Settings live in **Game Settings → Configure Settings → Sargas Visual Automa
 | Disable effects         | Client | You see no SVA animations at all. Other players are unaffected.                                    |
 | Reduced motion          | Client | Skip decorative effects (cast, screen effects); hits, misses, areas, impacts and auras still play. |
 | Volume                  | Client | Volume of SVA sounds on your machine.                                                              |
+| Automatic sounds        | World  | Add a default sound to automatic animations that have none (see [Sounds](#sounds)).                |
+| Sound folder            | World  | Folder of the sound bank. Default: the one shipped with the module.                                |
 | Condition markers       | World  | Show JB2A markers for conditions (PF2e, and D&D 5e: "animate conditions").                         |
 | GURPS: failed casts     | World  | Animate spell and healing rolls that fail (GURPS). Failed attacks always play as misses.           |
 | Debug logging           | Client | Detailed logs in the browser console (F12), including why a recipe matched.                        |

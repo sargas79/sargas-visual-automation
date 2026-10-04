@@ -331,6 +331,7 @@ SVA.automation.rules.exportJSON();
 await SVA.automation.rules.importJSON(json);
 
 SVA.automation.presets; // { melee, ranged, onToken, area, aura, teleport } with labels and option schemas
+SVA.automation.soundName(descriptors, { eventType: "attack", outcome: "criticalSuccess" }); // → "crit-bow" | null
 
 // Teleport helpers used by the teleport preset.
 const point = await SVA.automation.teleport.pickCanvasPoint(); // {x, y} canvas px, or null (right-click/Escape)

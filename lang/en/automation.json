@@ -8,6 +8,14 @@
         },
         "Rules": {
           "Name": "Automation rules"
+        },
+        "Sounds": {
+          "Name": "Automatic sounds",
+          "Hint": "Play a sound with automatic animations that have none: attacks by weapon type, criticals, misses, spells by damage type, healing and buffs."
+        },
+        "SoundFolder": {
+          "Name": "Sound folder",
+          "Hint": "Folder of the sound bank (files named melee-slash.wav, crit-bow.wav, magic-fire.wav…). Default: the bank shipped with the module; copy it and replace files to use your own."
         }
       },
       "Presets": {

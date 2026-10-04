@@ -28,7 +28,7 @@ describe("handle()", () => {
     await adapter.fire(attack());
     expect(api.playSequence).toHaveBeenCalledTimes(1);
     const [seq] = api.playSequence.mock.calls[0];
-    expect(seq.steps[0].effect).toMatchObject({
+    expect(seq.steps.find((s) => s.type === "effect").effect).toMatchObject({
       file: "jb2a.sword.melee.01.white",
       atLocation: { tokenId: "src" },
       stretchTo: { tokenId: "t1" }
@@ -97,7 +97,10 @@ describe("handle()", () => {
       attack({ itemUuid: null, descriptors: { name: "Bolt", attackKind: "ranged", damageTypes: ["cold"] } })
     );
     expect(ok).toBe(true);
-    expect(api.playSequence.mock.calls[0][0].steps[0].effect.file).toBe("jb2a.ray_of_frost.blue");
+    const played = api.playSequence.mock.calls[0][0].steps;
+    expect(played.find((s) => s.type === "effect").effect.file).toBe("jb2a.ray_of_frost.blue");
+    // A spell attack gets a magic sound of its damage type.
+    expect(played[0]).toMatchObject({ type: "sound", file: expect.stringMatching(/magic-cold\.wav$/) });
   });
 
   it("plays nothing for an actor whose animations are turned off, and drops its tokens from targets", async () => {
@@ -131,6 +134,18 @@ describe("handle()", () => {
     delete globalThis.canvas;
   });
 
+  it("adds the default sound (and its critical variant) to recipes without one, unless sounds are off", async () => {
+    const { api } = bootAutomation({ items: [sword()] });
+    expect(await api.automation.handle(attack({ outcome: "criticalSuccess", targets: [{ tokenId: "t1" }] }))).toBe(
+      true
+    );
+    const steps = api.playSequence.mock.calls[0][0].steps;
+    expect(steps[0]).toMatchObject({ type: "sound", file: expect.stringMatching(/sounds\/crit-melee-slash\.wav$/) });
+    await game.settings.set("sargas-visual-automation", "soundsEnabled", false);
+    expect(await api.automation.handle(attack({ outcome: "success" }))).toBe(true);
+    expect(api.playSequence.mock.calls[1][0].steps.some((s) => s.type === "sound")).toBe(false);
+  });
+
   it("skips items whose recipe does not trigger on the event", async () => {
     const { api } = bootAutomation({ items: [sword()] });
     expect(await api.automation.handle(attack({ type: "damage" }))).toBe(false);
@@ -151,7 +166,7 @@ describe("handle()", () => {
     const { api } = bootAutomation({ items: [aura], effects });
     const ev = { type: "effectApplied", source: { tokenId: "src", actorId: "a1" }, itemUuid: "Item.aura" };
     expect(await api.automation.handle(ev)).toBe(true);
-    const effect = api.playSequence.mock.calls[0][0].steps[0].effect;
+    const effect = api.playSequence.mock.calls[0][0].steps.find((s) => s.type === "effect").effect;
     expect(effect).toMatchObject({ persist: true, name: "aura:a1:aura-effect" });
     stored.push(effect);
     expect(await api.automation.handle({ ...ev, effectUuid: "again" })).toBe(false);
@@ -184,8 +199,9 @@ describe("preview()", () => {
     );
     const [seq, opts] = api.playSequence.mock.calls[0];
     expect(opts).toEqual({ broadcast: false });
-    expect(seq.steps[0].effect.persist).toBeUndefined();
-    expect(seq.steps[0].effect.attachTo).toEqual({ tokenId: "src" });
+    const effect = seq.steps.find((s) => s.type === "effect").effect;
+    expect(effect.persist).toBeUndefined();
+    expect(effect.attachTo).toEqual({ tokenId: "src" });
   });
 
   it("accepts token documents and ids for targets", async () => {

@@ -88,13 +88,22 @@ describe("EffectSprite attachment", () => {
     expect(d.elevation).toBe(20);
   });
 
-  it("attaches to the token center when the art anchor is offset", async () => {
+  it("attaches to the document center at rest and follows the mesh with that offset while animating", async () => {
     const token = createFakeToken({ x: 130, y: 120, w: 100, h: 100 });
-    token.mesh.anchor = { x: 0.3, y: 0.2 };
+    token.center = { x: 150, y: 150 }; // art anchored off-center: mesh sits 20px up-left of the center
+    token.animationName = "Token.t.animate";
+    let animating = false;
+    globalThis.CanvasAnimation = { getAnimation: () => (animating ? {} : undefined) };
     const ctx = createFakeContext({ tokens: { t: token } });
     const s = sprite({ file: "x/y.webp", attachTo: { tokenId: "t" }, persist: true }, ctx);
     await s.mount();
-    expect(ctx.layers.displays[0].position).toMatchObject({ x: 150, y: 150 });
+    const d = ctx.layers.displays[0];
+    expect(d.position).toMatchObject({ x: 150, y: 150 });
+    animating = true;
+    token.mesh.position = { x: 330, y: 220 }; // document center is not updated during the animation
+    expect(s.update(16)).toBe(true);
+    expect(d.position).toMatchObject({ x: 350, y: 250 });
+    delete globalThis.CanvasAnimation;
   });
 
   it("ends when the attached token disappears", async () => {

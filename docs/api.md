@@ -318,6 +318,11 @@ SVA.automation.getItemRecipe(item);
 await SVA.automation.setItemRecipe(item, recipe);
 await SVA.automation.setItemDisabled(item, true);
 
+// Per-actor switch (actor flag, settable by the actor's owner): nothing the actor does animates,
+// and nothing lands on its tokens.
+await SVA.automation.setActorDisabled(actor, true);
+SVA.automation.isActorDisabled(actor); // → boolean
+
 // World rules.
 SVA.automation.rules.list();
 await SVA.automation.rules.save(rule);

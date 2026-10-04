@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Turn animations off for a character.** A button in the animation overview header (owner or GM) silences the character: nothing it does animates and nothing lands on its tokens, while other characters keep animating. Also `SVA.automation.setActorDisabled(actor, true)` / `isActorDisabled(actor)`.
+
 ## 0.3.2 - 2026-10-04
 
 ### Fixed

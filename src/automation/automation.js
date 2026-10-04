@@ -6,7 +6,8 @@
  *   2. world rules (setting automationRules)                          source "world"
  *   3. active system's rule pack (rules/<systemId>.json)              source "system"
  *   4. generic fallback from ItemDescriptors                          source "fallback"
- * flags["sargas-visual-automation"].disabled === true turns an item off.
+ * flags["sargas-visual-automation"].disabled === true turns an item off; the same flag on an actor turns the
+ * actor off: nothing it does animates and nothing lands on its tokens (a player silencing their character).
  */
 import { MODULE_ID } from "../constants.js";
 import { log } from "../logger.js";
@@ -46,6 +47,30 @@ function tokenIdOf(token) {
 function actorIdOf(token) {
   if (!token || typeof token === "string") return null;
   return token.actor?.id ?? token.document?.actorId ?? token.actorId ?? null;
+}
+
+/** Actor of a token id on the canvas, or an actor id in the world. */
+function actorOf({ tokenId, actorId } = {}) {
+  const token = tokenId ? globalThis.canvas?.tokens?.get?.(tokenId) : null;
+  const fromToken = token?.actor ?? token?.document?.actor ?? null;
+  if (fromToken) return fromToken;
+  return actorId ? (globalThis.game?.actors?.get?.(actorId) ?? null) : null;
+}
+
+/** True when animations are turned off for this actor (actor flag). */
+function actorDisabled(actor) {
+  return flagsOf(actor).disabled === true;
+}
+
+/**
+ * Apply actor-level disabling: null when the source actor is off; otherwise the event without the targets
+ * whose actor is off.
+ */
+function withoutDisabledActors(event) {
+  if (event.source && actorDisabled(actorOf(event.source))) return null;
+  const targets = event.targets ?? [];
+  const kept = targets.filter((t) => !actorDisabled(actorOf({ tokenId: t.tokenId })));
+  return kept.length === targets.length ? event : { ...event, targets: kept };
 }
 
 /** VERIFY(v14): global fromUuid (also foundry.utils.fromUuid). */
@@ -269,6 +294,12 @@ export function createAutomation(api, rules) {
         log.debug("Duplicate automation event dropped", event);
         return false;
       }
+      const filtered = withoutDisabledActors(event);
+      if (!filtered) {
+        log.debug("Automation event dropped: animations are disabled for the source actor", event);
+        return false;
+      }
+      event = filtered;
 
       const item = await resolveUuid(event.itemUuid);
       if (!item && !event.descriptors) {
@@ -363,6 +394,19 @@ export function createAutomation(api, rules) {
     /** True when automation is turned off for this item. */
     isItemDisabled(item) {
       return flagsOf(item).disabled === true;
+    },
+
+    /**
+     * Turn animations off (true) or back on (false) for an actor: nothing it does animates, and nothing lands on
+     * its tokens. Owners (players) can set it on their own characters.
+     */
+    async setActorDisabled(actor, disabled) {
+      return disabled ? actor.setFlag(MODULE_ID, "disabled", true) : actor.unsetFlag(MODULE_ID, "disabled");
+    },
+
+    /** True when animations are turned off for this actor. */
+    isActorDisabled(actor) {
+      return actorDisabled(actor);
     },
 
     rules

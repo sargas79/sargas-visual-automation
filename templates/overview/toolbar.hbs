@@ -14,7 +14,25 @@
           }}
         </span>
       {{/if}}
+      {{#if actor.disabled}}
+        <span class="sva-badge sva-actor-off">
+          <i class="fa-solid fa-ban" inert></i>
+          {{localize "SVA.UI.Overview.ActorDisabled"}}
+        </span>
+      {{/if}}
     </div>
+    {{#if actor.canEdit}}
+      <button
+        type="button"
+        class="{{actor.toggleClass}}"
+        data-action="toggleActorDisabled"
+        aria-pressed="{{actor.pressed}}"
+        data-tooltip="{{actor.toggleTooltip}}"
+      >
+        <i class="fa-solid {{actor.toggleIcon}}" inert></i>
+        {{localize actor.toggleLabel}}
+      </button>
+    {{/if}}
   </div>
   <div class="sva-overview-toolbar">
     <label class="sva-search">

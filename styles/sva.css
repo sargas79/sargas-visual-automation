@@ -331,6 +331,14 @@
   white-space: nowrap;
 }
 
+.sva-app button.sva-disable-toggle {
+  width: auto;
+}
+
+.sva-app .sva-actor-off {
+  margin-left: var(--sva-gap);
+}
+
 .sva-app .sva-match {
   margin-bottom: var(--sva-gap);
   padding: var(--sva-gap);

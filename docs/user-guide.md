@@ -152,6 +152,8 @@ Row buttons:
 - **Reset**: removes the item's own recipe; rules apply again.
 - **Disable / Enable** automation for that item.
 
+**Turn off for this character** (header button, for the character's owner or the GM) silences the whole character: nothing it does animates, and no animation lands on its tokens (impacts, buffs, auras). Other characters are not affected, and the same button turns it back on. A player can use it on their own characters.
+
 The list updates by itself when items or world rules change. The token HUD button can be turned off per client in the settings (**Animation overview button on the token HUD**).
 
 ## Rules manager
@@ -205,17 +207,17 @@ Settings live in **Game Settings → Configure Settings → Sargas Visual Automa
 
 ## Troubleshooting
 
-| Symptom                                    | What to check                                                                                                                                                                                                                       |
-| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| "JB2A is not installed" warning            | Enable `jb2a_patreon` or `JB2A_DnD5e` in **Manage Modules** and reload. In the console, `SVA.db.provider` should not be `null`.                                                                                                     |
-| Nothing plays for anyone                   | **Automation enabled** is on; the item isn't disabled; `SVA.automation.explain(item)` returns a recipe; your role is at least **minimum role to trigger**; turn on **Debug logging** and look for errors.                           |
-| It plays for me but not for another player | That player turned on **Disable effects** or **Reduced motion**; or they are on another scene; or the effect was restricted with `forUsers`; or the token is hidden from them.                                                      |
-| An animation plays twice                   | Automated Animations (or another animation module) is also active. Disable automation in one of them.                                                                                                                               |
-| "Path not found" in the console            | The path doesn't exist in your JB2A collection (common with the free module). Pick another one in the animation browser.                                                                                                            |
-| Projectile is too short / too long         | The scene's grid distance and units are used to pick the distance variant. Check **Scene → Grid** (size, distance, units).                                                                                                          |
-| Persistent aura disappeared after reload   | A player created it while no GM was connected, so it couldn't be saved. Recreate it with a GM online.                                                                                                                               |
-| Aura stays after the effect was removed    | End it with `SVA.effects.end({ name: "aura:<actorId>:<key>", sceneId: canvas.scene.id })`, or `SVA.effects.endAll({ sceneId: canvas.scene.id })`, and report it with the item's name. `<actorId>` is the actor carrying the effect. |
-| Stuttering with many effects               | Lower **Max concurrent effects**, or turn on **Reduced motion** on slow machines.                                                                                                                                                   |
+| Symptom                                    | What to check                                                                                                                                                                                                                                                       |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "JB2A is not installed" warning            | Enable `jb2a_patreon` or `JB2A_DnD5e` in **Manage Modules** and reload. In the console, `SVA.db.provider` should not be `null`.                                                                                                                                     |
+| Nothing plays for anyone                   | **Automation enabled** is on; the item isn't disabled; the character isn't turned off in its animation overview; `SVA.automation.explain(item)` returns a recipe; your role is at least **minimum role to trigger**; turn on **Debug logging** and look for errors. |
+| It plays for me but not for another player | That player turned on **Disable effects** or **Reduced motion**; or they are on another scene; or the effect was restricted with `forUsers`; or the token is hidden from them.                                                                                      |
+| An animation plays twice                   | Automated Animations (or another animation module) is also active. Disable automation in one of them.                                                                                                                                                               |
+| "Path not found" in the console            | The path doesn't exist in your JB2A collection (common with the free module). Pick another one in the animation browser.                                                                                                                                            |
+| Projectile is too short / too long         | The scene's grid distance and units are used to pick the distance variant. Check **Scene → Grid** (size, distance, units).                                                                                                                                          |
+| Persistent aura disappeared after reload   | A player created it while no GM was connected, so it couldn't be saved. Recreate it with a GM online.                                                                                                                                                               |
+| Aura stays after the effect was removed    | End it with `SVA.effects.end({ name: "aura:<actorId>:<key>", sceneId: canvas.scene.id })`, or `SVA.effects.endAll({ sceneId: canvas.scene.id })`, and report it with the item's name. `<actorId>` is the actor carrying the effect.                                 |
+| Stuttering with many effects               | Lower **Max concurrent effects**, or turn on **Reduced motion** on slow machines.                                                                                                                                                                                   |
 
 When you report a bug, include your Foundry, system, JB2A and SVA versions, the output of `SVA.automation.explain(item)` for the item, and the console log with **Debug logging** on: <https://github.com/sargas79/sargas-visual-automation/issues>.
 

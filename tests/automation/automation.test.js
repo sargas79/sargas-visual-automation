@@ -100,6 +100,37 @@ describe("handle()", () => {
     expect(api.playSequence.mock.calls[0][0].steps[0].effect.file).toBe("jb2a.ray_of_frost.blue");
   });
 
+  it("plays nothing for an actor whose animations are turned off, and drops its tokens from targets", async () => {
+    const { api } = bootAutomation({ items: [sword()] });
+    const off = { id: "a1", flags: flagged({ disabled: true }), setFlag: vi.fn(), unsetFlag: vi.fn() };
+    const on = { id: "a2", flags: {} };
+    globalThis.game.actors = new Map([
+      ["a1", off],
+      ["a2", on]
+    ]);
+    globalThis.canvas = {
+      tokens: { get: (id) => ({ src: { actor: off }, t1: { actor: off }, t2: { actor: on } })[id] }
+    };
+    expect(api.automation.isActorDisabled(off)).toBe(true);
+    expect(api.automation.isActorDisabled(on)).toBe(false);
+    // The disabled actor attacks: nothing plays.
+    expect(await api.automation.handle(attack())).toBe(false);
+    expect(api.playSequence).not.toHaveBeenCalled();
+    // Another actor attacks the disabled one and a third token: only the third token gets the animation.
+    const ev = attack({ source: { tokenId: "t2", actorId: "a2" }, targets: [{ tokenId: "t1" }, { tokenId: "t2" }] });
+    expect(await api.automation.handle(ev)).toBe(true);
+    const steps = api.playSequence.mock.calls[0][0].steps.filter((s) => s.type === "effect");
+    expect(steps.some((s) => s.effect.stretchTo?.tokenId === "t1" || s.effect.atLocation?.tokenId === "t1")).toBe(
+      false
+    );
+    // The API writes the actor flag.
+    await api.automation.setActorDisabled(off, false);
+    expect(off.unsetFlag).toHaveBeenCalledWith("sargas-visual-automation", "disabled");
+    await api.automation.setActorDisabled(off, true);
+    expect(off.setFlag).toHaveBeenCalledWith("sargas-visual-automation", "disabled", true);
+    delete globalThis.canvas;
+  });
+
   it("skips items whose recipe does not trigger on the event", async () => {
     const { api } = bootAutomation({ items: [sword()] });
     expect(await api.automation.handle(attack({ type: "damage" }))).toBe(false);

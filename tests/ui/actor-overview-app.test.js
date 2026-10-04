@@ -35,6 +35,10 @@ function createApi({ ownRecipe = null } = {}) {
     }),
     setItemRecipe: vi.fn(async () => {}),
     setItemDisabled: vi.fn(async () => {}),
+    isActorDisabled: vi.fn((actor) => actor?.flags?.[MODULE_ID]?.disabled === true),
+    setActorDisabled: vi.fn(async (actor, disabled) => {
+      actor.flags = disabled ? { [MODULE_ID]: { disabled: true } } : {};
+    }),
     preview: vi.fn(async () => true)
   };
   const items = makeItems([
@@ -48,7 +52,16 @@ function createApi({ ownRecipe = null } = {}) {
     },
     { id: "rope", name: "Rope", type: "other", isOwner: true, flags: {} }
   ]);
-  const actor = { id: "a1", uuid: "Actor.a1", name: "Ezren", img: "e.webp", items, getActiveTokens: () => [] };
+  const actor = {
+    id: "a1",
+    uuid: "Actor.a1",
+    name: "Ezren",
+    img: "e.webp",
+    items,
+    isOwner: true,
+    flags: {},
+    getActiveTokens: () => []
+  };
   for (const item of items) item.parent = actor;
   const api = {
     automation,
@@ -103,6 +116,35 @@ describe("actor animation overview app", () => {
     await load(api);
     expect(api.ui.openActorOverview(null)).toBeNull();
     expect(globalThis.ui.notifications.warn).toHaveBeenCalled();
+  });
+
+  it("turns animations off and on for the whole actor from the header", async () => {
+    const { api, actor } = createApi();
+    await load(api);
+    const app = api.ui.openActorOverview(actor);
+    app.render = vi.fn();
+    let context = await app._prepareContext({});
+    expect(context.actor).toMatchObject({
+      disabled: false,
+      canEdit: true,
+      toggleLabel: "SVA.UI.Overview.DisableActor"
+    });
+    await app.constructor.DEFAULT_OPTIONS.actions.toggleActorDisabled.call(app, {}, null);
+    expect(api.automation.setActorDisabled).toHaveBeenCalledWith(actor, true);
+    expect(app.render).toHaveBeenCalled();
+    context = await app._prepareContext({});
+    expect(context.actor).toMatchObject({
+      disabled: true,
+      pressed: "true",
+      toggleLabel: "SVA.UI.Overview.EnableActor"
+    });
+    await app.constructor.DEFAULT_OPTIONS.actions.toggleActorDisabled.call(app, {}, null);
+    expect(api.automation.setActorDisabled).toHaveBeenLastCalledWith(actor, false);
+    // Not an owner: no button.
+    actor.isOwner = false;
+    globalThis.game.user.isGM = false;
+    context = await app._prepareContext({});
+    expect(context.actor.canEdit).toBe(false);
   });
 
   it("changes an animation keeping the resolved recipe", async () => {

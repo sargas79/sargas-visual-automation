@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Effects attached to or placed on a token now use the token's document center at rest, and follow the mesh with the offset measured at rest while it moves. The previous correction assumed Foundry's texture-anchor formula; on tokens with offset or scaled art it could still draw effects beside the token.
+
 ## 0.4.0 - 2026-10-04
 
 ### Added

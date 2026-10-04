@@ -204,6 +204,8 @@
         "MatchAttackKind": "Attack kind",
         "MatchWeaponGroup": "Weapon group",
         "MatchBaseItem": "Base item",
+        "MatchActorTraits": "Creature traits",
+        "MatchActorTraitsHint": "Traits of the creature using the item, all required: creature type (dragon, undead, fiend…) or size:tiny … size:gargantuan.",
         "Cancel": "Cancel",
         "Save": "Save rule",
         "SelectHint": "Select a rule to edit it, or add a new one.",

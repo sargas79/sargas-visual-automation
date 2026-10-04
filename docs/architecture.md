@@ -156,7 +156,7 @@ Recipe = {
   sound?: { file, volume, delay },
   triggers?: ["attack", "damage", "cast", "save", "healing", "areaPlaced", "effectApplied"] // default per preset
 }
-Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, traits?, attackKind?, weaponGroup?, baseItem? }, recipe }
+Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, traits?, actorTraits?, attackKind?, weaponGroup?, baseItem? }, recipe }
 RulePack (rules/<system>.json) = { system, version: 1, rules: Rule[] }
 ```
 

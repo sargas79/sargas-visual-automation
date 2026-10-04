@@ -57,7 +57,7 @@ SVA looks for a recipe in this order and uses the first one it finds:
 1. **Item**: a recipe configured on the item itself ([item configuration](#configuring-an-item)).
 2. **World rules**: rules you create in the [rules manager](#rules-manager).
 3. **System rule pack**: the defaults shipped with SVA for your game system (`rules/pf2e.json`: common spells, cantrips and every weapon group; `rules/dnd5e.json`: SRD spells, every base weapon, healing potions, spell effects and conditions; `rules/gurps.json`: weapon families, unarmed and natural attacks, firearms and common GURPS Magic spells).
-4. **Generic fallback**: based on what the item is (melee, ranged or thrown attack, damage type, healing).
+4. **Generic fallback**: based on what the item is (melee, ranged or thrown attack, damage type, healing). Creature attacks named after a body part (jaws, claws, stings, tails, wings, slams…) get a bite, claw or slam animation sized to the creature and coloured by its energy damage or creature type (a fire-breathing dragon's jaws glow orange, a ghoul's claws purple).
 
 If the item's **Disable automation** box is ticked, nothing plays for it, whatever the rules say.
 

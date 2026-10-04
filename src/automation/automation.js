@@ -210,7 +210,8 @@ export function createAutomation(api, rules) {
       }
     }
 
-    const fb = fallbackRecipe(d, { eventType, area });
+    const exists = api.db?.available ? (path) => api.db.has(path) : undefined;
+    const fb = fallbackRecipe(d, { eventType, area, exists });
     trace.candidates.push({
       source: "fallback",
       ruleId: null,

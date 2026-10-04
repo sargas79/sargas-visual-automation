@@ -32,7 +32,14 @@ describe("rules model", () => {
       label: "Fire bolt",
       enabled: false,
       priority: 10,
-      match: { key: "fire-bolt", traits: ["fire", "attack"], attackKind: "ranged", baseItem: "longsword", custom: 1 },
+      match: {
+        key: "fire-bolt",
+        traits: ["fire", "attack"],
+        actorTraits: ["dragon", "size:large"],
+        attackKind: "ranged",
+        baseItem: "longsword",
+        custom: 1
+      },
       recipe: { version: 1, preset: "ranged", animation: "jb2a.fire_bolt.orange", options: { scale: 2 } }
     };
     const m = ruleToFormModel(rule);

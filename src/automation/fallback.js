@@ -8,6 +8,7 @@
  * leaf (and the closest distance variant for stretched effects).
  */
 import { AREA_SHAPES, ATTACK_KINDS, EVENT_TYPES } from "../shared/events.js";
+import { NATURAL_GROUP, naturalFamilyOf } from "../shared/natural-attacks.js";
 import { RECIPE_VERSION } from "./schema.js";
 
 /** Synonyms used by different game systems → one canonical damage type. */
@@ -63,10 +64,92 @@ const MELEE_BY_GROUP = {
   dagger: "jb2a.dagger.melee.02.white",
   brawling: "jb2a.unarmed_strike.physical.01.blue",
   unarmed: "jb2a.unarmed_strike.physical.01.blue",
+  [NATURAL_GROUP]: "jb2a.melee_generic.creature_attack.fist",
   claw: "jb2a.claws.200px.red",
   bite: "jb2a.bite.200px.red",
   jaws: "jb2a.bite.200px.red"
 };
+
+/**
+ * Natural attacks of creatures (NPC strikes named after a body part). Family by name, then a JB2A path sized to the
+ * creature (200px up to Medium, 400px from Large) and coloured by its energy damage or creature type.
+ */
+/** JB2A paths per natural family: `{size}` is 200px/400px, `{color}` a colour variant. */
+const NATURAL_PATHS = {
+  bite: { base: "jb2a.bite.{size}", colored: "jb2a.bite.{size}.{color}" },
+  claw: { base: "jb2a.claws.{size}", colored: "jb2a.claws.{size}.{color}" },
+  sting: { base: "jb2a.melee_generic.piercing.one_handed", colored: null },
+  slam: { base: "jb2a.melee_generic.creature_attack.fist", colored: null }
+};
+
+/** Colour of a natural attack: by energy damage first, else by creature type, else red. */
+const NATURAL_COLOR_BY_ENERGY = {
+  fire: "orange",
+  cold: "blue",
+  electricity: "yellow",
+  acid: "green",
+  poison: "green",
+  sonic: "yellow",
+  force: "purple",
+  void: "purple",
+  vitality: "yellow",
+  mental: "purple",
+  spirit: "blue"
+};
+const NATURAL_COLOR_BY_CREATURE = {
+  undead: "purple",
+  aberration: "purple",
+  fiend: "red",
+  dragon: "red",
+  fey: "green",
+  plant: "green",
+  ooze: "green",
+  celestial: "yellow",
+  elemental: "blue",
+  construct: "blue"
+};
+const NATURAL_DEFAULT_COLOR = "red";
+const LARGE_SIZES = new Set(["size:large", "size:huge", "size:gargantuan"]);
+
+/** Natural attack family of a creature strike (by base item or name), or null. */
+export function naturalFamily(descriptors) {
+  const d = descriptors ?? {};
+  const group = d.weaponGroup ? String(d.weaponGroup).toLowerCase() : null;
+  // A strike with a real weapon group (sword, bow...) is a weapon, whatever its name.
+  if (group && group !== NATURAL_GROUP && group !== "brawling" && group !== "unarmed") return null;
+  return naturalFamilyOf(d.baseItem, d.name);
+}
+
+/**
+ * Animation of a natural attack, trying the exact size + colour variant first and falling back to branch paths.
+ * @param {(path: string) => boolean} [exists]  Database check; without it the most specific path is used.
+ */
+export function naturalAnimation(family, descriptors, { exists } = {}) {
+  const d = descriptors ?? {};
+  const paths = NATURAL_PATHS[family];
+  if (!paths) return null;
+  const actorTraits = (d.actorTraits ?? []).map((t) => String(t).toLowerCase());
+  const size = actorTraits.some((t) => LARGE_SIZES.has(t)) ? "400px" : "200px";
+  const energy = primaryEnergy(d.damageTypes);
+  const creature = actorTraits.find((t) => NATURAL_COLOR_BY_CREATURE[t]);
+  const color =
+    (energy && NATURAL_COLOR_BY_ENERGY[energy]) ??
+    (creature && NATURAL_COLOR_BY_CREATURE[creature]) ??
+    NATURAL_DEFAULT_COLOR;
+  const fill = (tpl) => tpl.replace("{size}", size).replace("{color}", color);
+  const candidates = [
+    paths.colored && fill(paths.colored),
+    fill(paths.base),
+    fill(paths.base.replace(".{size}", ""))
+  ].filter(Boolean);
+  const ok = typeof exists === "function" ? exists : () => true;
+  const animation = candidates.find((c) => ok(c)) ?? candidates[candidates.length - 1];
+  const why = [`natural ${family} attack`];
+  if (size === "400px") why.push("large creature");
+  if (energy && NATURAL_COLOR_BY_ENERGY[energy]) why.push(`${energy} damage`);
+  else if (creature) why.push(`${creature} creature`);
+  return { animation, reason: why.join(", ") };
+}
 
 const MELEE_BY_DAMAGE = {
   slashing: "jb2a.melee_generic.slashing.one_handed",
@@ -215,6 +298,7 @@ const impactStage = (animation) => ({ stages: { impact: { animation } } });
 export function fallbackAnimations() {
   const paths = new Set([
     ...Object.values(MELEE_BY_GROUP),
+    ...Object.values(NATURAL_PATHS).flatMap((p) => ["200px", "400px"].map((size) => p.base.replace("{size}", size))),
     ...Object.values(MELEE_BY_DAMAGE),
     MELEE_DEFAULT,
     ...Object.values(RANGED_BY_GROUP),
@@ -242,10 +326,11 @@ function areaRecipe(shape, energy, isHealing) {
 
 /**
  * @param {import("../shared/events.js").ItemDescriptors|null} descriptors
- * @param {{eventType?: string, area?: object|null}} [opts]
+ * @param {{eventType?: string, area?: object|null, exists?: (path: string) => boolean}} [opts]
+ *   `exists` checks a JB2A path against the loaded database (natural attacks pick colour/size variants with it).
  * @returns {{recipe: object, reason: string}|null}
  */
-export function fallbackRecipe(descriptors, { eventType, area = null } = {}) {
+export function fallbackRecipe(descriptors, { eventType, area = null, exists } = {}) {
   const d = descriptors ?? {};
   const group = d.weaponGroup ? String(d.weaponGroup).toLowerCase() : null;
   const damage = canonicalDamageTypes(d.damageTypes);
@@ -279,6 +364,12 @@ export function fallbackRecipe(descriptors, { eventType, area = null } = {}) {
   // Attacks.
   const kind = d.attackKind ?? (traits.includes("thrown") ? ATTACK_KINDS.THROWN : null);
   if (kind === ATTACK_KINDS.MELEE) {
+    const family = isWeapon ? naturalFamily(d) : null;
+    if (family) {
+      const natural = naturalAnimation(family, d, { exists });
+      const extra = energy && ENERGY[energy] ? impactStage(ENERGY[energy].impact) : {};
+      return { recipe: recipe("melee", natural.animation, extra), reason: natural.reason };
+    }
     if (!isWeapon && energy) {
       const e = ENERGY[energy];
       return {

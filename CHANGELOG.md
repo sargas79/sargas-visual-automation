@@ -4,6 +4,9 @@
 
 ### Added
 
+- **Creature attacks set up by type.** Natural attacks of creatures (jaws, claws, stings, tails, wings, slams… by name) are reported with the weapon group `natural` instead of `brawling`, so they no longer play as unarmed strikes, and get an animation on their own: bites and claws are sized to the creature (200px up to Medium, 400px from Large) and coloured by the attack's energy damage (fire, cold, acid, electricity…) or, failing that, by the creature type (undead, fiend, fey, dragon…). The three fixed-colour natural attack rules of the PF2e pack are gone (184 rules).
+- **Creature traits in rules.** `match.actorTraits` (rules manager: "Creature traits") matches the traits of the creature using the item, such as `dragon`, `undead` or `size:large`. Adapters fill `ItemDescriptors.actorTraits` (PF2e: actor traits and size).
+
 - **Turn animations off for a character.** A button in the animation overview header (owner or GM) silences the character: nothing it does animates and nothing lands on its tokens, while other characters keep animating. Also `SVA.automation.setActorDisabled(actor, true)` / `isActorDisabled(actor)`.
 
 ## 0.3.2 - 2026-10-04

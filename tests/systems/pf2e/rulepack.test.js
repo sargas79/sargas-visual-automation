@@ -124,6 +124,11 @@ describe("rules/pf2e.json", () => {
     }
   });
 
+  it("leaves natural attacks (jaws, claws) to the generic fallback, which sizes and colours them", () => {
+    expect(resolve(describeItem(npcAttacks.jaws()))).toBeNull();
+    expect(resolve(describeItem(npcAttacks.claw()))).toBeNull();
+  });
+
   it("uses the PF2e-specific JB2A cone entries", () => {
     const paths = pack.rules.flatMap((r) => animations(r.recipe));
     expect(paths.some((p) => p.startsWith("jb2a.template_cone_PF2e"))).toBe(true);
@@ -135,8 +140,6 @@ describe("rules/pf2e.json", () => {
     ["shortbow", () => describeItem(weapons.shortbow()), "weapon-shortbow"],
     ["thrown dagger", () => describeItem(weapons.daggerThrown()), "weapon-dagger-thrown"],
     ["fist", () => describeItem(weapons.fist()), "unarmed-basic"],
-    ["jaws", () => describeItem(npcAttacks.jaws()), "natural-jaws"],
-    ["claw", () => describeItem(npcAttacks.claw()), "natural-claw"],
     ["NPC thrown spear", () => describeItem(npcAttacks.spear()), "weapon-spear-thrown"],
     ["fireball", () => describeItem(spells.fireball()), "spell-fireball"],
     ["force barrage", () => describeItem(spells.forceBarrage()), "spell-force-barrage"],

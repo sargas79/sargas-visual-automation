@@ -7,19 +7,31 @@
  *   key, name, type, attackKind, weaponGroup, baseItem  string | string[] (any of, case-insensitive)
  *   regex                                     "pattern" | { pattern, flags } tested against the name (default flag "i")
  *   traits                                    string | string[] (all required)
+ *   actorTraits                               string | string[] (all required; traits of the actor carrying the item:
+ *                                             creature type such as "dragon", "undead", or "size:large")
  */
 import { isPlainObject } from "./schema.js";
 
 const lower = (v) => (v === null || v === undefined ? null : String(v).trim().toLowerCase());
 const list = (v) => (Array.isArray(v) ? v : [v]).map(lower);
 
-const SPECIFICITY = { key: 16, name: 8, baseItem: 6, regex: 4, weaponGroup: 2, traits: 2, attackKind: 1, type: 1 };
+const SPECIFICITY = {
+  key: 16,
+  name: 8,
+  baseItem: 6,
+  regex: 4,
+  weaponGroup: 2,
+  traits: 2,
+  actorTraits: 2,
+  attackKind: 1,
+  type: 1
+};
 
 export function specificity(match = {}) {
   let score = 0;
   for (const key of Object.keys(match)) {
     const weight = SPECIFICITY[key] ?? 0;
-    score += key === "traits" ? weight * list(match.traits).length : weight;
+    score += key === "traits" || key === "actorTraits" ? weight * list(match[key]).length : weight;
   }
   return score;
 }
@@ -67,12 +79,14 @@ export function matchRule(rule, descriptors = {}) {
         };
         break;
       }
-      case "traits": {
-        const have = new Set((descriptors.traits ?? []).map(lower));
+      case "traits":
+      case "actorTraits": {
+        const have = new Set((descriptors[key] ?? []).map(lower));
         const missing = list(expected).filter((t) => !have.has(t));
+        const label = key === "traits" ? "traits" : "actor traits";
         result = missing.length
-          ? { ok: false, reason: `missing traits ${missing.join(", ")}` }
-          : { ok: true, reason: `has traits ${list(expected).join(", ")}` };
+          ? { ok: false, reason: `missing ${label} ${missing.join(", ")}` }
+          : { ok: true, reason: `has ${label} ${list(expected).join(", ")}` };
         break;
       }
       default:

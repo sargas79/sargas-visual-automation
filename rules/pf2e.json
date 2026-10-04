@@ -2734,57 +2734,6 @@
       }
     },
     {
-      "id": "natural-claw",
-      "label": "Claws / talons",
-      "enabled": true,
-      "priority": 90,
-      "match": {
-        "regex": "\\b(claw|claws|talon|talons)\\b",
-        "type": "weapon"
-      },
-      "recipe": {
-        "version": 1,
-        "preset": "melee",
-        "animation": "jb2a.claws.200px.red",
-        "options": {},
-        "triggers": ["attack"]
-      }
-    },
-    {
-      "id": "natural-jaws",
-      "label": "Jaws / bite / fangs",
-      "enabled": true,
-      "priority": 90,
-      "match": {
-        "regex": "\\b(jaws|bite|fangs|beak|mandibles)\\b",
-        "type": "weapon"
-      },
-      "recipe": {
-        "version": 1,
-        "preset": "melee",
-        "animation": "jb2a.bite.200px.red",
-        "options": {},
-        "triggers": ["attack"]
-      }
-    },
-    {
-      "id": "natural-tail",
-      "label": "Tail / horn / hoof / slam",
-      "enabled": true,
-      "priority": 85,
-      "match": {
-        "regex": "\\b(tail|horn|horns|hoof|hooves|slam|fist|tentacle)\\b",
-        "type": "weapon"
-      },
-      "recipe": {
-        "version": 1,
-        "preset": "melee",
-        "animation": "jb2a.melee_generic.creature_attack.fist",
-        "options": {},
-        "triggers": ["attack"]
-      }
-    },
-    {
       "id": "unarmed-flurry",
       "label": "Flurry of Blows",
       "enabled": true,

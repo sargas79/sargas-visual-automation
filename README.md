@@ -26,7 +26,7 @@ A [Foundry VTT](https://foundryvtt.com) module that plays and automates [JB2A](h
 
 | System                                | Status                                                              | Default rules |
 | ------------------------------------- | ------------------------------------------------------------------- | ------------- |
-| **Pathfinder 2e** (pf2e 8.x)          | Tested in a live Foundry v14 world                                  | 187           |
+| **Pathfinder 2e** (pf2e 8.x)          | Tested in a live Foundry v14 world                                  | 184           |
 | **D&D 5e** (dnd5e 6.x)                | New in 0.3.0, not yet tested live. Please report problems           | 212           |
 | **GURPS 4e Game Aid** (`gurps` 0.18+) | New in 0.3.0, not yet tested live. Please report problems           | 128           |
 | Any other system                      | Animation browser, macros and the macro API work; no automation yet | -             |

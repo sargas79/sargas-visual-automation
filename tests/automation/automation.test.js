@@ -281,6 +281,38 @@ describe("generic fallback", () => {
     );
   });
 
+  it("sizes and colours natural attacks by creature size, energy damage and creature type", () => {
+    const jaws = { type: "weapon", attackKind: "melee", weaponGroup: "brawling", baseItem: "jaws", name: "Jaws" };
+    expect(fallbackRecipe(jaws, { eventType: "attack" })).toMatchObject({
+      recipe: { preset: "melee", animation: "jb2a.bite.200px.red" },
+      reason: "natural bite attack"
+    });
+    const dragon = { ...jaws, damageTypes: ["piercing", "fire"], actorTraits: ["dragon", "size:huge"] };
+    expect(fallbackRecipe(dragon, { eventType: "attack" })).toMatchObject({
+      recipe: {
+        animation: "jb2a.bite.400px.orange",
+        stages: { impact: { animation: "jb2a.impact.fire.01.orange" } }
+      },
+      reason: "natural bite attack, large creature, fire damage"
+    });
+    const ghoul = { type: "weapon", attackKind: "melee", weaponGroup: null, name: "Claw", actorTraits: ["undead"] };
+    expect(fb(ghoul).animation).toBe("jb2a.claws.200px.purple");
+    expect(fb({ type: "weapon", attackKind: "melee", name: "Tail" }).animation).toBe(
+      "jb2a.melee_generic.creature_attack.fist"
+    );
+    expect(fb({ type: "weapon", attackKind: "melee", name: "Stinger" }).animation).toBe(
+      "jb2a.melee_generic.piercing.one_handed"
+    );
+    // A weapon with a real group keeps its group animation even when it is called "Claw Blade".
+    expect(fb({ type: "weapon", attackKind: "melee", weaponGroup: "sword", name: "Claw Blade" }).animation).toBe(
+      "jb2a.sword.melee.01.white"
+    );
+    // Variants missing from the database fall back to the branch path (random colour), then to the family.
+    const only200 = (path) => path === "jb2a.bite.200px";
+    expect(fallbackRecipe(jaws, { eventType: "attack", exists: only200 }).recipe.animation).toBe("jb2a.bite.200px");
+    expect(fallbackRecipe(dragon, { eventType: "attack", exists: () => false }).recipe.animation).toBe("jb2a.bite");
+  });
+
   it("maps spells by damage type (with system synonyms)", () => {
     expect(fb({ type: "spell", attackKind: "ranged", damageTypes: ["lightning"] })).toMatchObject({
       animation: "jb2a.chain_lightning.primary.blue",

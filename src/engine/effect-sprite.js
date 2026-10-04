@@ -48,7 +48,7 @@ const isPoint = (p) => Number.isFinite(p?.x) && Number.isFinite(p?.y);
 /** Is the token's movement animation running? (CanvasAnimation.getAnimation(token.animationName)) */
 function isAnimating(token) {
   const name = token?.animationName;
-  const api = globalThis.CanvasAnimation;
+  const api = globalThis.foundry?.canvas?.animation?.CanvasAnimation ?? globalThis.CanvasAnimation;
   if (!name || typeof api?.getAnimation !== "function") return false;
   try {
     return !!api.getAnimation(name);

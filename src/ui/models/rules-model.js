@@ -1,13 +1,23 @@
 /**
  * Pure view-model helpers for the world rules manager (#38).
- * Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, traits?, attackKind?, weaponGroup?, baseItem? }, recipe }
+ * Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, traits?, actorTraits?, attackKind?, weaponGroup?, baseItem? }, recipe }
  */
 import { ATTACK_KINDS } from "../../shared/events.js";
 import { cloneJson, compact, expandFlat, parseList } from "./form-utils.js";
 import { emptyRecipe, formToRecipe } from "./recipe-form.js";
 
 export const ITEM_TYPES = ["weapon", "spell", "action", "consumable", "effect", "condition", "feat", "other"];
-export const MATCH_KEYS = ["key", "name", "regex", "type", "traits", "attackKind", "weaponGroup", "baseItem"];
+export const MATCH_KEYS = [
+  "key",
+  "name",
+  "regex",
+  "type",
+  "traits",
+  "actorTraits",
+  "attackKind",
+  "weaponGroup",
+  "baseItem"
+];
 
 const PREFIX = "rule.";
 
@@ -44,6 +54,7 @@ export function ruleToFormModel(rule, { isNew = false } = {}) {
       regex: match.regex ?? "",
       type: match.type ?? "",
       traits: Array.isArray(match.traits) ? match.traits.join(", ") : (match.traits ?? ""),
+      actorTraits: Array.isArray(match.actorTraits) ? match.actorTraits.join(", ") : (match.actorTraits ?? ""),
       attackKind: match.attackKind ?? "",
       weaponGroup: match.weaponGroup ?? "",
       baseItem: match.baseItem ?? ""
@@ -85,6 +96,7 @@ export function formToRule(flat, { base = null, presets, generateId } = {}) {
     regex: String(m.regex ?? "").trim(),
     type: String(m.type ?? "").trim(),
     traits: parseList(m.traits),
+    actorTraits: parseList(m.actorTraits),
     attackKind: String(m.attackKind ?? "").trim(),
     weaponGroup: String(m.weaponGroup ?? "")
       .trim()

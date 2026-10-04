@@ -82,7 +82,14 @@
         "Enable": "Enable automation for this item",
         "Changed": "{name} now uses {path}.",
         "NothingToPreview": "{name} has no animation to preview.",
-        "NoSourceToken": "Place or select a token of {name} to preview from."
+        "NoSourceToken": "Place or select a token of {name} to preview from.",
+        "ActorDisabled": "Animations off",
+        "DisableActor": "Turn off for this character",
+        "DisableActorHint": "No animation plays for anything this character does, and none lands on its tokens. Other characters are unaffected.",
+        "EnableActor": "Turn on for this character",
+        "EnableActorHint": "Animations play again for this character.",
+        "ActorDisabledOn": "Animations turned off for {name}.",
+        "ActorDisabledOff": "Animations turned on for {name}."
       },
       "Recipe": {
         "Preset": "Preset",
@@ -197,6 +204,8 @@
         "MatchAttackKind": "Attack kind",
         "MatchWeaponGroup": "Weapon group",
         "MatchBaseItem": "Base item",
+        "MatchActorTraits": "Creature traits",
+        "MatchActorTraitsHint": "Traits of the creature using the item, all required: creature type (dragon, undead, fiend…) or size:tiny … size:gargantuan.",
         "Cancel": "Cancel",
         "Save": "Save rule",
         "SelectHint": "Select a rule to edit it, or add a new one.",

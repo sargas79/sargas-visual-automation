@@ -62,6 +62,16 @@ describe("rule ordering", () => {
     expect(findRule(rules, descriptors).winner.rule.id).toBe("high");
   });
 
+  it("matches actorTraits (all required) against the creature's traits", () => {
+    const d = { ...descriptors, actorTraits: ["dragon", "size:large"] };
+    expect(matchRule({ match: { actorTraits: "DRAGON" } }, d).matched).toBe(true);
+    expect(matchRule({ match: { actorTraits: ["dragon", "size:large"] } }, d).matched).toBe(true);
+    const miss = matchRule({ match: { actorTraits: ["dragon", "undead"] } }, d);
+    expect(miss.matched).toBe(false);
+    expect(miss.reasons[0]).toContain("missing actor traits undead");
+    expect(matchRule({ match: { actorTraits: "dragon" } }, descriptors).matched).toBe(false);
+  });
+
   it("ranks baseItem between name and regex", () => {
     const rules = [
       { id: "group", match: { weaponGroup: "sword" } },

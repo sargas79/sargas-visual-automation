@@ -54,6 +54,10 @@ export const ATTACK_KINDS = Object.freeze({
  * @property {{shape: string, size: number}|null} area  Shape from AREA_SHAPES, size in scene distance units.
  * @property {string[]} damageTypes     Lower-case ("fire", "cold", "piercing"...).
  * @property {boolean} isHealing
+ * @property {string[]} [actorTraits]   Lower-case traits of the actor carrying the item: creature type ("dragon",
+ *                                      "undead", "fiend"...), plus "size:<tiny|small|medium|large|huge|gargantuan>".
+ *                                      Rules match them with `match.actorTraits`; the fallback sizes and colours
+ *                                      natural attacks with them. Empty when the item has no actor.
  */
 
 /**

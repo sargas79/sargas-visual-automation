@@ -28,7 +28,7 @@ describe("handle()", () => {
     await adapter.fire(attack());
     expect(api.playSequence).toHaveBeenCalledTimes(1);
     const [seq] = api.playSequence.mock.calls[0];
-    expect(seq.steps[0].effect).toMatchObject({
+    expect(seq.steps.find((s) => s.type === "effect").effect).toMatchObject({
       file: "jb2a.sword.melee.01.white",
       atLocation: { tokenId: "src" },
       stretchTo: { tokenId: "t1" }
@@ -97,7 +97,53 @@ describe("handle()", () => {
       attack({ itemUuid: null, descriptors: { name: "Bolt", attackKind: "ranged", damageTypes: ["cold"] } })
     );
     expect(ok).toBe(true);
-    expect(api.playSequence.mock.calls[0][0].steps[0].effect.file).toBe("jb2a.ray_of_frost.blue");
+    const played = api.playSequence.mock.calls[0][0].steps;
+    expect(played.find((s) => s.type === "effect").effect.file).toBe("jb2a.ray_of_frost.blue");
+    // A spell attack gets a magic sound of its damage type.
+    expect(played[0]).toMatchObject({ type: "sound", file: expect.stringMatching(/magic-cold\.wav$/) });
+  });
+
+  it("plays nothing for an actor whose animations are turned off, and drops its tokens from targets", async () => {
+    const { api } = bootAutomation({ items: [sword()] });
+    const off = { id: "a1", flags: flagged({ disabled: true }), setFlag: vi.fn(), unsetFlag: vi.fn() };
+    const on = { id: "a2", flags: {} };
+    globalThis.game.actors = new Map([
+      ["a1", off],
+      ["a2", on]
+    ]);
+    globalThis.canvas = {
+      tokens: { get: (id) => ({ src: { actor: off }, t1: { actor: off }, t2: { actor: on } })[id] }
+    };
+    expect(api.automation.isActorDisabled(off)).toBe(true);
+    expect(api.automation.isActorDisabled(on)).toBe(false);
+    // The disabled actor attacks: nothing plays.
+    expect(await api.automation.handle(attack())).toBe(false);
+    expect(api.playSequence).not.toHaveBeenCalled();
+    // Another actor attacks the disabled one and a third token: only the third token gets the animation.
+    const ev = attack({ source: { tokenId: "t2", actorId: "a2" }, targets: [{ tokenId: "t1" }, { tokenId: "t2" }] });
+    expect(await api.automation.handle(ev)).toBe(true);
+    const steps = api.playSequence.mock.calls[0][0].steps.filter((s) => s.type === "effect");
+    expect(steps.some((s) => s.effect.stretchTo?.tokenId === "t1" || s.effect.atLocation?.tokenId === "t1")).toBe(
+      false
+    );
+    // The API writes the actor flag.
+    await api.automation.setActorDisabled(off, false);
+    expect(off.unsetFlag).toHaveBeenCalledWith("sargas-visual-automation", "disabled");
+    await api.automation.setActorDisabled(off, true);
+    expect(off.setFlag).toHaveBeenCalledWith("sargas-visual-automation", "disabled", true);
+    delete globalThis.canvas;
+  });
+
+  it("adds the default sound (and its critical variant) to recipes without one, unless sounds are off", async () => {
+    const { api } = bootAutomation({ items: [sword()] });
+    expect(await api.automation.handle(attack({ outcome: "criticalSuccess", targets: [{ tokenId: "t1" }] }))).toBe(
+      true
+    );
+    const steps = api.playSequence.mock.calls[0][0].steps;
+    expect(steps[0]).toMatchObject({ type: "sound", file: expect.stringMatching(/sounds\/crit-melee-slash\.wav$/) });
+    await game.settings.set("sargas-visual-automation", "soundsEnabled", false);
+    expect(await api.automation.handle(attack({ outcome: "success" }))).toBe(true);
+    expect(api.playSequence.mock.calls[1][0].steps.some((s) => s.type === "sound")).toBe(false);
   });
 
   it("skips items whose recipe does not trigger on the event", async () => {
@@ -120,7 +166,7 @@ describe("handle()", () => {
     const { api } = bootAutomation({ items: [aura], effects });
     const ev = { type: "effectApplied", source: { tokenId: "src", actorId: "a1" }, itemUuid: "Item.aura" };
     expect(await api.automation.handle(ev)).toBe(true);
-    const effect = api.playSequence.mock.calls[0][0].steps[0].effect;
+    const effect = api.playSequence.mock.calls[0][0].steps.find((s) => s.type === "effect").effect;
     expect(effect).toMatchObject({ persist: true, name: "aura:a1:aura-effect" });
     stored.push(effect);
     expect(await api.automation.handle({ ...ev, effectUuid: "again" })).toBe(false);
@@ -153,8 +199,9 @@ describe("preview()", () => {
     );
     const [seq, opts] = api.playSequence.mock.calls[0];
     expect(opts).toEqual({ broadcast: false });
-    expect(seq.steps[0].effect.persist).toBeUndefined();
-    expect(seq.steps[0].effect.attachTo).toEqual({ tokenId: "src" });
+    const effect = seq.steps.find((s) => s.type === "effect").effect;
+    expect(effect.persist).toBeUndefined();
+    expect(effect.attachTo).toEqual({ tokenId: "src" });
   });
 
   it("accepts token documents and ids for targets", async () => {
@@ -248,6 +295,38 @@ describe("generic fallback", () => {
     expect(fb({ type: "weapon", attackKind: "thrown", weaponGroup: "knife" }).animation).toBe(
       "jb2a.dagger.throw.01.white"
     );
+  });
+
+  it("sizes and colours natural attacks by creature size, energy damage and creature type", () => {
+    const jaws = { type: "weapon", attackKind: "melee", weaponGroup: "brawling", baseItem: "jaws", name: "Jaws" };
+    expect(fallbackRecipe(jaws, { eventType: "attack" })).toMatchObject({
+      recipe: { preset: "melee", animation: "jb2a.bite.200px.red" },
+      reason: "natural bite attack"
+    });
+    const dragon = { ...jaws, damageTypes: ["piercing", "fire"], actorTraits: ["dragon", "size:huge"] };
+    expect(fallbackRecipe(dragon, { eventType: "attack" })).toMatchObject({
+      recipe: {
+        animation: "jb2a.bite.400px.orange",
+        stages: { impact: { animation: "jb2a.impact.fire.01.orange" } }
+      },
+      reason: "natural bite attack, large creature, fire damage"
+    });
+    const ghoul = { type: "weapon", attackKind: "melee", weaponGroup: null, name: "Claw", actorTraits: ["undead"] };
+    expect(fb(ghoul).animation).toBe("jb2a.claws.200px.purple");
+    expect(fb({ type: "weapon", attackKind: "melee", name: "Tail" }).animation).toBe(
+      "jb2a.melee_generic.creature_attack.fist"
+    );
+    expect(fb({ type: "weapon", attackKind: "melee", name: "Stinger" }).animation).toBe(
+      "jb2a.melee_generic.piercing.one_handed"
+    );
+    // A weapon with a real group keeps its group animation even when it is called "Claw Blade".
+    expect(fb({ type: "weapon", attackKind: "melee", weaponGroup: "sword", name: "Claw Blade" }).animation).toBe(
+      "jb2a.sword.melee.01.white"
+    );
+    // Variants missing from the database fall back to the branch path (random colour), then to the family.
+    const only200 = (path) => path === "jb2a.bite.200px";
+    expect(fallbackRecipe(jaws, { eventType: "attack", exists: only200 }).recipe.animation).toBe("jb2a.bite.200px");
+    expect(fallbackRecipe(dragon, { eventType: "attack", exists: () => false }).recipe.animation).toBe("jb2a.bite");
   });
 
   it("maps spells by damage type (with system synonyms)", () => {

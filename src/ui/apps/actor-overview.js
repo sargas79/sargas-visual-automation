@@ -34,10 +34,10 @@ function actorKey(actor) {
   return actor?.uuid ?? actor?.id ?? actor;
 }
 
-/** May the current user change this item's flags? */
-function canEdit(item) {
+/** May the current user change this document's (item or actor) flags? */
+function canEdit(doc) {
   const user = globalThis.game?.user;
-  return !!(user?.isGM || item?.isOwner);
+  return !!(user?.isGM || doc?.isOwner);
 }
 
 /**
@@ -75,6 +75,7 @@ export function getActorOverviewClass() {
         edit: SvaActorOverview.#onEdit,
         reset: SvaActorOverview.#onReset,
         toggleDisabled: SvaActorOverview.#onToggleDisabled,
+        toggleActorDisabled: SvaActorOverview.#onToggleActorDisabled,
         clearSearch: SvaActorOverview.#onClearSearch
       }
     };
@@ -114,7 +115,18 @@ export function getActorOverviewClass() {
       const api = getApi();
       const db = api?.db;
       if (db?.ready && typeof db.ready.then === "function") await db.ready;
-      context.actor = { name: this.actor?.name ?? "", img: this.actor?.img ?? "" };
+      const disabled = api?.automation?.isActorDisabled?.(this.actor) === true;
+      context.actor = {
+        name: this.actor?.name ?? "",
+        img: this.actor?.img ?? "",
+        disabled,
+        canEdit: canEdit(this.actor),
+        pressed: disabled ? "true" : "false",
+        toggleClass: disabled ? "sva-disable-toggle sva-active" : "sva-disable-toggle",
+        toggleIcon: disabled ? "fa-toggle-off" : "fa-toggle-on",
+        toggleLabel: disabled ? "SVA.UI.Overview.EnableActor" : "SVA.UI.Overview.DisableActor",
+        toggleTooltip: disabled ? "SVA.UI.Overview.EnableActorHint" : "SVA.UI.Overview.DisableActorHint"
+      };
       context.state = this.viewState;
       context.filters = Object.fromEntries(FILTERS.map((id) => [id, t(`SVA.UI.Overview.Filters.${id}`)]));
       if (!api?.automation?.explain) return Object.assign(context, { unavailable: true, groups: [] });
@@ -200,6 +212,9 @@ export function getActorOverviewClass() {
       const onDeleteActor = (actor) => {
         if (actorKey(actor) === actorKey(this.actor)) this.close();
       };
+      const onUpdateActor = (actor, changes) => {
+        if (actorKey(actor) === actorKey(this.actor) && changes?.flags?.[MODULE_ID] !== undefined) this.render();
+      };
       // VERIFY(v14): embedded item changes of synthetic (unlinked token) actors fire the Item hooks
       // with `item.parent` = the synthetic actor; world rule changes fire `updateSetting` (Setting document).
       this.#hooks = [
@@ -208,7 +223,8 @@ export function getActorOverviewClass() {
         ["deleteItem", hooks.on("deleteItem", onItem)],
         ["createSetting", hooks.on("createSetting", onSetting)],
         ["updateSetting", hooks.on("updateSetting", onSetting)],
-        ["deleteActor", hooks.on("deleteActor", onDeleteActor)]
+        ["deleteActor", hooks.on("deleteActor", onDeleteActor)],
+        ["updateActor", hooks.on("updateActor", onUpdateActor)]
       ];
     }
 
@@ -294,6 +310,23 @@ export function getActorOverviewClass() {
       await getApi()?.automation?.setItemDisabled?.(item, disabled);
       notify("info", disabled ? "SVA.UI.ItemConfig.DisabledOn" : "SVA.UI.ItemConfig.DisabledOff");
       this.refresh();
+    }
+
+    /** Turn every animation of this actor off or on (actor flag, owner or GM). */
+    static async #onToggleActorDisabled() {
+      const automation = getApi()?.automation;
+      if (!automation?.setActorDisabled || !this.actor || !canEdit(this.actor)) return;
+      const disabled = !automation.isActorDisabled?.(this.actor);
+      try {
+        await automation.setActorDisabled(this.actor, disabled);
+      } catch (err) {
+        log.error("Could not change the actor's animation flag", err);
+        return notify("error", "SVA.UI.ItemConfig.SaveFailed");
+      }
+      notify("info", disabled ? "SVA.UI.Overview.ActorDisabledOn" : "SVA.UI.Overview.ActorDisabledOff", {
+        name: this.actor.name ?? ""
+      });
+      this.render();
     }
 
     static #onClearSearch() {

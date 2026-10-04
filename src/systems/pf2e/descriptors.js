@@ -12,6 +12,7 @@
  *  - src/module/rules/rule-element/aura.ts (Aura rule element radius, in feet)
  */
 import { AREA_SHAPES, ATTACK_KINDS } from "../../shared/events.js";
+import { NATURAL_GROUP, naturalFamilyOf } from "../../shared/natural-attacks.js";
 
 /** PF2e item type → descriptor type. NPC attacks ("melee" items) count as weapons. */
 const TYPE_MAP = {
@@ -113,11 +114,19 @@ function weaponAttackKind(item, { altUsage } = {}) {
 
 function weaponGroup(item) {
   const traits = traitsOf(item);
+  const key = itemKey(item);
   const group = item.group ?? item.system?.group ?? null;
+  // Creature strikes named after a body part (jaws, claws, tail...): PF2e files claws/jaws under "brawling" like
+  // fists; SVA reports "natural" so they get bite/claw/slam animations instead of unarmed strikes. A strike linked
+  // to a real weapon group (a "Claw Blade" sword) keeps it.
+  const natural =
+    item.type === "melee" && !UNARMED_SLUGS.includes(key) && (!group || group === "brawling")
+      ? naturalFamilyOf(key, item.name)
+      : null;
+  if (natural) return NATURAL_GROUP;
   if (group) return String(group).toLowerCase();
   // NPC attacks: PF2e only knows the group through a linked weapon or the "unarmed" trait
   if (traits.includes("unarmed")) return "brawling";
-  const key = itemKey(item);
   if (UNARMED_SLUGS.includes(key) || NATURAL_BASE_TYPES.includes(key)) return "brawling";
   return null;
 }
@@ -157,6 +166,26 @@ function auraArea(item) {
   return null;
 }
 
+/** PF2e size codes → size trait. */
+const SIZE_NAMES = { tiny: "tiny", sm: "small", med: "medium", lg: "large", huge: "huge", grg: "gargantuan" };
+
+/**
+ * Traits of the actor carrying an item: creature traits (actor.system.traits.value: "dragon", "undead"...) plus
+ * "size:<name>" from actor.system.traits.size.value. Empty for items without an actor.
+ */
+export function actorTraitsOf(item) {
+  const actor = item?.actor ?? (item?.parent?.documentName === "Actor" ? item.parent : null);
+  const traits = actor?.system?.traits;
+  if (!traits) return [];
+  const value = traits.value;
+  const list = Array.isArray(value) ? value : value instanceof Set ? [...value] : [];
+  const out = list.filter((t) => typeof t === "string").map((t) => t.toLowerCase());
+  const size = traits.size?.value ?? traits.size;
+  const sizeName = typeof size === "string" ? (SIZE_NAMES[size.toLowerCase()] ?? size.toLowerCase()) : null;
+  if (sizeName) out.push(`size:${sizeName}`);
+  return out;
+}
+
 /**
  * @param {object} item PF2e item (or plain object shaped like one).
  * @param {{altUsage?: "thrown"|"melee"|null}} [context] Extra info from the chat message (context.altUsage).
@@ -176,7 +205,8 @@ export function describeItem(item, context = {}) {
     range: null,
     area: null,
     damageTypes: [],
-    isHealing: false
+    isHealing: false,
+    actorTraits: actorTraitsOf(item)
   };
   if (!item) return d;
   const sys = item.system ?? {};

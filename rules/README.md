@@ -20,7 +20,7 @@ Rule packs are merged with world rules. A world rule with the **same `id`** as a
 Within a tier, rules run in this order:
 
 1. Higher `priority` first.
-2. Then the more specific rule. Specificity is ranked `key` > `name` > `baseItem` > `regex` > `weaponGroup`/`traits` > `attackKind`/`type`.
+2. Then the more specific rule. Specificity is ranked `key` > `name` > `baseItem` > `regex` > `weaponGroup`/`traits`/`actorTraits` > `attackKind`/`type`.
 3. Then file order.
 
 To debug resolution, `api.automation.explain(item, { eventType })` lists every candidate rule and why it did or didn't match.
@@ -67,16 +67,17 @@ To debug resolution, `api.automation.explain(item, { eventType })` lists every c
 
 Matching is case-insensitive and uses the adapter's `ItemDescriptors` (see `src/shared/events.js`).
 
-| Criterion     | Value                                   | Matches when                                                                                         |
-| ------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `key`         | string or list                          | The item key (PF2e slug, 5e identifier, ...) is any of them.                                         |
-| `name`        | string or list                          | The item name equals any of them.                                                                    |
-| `regex`       | `"pattern"` or `{ "pattern", "flags" }` | The item name matches (default flags `"i"`).                                                         |
-| `type`        | string or list                          | `weapon`, `spell`, `action`, `consumable`, `effect`, `condition`, `feat` or `other`.                 |
-| `traits`      | string or list                          | The item has **all** the listed traits.                                                              |
-| `attackKind`  | string or list                          | `melee`, `ranged` or `thrown`.                                                                       |
-| `weaponGroup` | string or list                          | Normalized group, such as `sword`, `bow` or `axe`.                                                   |
-| `baseItem`    | string or list                          | The base weapon/item, such as `longsword`: matches every variant (+1 Striking, named magic weapons). |
+| Criterion     | Value                                   | Matches when                                                                                                                                                                        |
+| ------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `key`         | string or list                          | The item key (PF2e slug, 5e identifier, ...) is any of them.                                                                                                                        |
+| `name`        | string or list                          | The item name equals any of them.                                                                                                                                                   |
+| `regex`       | `"pattern"` or `{ "pattern", "flags" }` | The item name matches (default flags `"i"`).                                                                                                                                        |
+| `type`        | string or list                          | `weapon`, `spell`, `action`, `consumable`, `effect`, `condition`, `feat` or `other`.                                                                                                |
+| `traits`      | string or list                          | The item has **all** the listed traits.                                                                                                                                             |
+| `attackKind`  | string or list                          | `melee`, `ranged` or `thrown`.                                                                                                                                                      |
+| `weaponGroup` | string or list                          | Normalized group, such as `sword`, `bow` or `axe`; `natural` for creature strikes (jaws, claws, tails…).                                                                            |
+| `baseItem`    | string or list                          | The base weapon/item, such as `longsword`: matches every variant (+1 Striking, named magic weapons).                                                                                |
+| `actorTraits` | string or list                          | The creature using the item has **all** the listed traits: creature type (`dragon`, `undead`, `fiend`…) or `size:large` (`tiny`, `small`, `medium`, `large`, `huge`, `gargantuan`). |
 
 ### Recipe
 
@@ -88,7 +89,7 @@ Matching is case-insensitive and uses the adapter's `ItemDescriptors` (see `src/
 | `options`   | Preset options. See `api.automation.presets[preset].optionsSchema`.                                                                                                                                                                                                                               |
 | `stages`    | `cast`, `projectile`, `impact`, `onSource`, `onTarget`: each `{ "animation", "options" }`, or `null` to turn it off.                                                                                                                                                                              |
 | `outcomes`  | `criticalSuccess`, `success`, `failure`, `criticalFailure` (aliases `crit`, `hit`, `miss`, `fumble`): partial recipe overrides of `animation`, `options`, `stages` and `sound`. A critical result also applies the plain `success`/`failure` override first.                                      |
-| `sound`     | `{ "file", "volume" (0..1), "delay" (ms) }`.                                                                                                                                                                                                                                                      |
+| `sound`     | `{ "file", "volume" (0..1), "delay" (ms) }`. Without it SVA adds a default sound for the event (attack family, critical, miss, magic by damage type); `null` keeps the recipe silent.                                                                                                             |
 | `triggers`  | Event types that play the recipe. Defaults per preset: melee/ranged `attack`; onToken `cast` (use `healing` alone for healing spells - one PF2e action sends both a cast card and a healing roll, so listening to both animates twice); area `areaPlaced`; aura `effectApplied`; teleport `cast`. |
 
 ### Presets

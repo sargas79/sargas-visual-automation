@@ -43,6 +43,7 @@ export const MATCH_KEYS = Object.freeze([
   "regex",
   "type",
   "traits",
+  "actorTraits",
   "attackKind",
   "weaponGroup",
   "baseItem"

@@ -55,17 +55,35 @@ describe("strike descriptors", () => {
     });
   });
 
-  it("NPC natural attacks: jaws and claw are brawling with a natural base", () => {
+  it("NPC natural attacks: jaws and claw are in the natural group with a natural base", () => {
     expect(describeItem(npcAttacks.jaws())).toMatchObject({
       key: "jaws",
       type: "weapon",
       attackKind: ATTACK_KINDS.MELEE,
-      weaponGroup: "brawling",
+      weaponGroup: "natural",
       baseItem: "jaws",
       damageTypes: ["piercing"]
     });
-    // claw without a prepared `group` property still resolves through the unarmed trait
-    expect(describeItem(npcAttacks.claw())).toMatchObject({ weaponGroup: "brawling", baseItem: "claw" });
+    expect(describeItem(npcAttacks.claw())).toMatchObject({ weaponGroup: "natural", baseItem: "claw" });
+    // A creature's weapon strike keeps its group; an NPC "Fist" is still brawling.
+    const spear = npcAttacks.spear();
+    spear.system.group = "spear";
+    expect(describeItem(spear).weaponGroup).toBe("spear");
+    const fist = npcAttacks.claw();
+    Object.assign(fist, { name: "Fist", slug: "fist" });
+    expect(describeItem(fist).weaponGroup).toBe("brawling");
+  });
+
+  it("carries the creature's traits and size as actorTraits", () => {
+    const jaws = npcAttacks.jaws();
+    jaws.parent = {
+      documentName: "Actor",
+      system: { traits: { value: ["dragon", "fire"], size: { value: "lg" } } }
+    };
+    expect(describeItem(jaws).actorTraits).toEqual(["dragon", "fire", "size:large"]);
+    const loose = npcAttacks.claw();
+    loose.parent = null;
+    expect(describeItem(loose).actorTraits).toEqual([]);
   });
 
   it("bombs are thrown, mandatory-ranged groups are ranged without range data", () => {
@@ -108,6 +126,6 @@ describe("strike events", () => {
 
   it("fist and jaws strikes", () => {
     expect(strike(weapons.fist()).descriptors).toMatchObject({ weaponGroup: "brawling", key: "basic-unarmed" });
-    expect(strike(npcAttacks.jaws()).descriptors).toMatchObject({ weaponGroup: "brawling", key: "jaws" });
+    expect(strike(npcAttacks.jaws()).descriptors).toMatchObject({ weaponGroup: "natural", key: "jaws" });
   });
 });

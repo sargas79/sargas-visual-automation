@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Animations placed on a point or a token (bursts, explosions, auras, area effects) were drawn half their own size down and to the right of where they belonged the first time a display object was used: a Fireball landed four squares off its area. Effects are now always centered on their point.
 - Effects attached to or placed on a token now use the token's document center at rest, and follow the mesh with the offset measured at rest while it moves. The previous correction assumed Foundry's texture-anchor formula; on tokens with offset or scaled art it could still draw effects beside the token.
 
 ## 0.4.0 - 2026-10-04

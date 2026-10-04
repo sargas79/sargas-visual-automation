@@ -210,6 +210,14 @@ describe("compile: aura", () => {
     expect(auraName(event)).toBe("aura:actor1:bless");
   });
 
+  it("plays once, unnamed, when triggered by a cast (nothing would end a persistent aura)", () => {
+    const cast = one({ ...recipe, triggers: ["cast"] }, ev({ type: EVENT_TYPES.CAST, targets: [] }));
+    const effect = effects(cast)[0];
+    expect(effect).toMatchObject({ attachTo: { tokenId: "src" }, layer: "belowTokens" });
+    expect(effect.persist).toBeUndefined();
+    expect(effect.name).toBeUndefined();
+  });
+
   it("compiles nothing for effectRemoved", () => {
     expect(compile(recipe, ev({ type: EVENT_TYPES.EFFECT_REMOVED }), ctx)).toEqual([]);
   });

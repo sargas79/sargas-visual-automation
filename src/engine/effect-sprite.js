@@ -42,9 +42,17 @@ const VISION_TEST_INTERVAL = 250;
 
 /** Rendered center of a token (follows its movement animation). */
 export function tokenCenter(token) {
-  // VERIFY(v14): Token#_refreshPosition sets mesh.position to the (animated) center.
-  const p = token?.mesh?.position ?? token?.center;
-  return p ? { x: p.x, y: p.y } : null;
+  // Token#_refreshMesh puts mesh.position at (x + anchorX * w, y + anchorY * h) with mesh.anchor = the texture
+  // anchor: the center only when the anchor is (0.5, 0.5). Art shifted with texture.anchorX/Y (a face, a large
+  // ring) would otherwise drag attached effects off the token.
+  const mesh = token?.mesh;
+  const p = mesh?.position ?? token?.center;
+  if (!p) return null;
+  const ax = Number(mesh?.anchor?.x);
+  const ay = Number(mesh?.anchor?.y);
+  const dx = Number.isFinite(ax) && Number.isFinite(token?.w) ? (0.5 - ax) * token.w : 0;
+  const dy = Number.isFinite(ay) && Number.isFinite(token?.h) ? (0.5 - ay) * token.h : 0;
+  return { x: p.x + dx, y: p.y + dy };
 }
 
 /** Rendered rotation of a token in radians. */

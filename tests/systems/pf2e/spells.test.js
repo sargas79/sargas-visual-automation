@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import Pf2eAdapter from "../../../src/systems/pf2e/index.js";
 import { describeItem } from "../../../src/systems/pf2e/descriptors.js";
 import { eventFromMessage } from "../../../src/systems/pf2e/messages.js";
-import { areaFromShape, eventFromRegion, eventFromTemplate } from "../../../src/systems/pf2e/areas.js";
+import { areaFromShape, baseCenter, eventFromRegion, eventFromTemplate } from "../../../src/systems/pf2e/areas.js";
 import { AREA_SHAPES, ATTACK_KINDS, EVENT_TYPES, OUTCOMES } from "../../../src/shared/events.js";
 import { checkContext, installCanvas, mockActor, mockMessage, SCENE, spells } from "./helpers/fixtures.js";
 
@@ -178,6 +178,27 @@ describe("areas (v14 Regions)", () => {
       "emanation"
     );
     expect(area).toMatchObject({ shape: AREA_SHAPES.EMANATION, origin: { x: 400, y: 400 }, distance: 10 });
+  });
+
+  it("emanation base in pixels (token shape with pixel width/height)", () => {
+    const area = areaFromShape(
+      { type: "emanation", radius: 200, base: { type: "token", x: 300, y: 300, width: 200, height: 200 } },
+      "emanation"
+    );
+    expect(area).toMatchObject({ origin: { x: 400, y: 400 }, distance: 10, width: 10 });
+  });
+
+  it("emanation around circle, rectangle and polygon bases", () => {
+    expect(baseCenter({ type: "circle", x: 150, y: 250, radius: 50 }, 100)).toEqual({ x: 150, y: 250 });
+    expect(baseCenter({ type: "rectangle", x: 100, y: 100, width: 200, height: 100 }, 100)).toEqual({ x: 200, y: 150 });
+    expect(baseCenter({ type: "polygon", points: [0, 0, 200, 0, 200, 200, 0, 200] }, 100)).toEqual({ x: 100, y: 100 });
+    expect(baseCenter({ type: "token" }, 100)).toBeNull();
+    expect(baseCenter(null, 100)).toBeNull();
+  });
+
+  it("emanation without a resolvable base has no origin, so the recipe anchors on the caster", () => {
+    const area = areaFromShape({ type: "emanation", radius: 100, base: { type: "token" } }, "emanation");
+    expect(area).toMatchObject({ shape: AREA_SHAPES.EMANATION, origin: null, distance: 5 });
   });
 
   it("falls back to flag data when the item is gone, ignores foreign regions", () => {

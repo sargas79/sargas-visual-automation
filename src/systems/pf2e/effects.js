@@ -6,7 +6,6 @@
  *  - src/module/item/effect/, src/module/item/condition/  item types "effect" and "condition" (slug e.g. "frightened")
  *  - src/module/rules/rule-element/aura.ts     Aura rule element (radius in feet) → descriptors.area (emanation)
  */
-import { actorIdFromUuid, tokenIdFromUuid } from "./messages.js";
 import { describeItem } from "./descriptors.js";
 
 export const EFFECT_ITEM_TYPES = ["effect", "condition"];
@@ -32,14 +31,9 @@ export function eventFromEffectItem(item, type, { userId, conditions = true } = 
   if (!tokenIds.length && type === "effectApplied") return null;
   // The affected creature is always the actor carrying the effect.
   const targets = tokenIds.map((tokenId) => ({ tokenId }));
-  // Source: who applied it (system.context.origin), falling back to the affected actor.
-  const origin = item.system?.context?.origin ?? null;
-  const originActorId = actorIdFromUuid(origin?.actor);
-  const originTokenId = tokenIdFromUuid(origin?.token);
-  const source =
-    originActorId && originActorId !== actor.id
-      ? { tokenId: originTokenId, actorId: originActorId }
-      : { tokenId: tokenIds[0] ?? null, actorId: actor.id ?? null };
+  // Source: the actor carrying the effect, like the other adapters. The aura preset anchors on the source, so
+  // "Spell Effect: Haste" cast on an ally animates around the ally, not around the caster (system.context.origin).
+  const source = { tokenId: tokenIds[0] ?? null, actorId: actor.id ?? null };
 
   return {
     id: item.uuid || item.id ? `${item.uuid ?? item.id}:${type}` : null,

@@ -160,7 +160,7 @@ Rule = { id, label, enabled, priority, match: { key?, name?, regex?, type?, trai
 RulePack (rules/<system>.json) = { system, version: 1, rules: Rule[] }
 ```
 
-Persistent recipes (`aura`) name their effect `aura:<actorId>:<itemKey>`. They end on `effectRemoved`.
+Persistent recipes (`aura`) name their effect `aura:<actorId>:<itemKey>` (the actor carrying the effect) and are only persistent on `effectApplied` / `areaPlaced`, the events that have a matching `effectRemoved`. On a `cast` the aura plays once (or for `options.duration`).
 
 ## PF2e adapter (#29–#34)
 

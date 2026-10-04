@@ -137,6 +137,7 @@ export class LayerManager {
       create: (texture) => new foundry.canvas.primary.PrimarySpriteMesh({ texture }),
       prepare: (mesh, texture) => {
         mesh.texture = texture;
+        mesh.anchor.set(0.5, 0.5);
         mesh.eventMode = "none";
       },
       reset: (mesh) => resetDisplay(mesh),
@@ -147,6 +148,7 @@ export class LayerManager {
       create: (texture) => new PIXI.Sprite(texture),
       prepare: (sprite, texture) => {
         sprite.texture = texture;
+        sprite.anchor.set(0.5, 0.5);
         sprite.eventMode = "none";
       },
       reset: (sprite) => resetDisplay(sprite),

@@ -40,19 +40,43 @@ const VISION_TEST_INTERVAL = 250;
  * @property {(point: {x: number, y: number}) => {x: number, y: number}} toScreen  Canvas → screen px.
  */
 
-/** Rendered center of a token (follows its movement animation). */
+/** Per token: document center minus mesh position, measured while the token is at rest. */
+const restOffsets = new WeakMap();
+
+const isPoint = (p) => Number.isFinite(p?.x) && Number.isFinite(p?.y);
+
+/** Is the token's movement animation running? (CanvasAnimation.getAnimation(token.animationName)) */
+function isAnimating(token) {
+  const name = token?.animationName;
+  const api = globalThis.foundry?.canvas?.animation?.CanvasAnimation ?? globalThis.CanvasAnimation;
+  if (!name || typeof api?.getAnimation !== "function") return false;
+  try {
+    return !!api.getAnimation(name);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Rendered center of a token (follows its movement animation).
+ *
+ * At rest the document center (Token#center) is authoritative. While the token animates, the mesh position is
+ * followed, corrected by the offset measured at rest: the mesh sits at the texture anchor (art shifted with
+ * texture.anchorX/Y), not necessarily at the center, and that offset is what Foundry's formula happens to be,
+ * without depending on it. Tokens without a mesh or center fall back to whichever exists.
+ */
 export function tokenCenter(token) {
-  // Token#_refreshMesh puts mesh.position at (x + anchorX * w, y + anchorY * h) with mesh.anchor = the texture
-  // anchor: the center only when the anchor is (0.5, 0.5). Art shifted with texture.anchorX/Y (a face, a large
-  // ring) would otherwise drag attached effects off the token.
-  const mesh = token?.mesh;
-  const p = mesh?.position ?? token?.center;
-  if (!p) return null;
-  const ax = Number(mesh?.anchor?.x);
-  const ay = Number(mesh?.anchor?.y);
-  const dx = Number.isFinite(ax) && Number.isFinite(token?.w) ? (0.5 - ax) * token.w : 0;
-  const dy = Number.isFinite(ay) && Number.isFinite(token?.h) ? (0.5 - ay) * token.h : 0;
-  return { x: p.x + dx, y: p.y + dy };
+  const mesh = isPoint(token?.mesh?.position) ? token.mesh.position : null;
+  const center = isPoint(token?.center) ? token.center : null;
+  if (!mesh && !center) return null;
+  if (!mesh) return { x: center.x, y: center.y };
+  if (!center) return { x: mesh.x, y: mesh.y };
+  if (!isAnimating(token)) {
+    restOffsets.set(token, { dx: center.x - mesh.x, dy: center.y - mesh.y });
+    return { x: center.x, y: center.y };
+  }
+  const off = restOffsets.get(token) ?? { dx: 0, dy: 0 };
+  return { x: mesh.x + off.dx, y: mesh.y + off.dy };
 }
 
 /** Rendered rotation of a token in radians. */
@@ -214,6 +238,8 @@ export class EffectSprite {
     }
     if (d.attachTo?.followRotation && host) rotation += tokenRotation(host);
     const display = this.display;
+    // A new PIXI sprite / PrimarySpriteMesh is anchored at its top-left corner: center it on the point.
+    display.anchor.set(0.5, 0.5);
     display.position.set(pos.x, pos.y);
     display.rotation = rotation;
     display.scale.set(scale.x * env.scale, scale.y * env.scale);

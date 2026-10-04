@@ -97,6 +97,15 @@ describe("EffectSprite attachment", () => {
     expect(ctx.layers.displays[0].position).toMatchObject({ x: 150, y: 150 });
   });
 
+  it("centers a placed effect on its point (new display objects are anchored top-left)", async () => {
+    const ctx = createFakeContext();
+    const s = sprite({ file: "x/y.webp", atLocation: { x: 300, y: 250 } }, ctx);
+    await s.mount();
+    const d = ctx.layers.displays[0];
+    expect(d.position).toMatchObject({ x: 300, y: 250 });
+    expect(d.anchor).toMatchObject({ x: 0.5, y: 0.5 });
+  });
+
   it("ends when the attached token disappears", async () => {
     const ctx = createFakeContext({ tokens: { t: createFakeToken() } });
     const s = sprite({ file: "x/y.webp", attachTo: { tokenId: "t" }, persist: true }, ctx);

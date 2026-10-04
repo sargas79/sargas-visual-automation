@@ -214,6 +214,8 @@ export class EffectSprite {
     }
     if (d.attachTo?.followRotation && host) rotation += tokenRotation(host);
     const display = this.display;
+    // A new PIXI sprite / PrimarySpriteMesh is anchored at its top-left corner: center it on the point.
+    display.anchor.set(0.5, 0.5);
     display.position.set(pos.x, pos.y);
     display.rotation = rotation;
     display.scale.set(scale.x * env.scale, scale.y * env.scale);

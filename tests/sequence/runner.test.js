@@ -131,4 +131,18 @@ describe("helpers", () => {
     expect(play).toHaveBeenCalledWith({ src: "x.ogg", volume: 0.3, autoplay: true, loop: false }, false);
     delete globalThis.foundry;
   });
+
+  it("playLocalSound skips sounds of modules that are not installed", async () => {
+    const play = vi.fn(() => ({ duration: 0, addEventListener: vi.fn() }));
+    globalThis.foundry = { audio: { AudioHelper: { play } } };
+    const before = globalThis.game;
+    globalThis.game = { modules: new Map([["soundfxlibrary", { active: false }]]) };
+    await playLocalSound("modules/missing-module/a.mp3");
+    expect(play).not.toHaveBeenCalled();
+    await playLocalSound("modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3");
+    await playLocalSound("worlds/w/a.mp3");
+    expect(play).toHaveBeenCalledTimes(2);
+    globalThis.game = before;
+    delete globalThis.foundry;
+  });
 });

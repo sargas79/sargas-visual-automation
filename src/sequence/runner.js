@@ -15,6 +15,9 @@ export function isVisibleTo(users, userId) {
 export async function playLocalSound(file, { volume = 1 } = {}) {
   const AudioHelper = globalThis.foundry?.audio?.AudioHelper;
   if (!AudioHelper) return;
+  // A sound shipped by a module that is not installed (rule packs use SoundFx Library): stay silent.
+  const owner = /^\/?modules\/([^/]+)\//.exec(String(file))?.[1];
+  if (owner && globalThis.game?.modules && !globalThis.game.modules.get(owner)) return;
   // v14: AudioHelper.play(data, socketOptions) - socketOptions false = local only; channel defaults to "interface".
   const sound = await AudioHelper.play({ src: file, volume, autoplay: true, loop: false }, false);
   if (!sound) return;

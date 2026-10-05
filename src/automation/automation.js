@@ -17,7 +17,6 @@ import { compile } from "./compile.js";
 import { fallbackRecipe } from "./fallback.js";
 import { findRule } from "./matcher.js";
 import { PRESETS, auraName, defaultTriggers } from "./presets.js";
-import { DEFAULT_SOUND_FOLDER, SETTING_SOUNDS, SETTING_SOUND_FOLDER, soundName, withDefaultSound } from "./sounds.js";
 import { checkRecipe, normalizeRecipe } from "./schema.js";
 import { createTeleport } from "./teleport.js";
 
@@ -145,27 +144,6 @@ export function createAutomation(api, rules) {
     } catch {
       return true;
     }
-  }
-
-  function soundsEnabled() {
-    try {
-      return game.settings.get(MODULE_ID, SETTING_SOUNDS) !== false;
-    } catch {
-      return true;
-    }
-  }
-
-  function soundFolder() {
-    try {
-      return game.settings.get(MODULE_ID, SETTING_SOUND_FOLDER) || DEFAULT_SOUND_FOLDER;
-    } catch {
-      return DEFAULT_SOUND_FOLDER;
-    }
-  }
-
-  /** Recipe with the default sound for this event when the world setting is on and the recipe has none. */
-  function withSound(recipe, event) {
-    return soundsEnabled() ? withDefaultSound(recipe, event, { folder: soundFolder() }) : recipe;
   }
 
   /**
@@ -348,7 +326,7 @@ export function createAutomation(api, rules) {
 
       let sequences;
       try {
-        sequences = compile(withSound(resolved.recipe, event), event);
+        sequences = compile(resolved.recipe, event);
       } catch (err) {
         log.error(`Could not compile recipe (${resolved.reason})`, err);
         return false;
@@ -377,7 +355,7 @@ export function createAutomation(api, rules) {
         area,
         descriptors: descriptors ?? { key: "preview", name: "Preview", area: null }
       });
-      const sequences = compile(withSound(normalized, event), event).map((seq) => ({
+      const sequences = compile(normalized, event).map((seq) => ({
         ...seq,
         steps: seq.steps.map((step) => {
           if (step.type !== "effect" || !step.effect.persist) return step;
@@ -413,9 +391,6 @@ export function createAutomation(api, rules) {
     async setItemDisabled(item, disabled) {
       return disabled ? item.setFlag(MODULE_ID, "disabled", true) : item.unsetFlag(MODULE_ID, "disabled");
     },
-
-    /** Name of the default sound for descriptors on an event ("crit-bow", "magic-fire"...), or null. */
-    soundName,
 
     /** True when automation is turned off for this item. */
     isItemDisabled(item) {

@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 
 const BUNDLE = "scripts/main.js";
 /** Runtime folders shipped as-is next to the bundle. */
-const STATIC_DIRS = ["lang", "rules", "templates", "styles", "packs", "sounds"];
+const STATIC_DIRS = ["lang", "rules", "templates", "styles", "packs"];
 
 /** Copies static module files into dist/ and points module.json at the bundle. */
 function foundryModuleFiles() {

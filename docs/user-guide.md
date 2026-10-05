@@ -111,6 +111,16 @@ GURPS Game Aid has no item "activities": attacks, spells and skills are rows of 
 - Concentration drives auras: a rule with the `aura` preset on a concentration spell (Spirit Guardians) starts when you begin concentrating and ends when concentration ends. Effects applied from a card (for example "Blessed") and conditions (`prone`, `frightened`…) are matched by their name / status id with type `effect` / `condition`.
 - **Teleport** spells (Misty Step) move your token themselves: click the destination when asked, and don't also use dnd5e's own **Teleport** button on the card.
 
+## Sounds
+
+The default rules play recordings from the [SoundFx Library](https://github.com/sargas79/sargas-SoundFxLibrary) module. Install it with the manifest `https://github.com/sargas79/sargas-SoundFxLibrary/releases/latest/download/module.json`; it does not need to be enabled. Without it the same rules play silently.
+
+- **Melee weapons**: slash, pierce or blunt hits, a heavier one on a critical, a whoosh on a miss. Bites growl, claws slash; unarmed strikes only have the miss whoosh.
+- **Bows, crossbows, darts**: an arrow flying by, an arrow impact on a critical. **Thrown weapons**: a throw and hit, a whoosh on a miss; slings, bombs and other tossed things only whoosh.
+- **Magic**: fire and lightning spells, and a generic cast for untyped magic missiles. Other damage types, healing, buffs, firearms and lasers have no fitting recording and stay silent.
+
+To change or silence one, copy the rule in the rules manager (or edit the item) and set its own **Sound**. The **Volume** client setting applies to all of them. Check the library's `Attribution.xlsx` for the license of each recording; several are non-commercial.
+
 ## Configuring an item
 
 Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condition; for D&D 5e: weapon, spell, feature or consumable; for GURPS: equipment, spell, skill or attack items) and click the **Animation** control in the sheet header. In GURPS, attacks and spells that exist only on the character sheet (no item) are configured with a rule in the [rules manager](#rules-manager) instead.

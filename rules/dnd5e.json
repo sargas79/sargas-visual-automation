@@ -23,6 +23,10 @@
             "animation": "jb2a.impact.fire.01.orange",
             "options": {}
           }
+        },
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Whoosh/spell-whoosh-1.mp3",
+          "volume": 0.6
         }
       }
     },
@@ -40,7 +44,11 @@
         "preset": "ranged",
         "animation": "jb2a.eldritch_blast.purple",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Whoosh/spell-whoosh-1.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -131,7 +139,11 @@
         "preset": "ranged",
         "animation": "jb2a.fire_bolt.orange",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Whoosh/spell-whoosh-3.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -199,7 +211,11 @@
         "preset": "ranged",
         "animation": "jb2a.lightning_orb.01.complete.bluepurple",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact%20Lightning/spell-impact-lightning-3.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -256,7 +272,11 @@
         "preset": "ranged",
         "animation": "jb2a.scorching_ray.01.orange",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Whoosh/spell-whoosh-4.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -279,6 +299,18 @@
             "animation": "jb2a.liquid.splash.green",
             "options": {}
           }
+        },
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-2.mp3",
+              "volume": 0.6
+            }
+          }
         }
       }
     },
@@ -296,7 +328,11 @@
         "preset": "ranged",
         "animation": "jb2a.witch_bolt.blue",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact%20Lightning/spell-impact-lightning-4.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -336,7 +372,25 @@
         "preset": "melee",
         "animation": "jb2a.sword.melee.fire.orange",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-4.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-1.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -370,7 +424,11 @@
         "preset": "ranged",
         "animation": "jb2a.magic_missile.purple",
         "options": {},
-        "triggers": ["cast"]
+        "triggers": ["cast"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Whoosh/spell-whoosh-3.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -489,7 +547,11 @@
         "preset": "onToken",
         "animation": "jb2a.flames.01.orange",
         "options": {},
-        "triggers": ["cast"]
+        "triggers": ["cast"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact/spell-impact-5.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -506,7 +568,11 @@
         "preset": "ranged",
         "animation": "jb2a.chain_lightning.primary.blue",
         "options": {},
-        "triggers": ["cast"]
+        "triggers": ["cast"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact%20Lightning/spell-impact-lightning-3.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -523,7 +589,11 @@
         "preset": "ranged",
         "animation": "jb2a.disintegrate.green",
         "options": {},
-        "triggers": ["cast"]
+        "triggers": ["cast"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Whoosh/spell-whoosh-4.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -693,7 +763,11 @@
         "preset": "onToken",
         "animation": "jb2a.impact.fire.01.orange",
         "options": {},
-        "triggers": ["cast"]
+        "triggers": ["cast"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact/spell-impact-3.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -1381,6 +1455,10 @@
             "animation": "jb2a.fireball.beam.orange",
             "options": {}
           }
+        },
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact/spell-impact-3.mp3",
+          "volume": 0.6
         }
       }
     },
@@ -1398,7 +1476,11 @@
         "preset": "area",
         "animation": "jb2a.lightning_bolt.wide.blue",
         "options": {},
-        "triggers": ["areaPlaced"]
+        "triggers": ["areaPlaced"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact%20Lightning/spell-impact-lightning-1.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -1415,7 +1497,11 @@
         "preset": "area",
         "animation": "jb2a.burning_hands.01.orange",
         "options": {},
-        "triggers": ["areaPlaced"]
+        "triggers": ["areaPlaced"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact/spell-impact-3.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -1568,7 +1654,11 @@
         "preset": "area",
         "animation": "jb2a.call_lightning.low_res.blue",
         "options": {},
-        "triggers": ["areaPlaced"]
+        "triggers": ["areaPlaced"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact%20Lightning/spell-impact-lightning-4.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -1585,7 +1675,11 @@
         "preset": "area",
         "animation": "jb2a.wall_of_fire.300x100.yellow",
         "options": {},
-        "triggers": ["areaPlaced"]
+        "triggers": ["areaPlaced"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact/spell-impact-5.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -1857,7 +1951,11 @@
         "preset": "area",
         "animation": "jb2a.fireball.explosion.yellow",
         "options": {},
-        "triggers": ["areaPlaced"]
+        "triggers": ["areaPlaced"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact/spell-impact-3.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -1908,7 +2006,11 @@
         "preset": "area",
         "animation": "jb2a.fireball.explosion.dark_red",
         "options": {},
-        "triggers": ["areaPlaced"]
+        "triggers": ["areaPlaced"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Spell%20Impact/spell-impact-5.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -2039,7 +2141,15 @@
         "preset": "melee",
         "animation": "jb2a.flurry_of_blows.physical.blue",
         "options": {},
-        "triggers": ["cast"]
+        "triggers": ["cast"],
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2055,7 +2165,19 @@
         "preset": "area",
         "animation": "jb2a.volley_of_projectiles_Cone5e.arrow.001.001",
         "options": {},
-        "triggers": ["areaPlaced"]
+        "triggers": ["areaPlaced"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2071,7 +2193,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.02.battleaxe",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-10.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-2.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2087,7 +2227,19 @@
         "preset": "ranged",
         "animation": "jb2a.dart.01.throw",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-3.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-3.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2103,7 +2255,25 @@
         "preset": "melee",
         "animation": "jb2a.club.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-12.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2119,7 +2289,25 @@
         "preset": "melee",
         "animation": "jb2a.dagger.melee.02",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-8.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2135,7 +2323,19 @@
         "preset": "ranged",
         "animation": "jb2a.dart.01.throw",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2151,7 +2351,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.01.flail",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-12.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2167,7 +2385,25 @@
         "preset": "melee",
         "animation": "jb2a.glaive.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-5.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-3.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2183,7 +2419,25 @@
         "preset": "melee",
         "animation": "jb2a.greataxe.melee.standard",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-6.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-2.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2199,7 +2453,25 @@
         "preset": "melee",
         "animation": "jb2a.greatclub.standard.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Misc/Single/Impact/impact-4.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2215,7 +2487,25 @@
         "preset": "melee",
         "animation": "jb2a.greatsword.melee.standard",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-5.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-1.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2231,7 +2521,25 @@
         "preset": "melee",
         "animation": "jb2a.halberd.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-6.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-3.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2247,7 +2555,25 @@
         "preset": "melee",
         "animation": "jb2a.handaxe.melee.standard",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-11.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-1.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2263,7 +2589,19 @@
         "preset": "ranged",
         "animation": "jb2a.bolt.physical.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-3.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-2.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2279,7 +2617,19 @@
         "preset": "ranged",
         "animation": "jb2a.bolt.physical.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-2.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-5.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2295,7 +2645,25 @@
         "preset": "melee",
         "animation": "jb2a.spear.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-9.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2311,7 +2679,25 @@
         "preset": "melee",
         "animation": "jb2a.spear.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-9.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2327,7 +2713,19 @@
         "preset": "ranged",
         "animation": "jb2a.bolt.physical.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-2.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-4.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2343,7 +2741,25 @@
         "preset": "melee",
         "animation": "jb2a.hammer.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-12.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2359,7 +2775,19 @@
         "preset": "ranged",
         "animation": "jb2a.arrow.physical.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-5.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2375,7 +2803,25 @@
         "preset": "melee",
         "animation": "jb2a.sword.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-5.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-2.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2391,7 +2837,25 @@
         "preset": "melee",
         "animation": "jb2a.mace.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-12.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2407,7 +2871,25 @@
         "preset": "melee",
         "animation": "jb2a.maul.melee.standard",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Misc/Single/Impact/impact-4.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2423,7 +2905,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.02.mace",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-12.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2461,7 +2961,25 @@
         "preset": "melee",
         "animation": "jb2a.halberd.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-9.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2499,7 +3017,25 @@
         "preset": "melee",
         "animation": "jb2a.quarterstaff.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-12.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2515,7 +3051,25 @@
         "preset": "melee",
         "animation": "jb2a.rapier.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-9.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2531,7 +3085,25 @@
         "preset": "melee",
         "animation": "jb2a.scimitar.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-11.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-2.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2547,7 +3119,25 @@
         "preset": "melee",
         "animation": "jb2a.shortsword.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-9.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2563,7 +3153,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.01.sickle",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-11.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-3.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2579,7 +3187,25 @@
         "preset": "melee",
         "animation": "jb2a.spear.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-9.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2595,7 +3221,19 @@
         "preset": "ranged",
         "animation": "jb2a.arrow.physical.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-2.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-2.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2611,7 +3249,11 @@
         "preset": "ranged",
         "animation": "jb2a.slingshot",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -2627,7 +3269,25 @@
         "preset": "melee",
         "animation": "jb2a.spiritual_weapon.trident.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-8.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2643,7 +3303,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.02.hammer",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-9.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2659,7 +3337,25 @@
         "preset": "melee",
         "animation": "jb2a.warhammer.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-12.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2675,7 +3371,11 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.01.flail",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -2692,7 +3392,19 @@
         "preset": "ranged",
         "animation": "jb2a.dagger.throw.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2709,7 +3421,19 @@
         "preset": "ranged",
         "animation": "jb2a.dart.01.throw",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2726,7 +3450,19 @@
         "preset": "ranged",
         "animation": "jb2a.handaxe.throw.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2743,7 +3479,19 @@
         "preset": "ranged",
         "animation": "jb2a.javelin.01.throw",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2760,7 +3508,19 @@
         "preset": "ranged",
         "animation": "jb2a.hammer.throw",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2777,7 +3537,19 @@
         "preset": "ranged",
         "animation": "jb2a.spear.throw.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2794,7 +3566,19 @@
         "preset": "ranged",
         "animation": "jb2a.spear.throw.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2810,7 +3594,15 @@
         "preset": "melee",
         "animation": "jb2a.unarmed_strike.physical.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2827,7 +3619,25 @@
         "preset": "melee",
         "animation": "jb2a.claws.200px.red",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-6.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-1.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2844,7 +3654,25 @@
         "preset": "melee",
         "animation": "jb2a.bite.200px.red",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Creatures/Monsters/Growl/growl-2.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Creatures/Monsters/Growl/growl-3.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2861,7 +3689,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_generic.creature_attack.fist",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-12.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2877,7 +3723,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.02.battleaxe",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-10.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-1.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2893,7 +3757,19 @@
         "preset": "ranged",
         "animation": "jb2a.arrow.physical.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-2.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-4.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2909,7 +3785,15 @@
         "preset": "melee",
         "animation": "jb2a.unarmed_strike.physical.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2925,7 +3809,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.02.club",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Misc/Single/Impact/impact-4.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2941,7 +3843,19 @@
         "preset": "ranged",
         "animation": "jb2a.bolt.physical.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-3.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2957,7 +3871,19 @@
         "preset": "ranged",
         "animation": "jb2a.dart.01.throw",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Arrow%20Impact/arrow-impact-3.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -2989,7 +3915,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.01.flail",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Misc/Single/Impact/impact-4.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3005,7 +3949,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.02.warhammer",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Misc/Single/Impact/impact-4.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Shield%20Hit/shield-hit-11.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3021,7 +3983,25 @@
         "preset": "melee",
         "animation": "jb2a.dagger.melee.02",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-8.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3037,7 +4017,25 @@
         "preset": "melee",
         "animation": "jb2a.melee_attack.02.hammer",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-8.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3053,7 +4051,25 @@
         "preset": "melee",
         "animation": "jb2a.halberd.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-11.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-2.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3069,7 +4085,11 @@
         "preset": "ranged",
         "animation": "jb2a.slingshot",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -3085,7 +4105,25 @@
         "preset": "melee",
         "animation": "jb2a.spear.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-8.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-12.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3101,7 +4139,25 @@
         "preset": "melee",
         "animation": "jb2a.sword.melee.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-10.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "criticalSuccess": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-2.mp3",
+              "volume": 0.6
+            }
+          },
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3118,7 +4174,19 @@
         "preset": "ranged",
         "animation": "jb2a.handaxe.throw.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3135,7 +4203,19 @@
         "preset": "ranged",
         "animation": "jb2a.hammer.throw",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3152,7 +4232,19 @@
         "preset": "ranged",
         "animation": "jb2a.dagger.throw.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3169,7 +4261,19 @@
         "preset": "ranged",
         "animation": "jb2a.spear.throw.01",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {
@@ -3186,7 +4290,11 @@
         "preset": "ranged",
         "animation": "jb2a.boomerang.01.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+          "volume": 0.6
+        }
       }
     },
     {
@@ -3203,7 +4311,19 @@
         "preset": "ranged",
         "animation": "jb2a.sword.throw.white",
         "options": {},
-        "triggers": ["attack"]
+        "triggers": ["attack"],
+        "sound": {
+          "file": "modules/soundfxlibrary/Combat/Single/Throw%20Hit/throw-hit-1.mp3",
+          "volume": 0.6
+        },
+        "outcomes": {
+          "failure": {
+            "sound": {
+              "file": "modules/soundfxlibrary/Combat/Single/Melee%20Miss/melee-miss-1.mp3",
+              "volume": 0.6
+            }
+          }
+        }
       }
     },
     {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 - 2026-10-05
+
+### Added
+
+- **Sounds from SoundFx Library.** The default rules of the PF2e, D&D 5e and GURPS packs now carry a `sound` from the [SoundFx Library](https://github.com/sargas79/sargas-SoundFxLibrary) module (listed as recommended; it only needs to be installed, not enabled): slash, pierce and blunt melee hits with a heavier critical and a whoosh on a miss, bites and claws, arrows and bolts, thrown weapons, fire and lightning spells and a generic cast for untyped magic. Damage types and actions the library has no fitting recording for (healing, buffs, firearms, cold, acid…) stay silent.
+- Sounds that point into a module that is not installed are skipped instead of requesting a missing file, so the packs stay silent without the library.
+
 ## 0.4.2 - 2026-10-04
 
 ### Removed

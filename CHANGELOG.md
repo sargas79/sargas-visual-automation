@@ -17,8 +17,8 @@
 
 ### Added
 
-- **Creature attacks set up by type.** Natural attacks of creatures (jaws, claws, stings, tails, wings, slamsâ€¦ by name) are reported with the weapon group `natural` instead of `brawling`, so they no longer play as unarmed strikes, and get an animation on their own: bites and claws are sized to the creature (200px up to Medium, 400px from Large) and coloured by the attack's energy damage (fire, cold, acid, electricityâ€¦) or, failing that, by the creature type (undead, fiend, fey, dragonâ€¦). The three fixed-colour natural attack rules of the PF2e pack are gone (184 rules).
-- **Sounds for attacks, criticals and magic.** Automatic animations without a sound of their own now play one: attacks by weapon type (slash, pierce, blunt, unarmed, bite, claw, bow, crossbow, firearm, thrown), a heavier variant on a critical, a whoosh on a miss, magic by damage type (fire, cold, electricity, acidâ€¦), healing and buffs. A synthesized 36-file bank ships in `sounds/`; world settings **Automatic sounds** and **Sound folder** (use your own files with the same names). Recipes with their own `sound` are untouched; `"sound": null` keeps one silent.
+- **Creature attacks set up by type.** Natural attacks of creatures (jaws, claws, stings, tails, wings, slams… by name) are reported with the weapon group `natural` instead of `brawling`, so they no longer play as unarmed strikes, and get an animation on their own: bites and claws are sized to the creature (200px up to Medium, 400px from Large) and coloured by the attack's energy damage (fire, cold, acid, electricity…) or, failing that, by the creature type (undead, fiend, fey, dragon…). The three fixed-colour natural attack rules of the PF2e pack are gone (184 rules).
+- **Sounds for attacks, criticals and magic.** Automatic animations without a sound of their own now play one: attacks by weapon type (slash, pierce, blunt, unarmed, bite, claw, bow, crossbow, firearm, thrown), a heavier variant on a critical, a whoosh on a miss, magic by damage type (fire, cold, electricity, acid…), healing and buffs. A synthesized 36-file bank ships in `sounds/`; world settings **Automatic sounds** and **Sound folder** (use your own files with the same names). Recipes with their own `sound` are untouched; `"sound": null` keeps one silent.
 - **Creature traits in rules.** `match.actorTraits` (rules manager: "Creature traits") matches the traits of the creature using the item, such as `dragon`, `undead` or `size:large`. Adapters fill `ItemDescriptors.actorTraits` (PF2e: actor traits and size).
 
 - **Turn animations off for a character.** A button in the animation overview header (owner or GM) silences the character: nothing it does animates and nothing lands on its tokens, while other characters keep animating. Also `SVA.automation.setActorDisabled(actor, true)` / `isActorDisabled(actor)`.
@@ -98,7 +98,7 @@ First release. Sargas Visual Automation plays and automates JB2A animations on F
 - **PF2e adapter**: strikes (melee, ranged, thrown, unarmed, natural), spells (casts, attacks, saves, Region-based areas), effects and conditions, healing and multi-target actions. The default rule pack has 184 rules.
 - **UI**: an animation browser, a per-item animation editor with live preview, a rules manager (import/export) and a grouped settings panel.
 - **SVA Macros** compendium: 16 original example macros.
-- **Docs**: user guide, API reference, adapter guide (for D&D 5e, GURPS, â€¦) and QA checklist.
+- **Docs**: user guide, API reference, adapter guide (for D&D 5e, GURPS, …) and QA checklist.
 
 ### Known limitations
 

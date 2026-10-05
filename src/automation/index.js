@@ -10,7 +10,6 @@
 import { MODULE_ID } from "../constants.js";
 import { BUILTIN_ADAPTERS } from "../systems/index.js";
 import { SETTING_ENABLED, createAutomation } from "./automation.js";
-import { DEFAULT_SOUND_FOLDER, SETTING_SOUNDS, SETTING_SOUND_FOLDER } from "./sounds.js";
 import { loadRulePack } from "./rulepack.js";
 import { EMPTY_RULES, SETTING_RULES, createRulesStore } from "./rules.js";
 import { RECIPE_VERSION, checkRecipe, migrateRecipe, normalizeRecipe, validateRecipe } from "./schema.js";
@@ -24,22 +23,6 @@ function registerSettings() {
     config: true,
     type: Boolean,
     default: true
-  });
-  game.settings.register(MODULE_ID, SETTING_SOUNDS, {
-    name: "SVA.Automation.Settings.Sounds.Name",
-    hint: "SVA.Automation.Settings.Sounds.Hint",
-    scope: "world",
-    config: true,
-    type: Boolean,
-    default: true
-  });
-  game.settings.register(MODULE_ID, SETTING_SOUND_FOLDER, {
-    name: "SVA.Automation.Settings.SoundFolder.Name",
-    hint: "SVA.Automation.Settings.SoundFolder.Hint",
-    scope: "world",
-    config: true,
-    type: String,
-    default: DEFAULT_SOUND_FOLDER
   });
   // VERIFY(v14): `type: Object` settings are stored as JSON; a DataField could replace it.
   game.settings.register(MODULE_ID, SETTING_RULES, {

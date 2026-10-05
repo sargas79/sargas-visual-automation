@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2 - 2026-10-04
+
+### Removed
+
+- **Automatic sounds.** The default sound bank added in 0.4.0 (attacks, criticals, misses, magic, healing and buffs) is gone, along with the **Automatic sounds** and **Sound folder** world settings, the `sounds/` folder and `SVA.automation.soundName`. Automatic animations are silent again unless their recipe or rule has a `sound` of its own, which works as before.
+
 ## 0.4.1 - 2026-10-04
 
 ### Fixed

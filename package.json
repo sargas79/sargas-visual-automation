@@ -1,6 +1,6 @@
 {
   "name": "sargas-visual-automation",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "description": "Foundry VTT module that plays and automates JB2A animations without Sequencer or Automated Animations.",
   "type": "module",

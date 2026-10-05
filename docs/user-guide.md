@@ -119,7 +119,9 @@ Automatic animations come with a sound when their recipe has none (world setting
 - **Criticals** play a heavier variant of the same sound; **misses** a whoosh with no impact (melee and thrown).
 - **Magic** by damage type (fire, cold, electricity, acid, poison, sonic, force, void, vitality, mental, spirit, or a generic one) for casts, spell attacks, saves and areas; **healing** and **buffs** (effects applied) have their own.
 
-The bank shipped with the module (`sounds/*.wav`) is synthesized and deliberately short. To use your own, copy the folder somewhere in your user data, replace the files you want (same names), and set **Sound folder** to that folder. A recipe or rule with its own `sound` is left untouched; `"sound": null` keeps it silent. The **Volume** client setting applies to all of them.
+Install the [SoundFx Library](https://github.com/sargas79/sargas-SoundFxLibrary) module (manifest `https://github.com/sargas79/sargas-SoundFxLibrary/releases/latest/download/module.json`; it does not need to be enabled) and SVA plays its recordings, one picked at random each time, for the sounds it covers: slash, pierce and blunt melee, bite, claw, bow, crossbow, thrown, misses, generic magic, fire and electricity, and their criticals. Check the library's `Attribution.xlsx` for the license of each recording.
+
+Everything else (unarmed, firearm, the other damage types, healing, buffs), and every sound when the library is not installed, comes from the bank shipped with the module (`sounds/*.wav`), which is synthesized and deliberately short. To use your own, copy the folder somewhere in your user data, replace the files you want (same names), and set **Sound folder** to that folder; a custom folder replaces the library recordings too. A recipe or rule with its own `sound` is left untouched; `"sound": null` keeps it silent. The **Volume** client setting applies to all of them.
 
 ## Configuring an item
 
@@ -202,20 +204,20 @@ The compendium **SVA Example Macros** contains 16 ready-to-use macros that show 
 
 Settings live in **Game Settings → Configure Settings → Sargas Visual Automation**. The exact labels are shown with a hint in the settings panel.
 
-| Setting                 | Scope  | What it does                                                                                       |
-| ----------------------- | ------ | -------------------------------------------------------------------------------------------------- |
-| Automation enabled      | World  | Master switch for automatic animations. Macros keep working when it is off.                        |
-| System rule pack        | World  | Use the defaults shipped for your system (`rules/<system>.json`).                                  |
-| Minimum role to trigger | World  | Users below this role can't broadcast animations (automation or macros).                           |
-| Max concurrent effects  | Client | Upper limit of effects on screen at once, to protect slower machines.                              |
-| Disable effects         | Client | You see no SVA animations at all. Other players are unaffected.                                    |
-| Reduced motion          | Client | Skip decorative effects (cast, screen effects); hits, misses, areas, impacts and auras still play. |
-| Volume                  | Client | Volume of SVA sounds on your machine.                                                              |
-| Automatic sounds        | World  | Add a default sound to automatic animations that have none (see [Sounds](#sounds)).                |
-| Sound folder            | World  | Folder of the sound bank. Default: the one shipped with the module.                                |
-| Condition markers       | World  | Show JB2A markers for conditions (PF2e, and D&D 5e: "animate conditions").                         |
-| GURPS: failed casts     | World  | Animate spell and healing rolls that fail (GURPS). Failed attacks always play as misses.           |
-| Debug logging           | Client | Detailed logs in the browser console (F12), including why a recipe matched.                        |
+| Setting                 | Scope  | What it does                                                                                           |
+| ----------------------- | ------ | ------------------------------------------------------------------------------------------------------ |
+| Automation enabled      | World  | Master switch for automatic animations. Macros keep working when it is off.                            |
+| System rule pack        | World  | Use the defaults shipped for your system (`rules/<system>.json`).                                      |
+| Minimum role to trigger | World  | Users below this role can't broadcast animations (automation or macros).                               |
+| Max concurrent effects  | Client | Upper limit of effects on screen at once, to protect slower machines.                                  |
+| Disable effects         | Client | You see no SVA animations at all. Other players are unaffected.                                        |
+| Reduced motion          | Client | Skip decorative effects (cast, screen effects); hits, misses, areas, impacts and auras still play.     |
+| Volume                  | Client | Volume of SVA sounds on your machine.                                                                  |
+| Automatic sounds        | World  | Add a default sound to automatic animations that have none (see [Sounds](#sounds)).                    |
+| Sound folder            | World  | Folder of the sound bank. Default: the one shipped with the module, plus SoundFx Library if installed. |
+| Condition markers       | World  | Show JB2A markers for conditions (PF2e, and D&D 5e: "animate conditions").                             |
+| GURPS: failed casts     | World  | Animate spell and healing rolls that fail (GURPS). Failed attacks always play as misses.               |
+| Debug logging           | Client | Detailed logs in the browser console (F12), including why a recipe matched.                            |
 
 ## Troubleshooting
 

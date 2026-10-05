@@ -17,7 +17,14 @@ import { compile } from "./compile.js";
 import { fallbackRecipe } from "./fallback.js";
 import { findRule } from "./matcher.js";
 import { PRESETS, auraName, defaultTriggers } from "./presets.js";
-import { DEFAULT_SOUND_FOLDER, SETTING_SOUNDS, SETTING_SOUND_FOLDER, soundName, withDefaultSound } from "./sounds.js";
+import {
+  DEFAULT_SOUND_FOLDER,
+  SETTING_SOUNDS,
+  SETTING_SOUND_FOLDER,
+  SOUND_LIBRARY_ID,
+  soundName,
+  withDefaultSound
+} from "./sounds.js";
 import { checkRecipe, normalizeRecipe } from "./schema.js";
 import { createTeleport } from "./teleport.js";
 
@@ -163,9 +170,16 @@ export function createAutomation(api, rules) {
     }
   }
 
+  /** SoundFx Library recordings are used when it is installed (enabled or not) and the sound folder is the default. */
+  function soundLibrary(folder) {
+    return folder === DEFAULT_SOUND_FOLDER && !!game.modules?.get?.(SOUND_LIBRARY_ID);
+  }
+
   /** Recipe with the default sound for this event when the world setting is on and the recipe has none. */
   function withSound(recipe, event) {
-    return soundsEnabled() ? withDefaultSound(recipe, event, { folder: soundFolder() }) : recipe;
+    if (!soundsEnabled()) return recipe;
+    const folder = soundFolder();
+    return withDefaultSound(recipe, event, { folder, library: soundLibrary(folder) });
   }
 
   /**

@@ -79,6 +79,16 @@
       "flags": {}
     }
   ],
+  "relationships": {
+    "recommends": [
+      {
+        "id": "soundfxlibrary",
+        "type": "module",
+        "manifest": "https://github.com/sargas79/sargas-SoundFxLibrary/releases/latest/download/module.json",
+        "reason": "Recorded sounds for automatic animations."
+      }
+    ]
+  },
   "socket": true,
   "license": "MIT",
   "url": "https://github.com/sargas79/sargas-visual-automation",

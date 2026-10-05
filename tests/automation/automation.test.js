@@ -146,6 +146,19 @@ describe("handle()", () => {
     expect(api.playSequence.mock.calls[1][0].steps.some((s) => s.type === "sound")).toBe(false);
   });
 
+  it("uses SoundFx Library recordings when it is installed, unless a custom sound folder is set", async () => {
+    const { api } = bootAutomation({ items: [sword()] });
+    game.modules.set("soundfxlibrary", { id: "soundfxlibrary", active: false });
+    expect(await api.automation.handle(attack())).toBe(true);
+    expect(api.playSequence.mock.calls[0][0].steps[0]).toMatchObject({
+      type: "sound",
+      file: expect.stringMatching(/^modules\/soundfxlibrary\/Combat\/Single\/Melee%20Hit\/melee-hit-\d+\.mp3$/)
+    });
+    await game.settings.set("sargas-visual-automation", "soundFolder", "worlds/w/sfx");
+    expect(await api.automation.handle(attack({ outcome: "failure" }))).toBe(true);
+    expect(api.playSequence.mock.calls[1][0].steps[0]).toMatchObject({ type: "sound", file: "worlds/w/sfx/miss.wav" });
+  });
+
   it("skips items whose recipe does not trigger on the event", async () => {
     const { api } = bootAutomation({ items: [sword()] });
     expect(await api.automation.handle(attack({ type: "damage" }))).toBe(false);

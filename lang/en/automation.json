@@ -15,7 +15,7 @@
         },
         "SoundFolder": {
           "Name": "Sound folder",
-          "Hint": "Folder of the sound bank (files named melee-slash.wav, crit-bow.wav, magic-fire.wav…). Default: the bank shipped with the module; copy it and replace files to use your own."
+          "Hint": "Folder of the sound bank (files named melee-slash.wav, crit-bow.wav, magic-fire.wav…). Default: the bank shipped with the module, with SoundFx Library recordings where it has them if that module is installed; copy the bank and replace files to use only your own."
         }
       },
       "Presets": {

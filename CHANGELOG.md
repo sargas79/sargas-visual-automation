@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **SoundFx Library sounds.** With the [SoundFx Library](https://github.com/sargas79/sargas-SoundFxLibrary) module installed (enabled or not), automatic sounds use its recordings, one picked at random each time: slash, pierce and blunt melee, bite, claw, bow, crossbow, thrown, misses, generic magic, fire and electricity, and their criticals. Sounds it has no recording for (unarmed, firearm, other damage types, healing, buffs) keep the shipped bank; a custom **Sound folder** replaces both. The module is listed as recommended.
+
 ## 0.4.1 - 2026-10-04
 
 ### Fixed

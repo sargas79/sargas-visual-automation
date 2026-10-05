@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readdirSync } from "node:fs";
-import { SOUND_NAMES, soundName, withDefaultSound } from "../../src/automation/sounds.js";
+import { LIBRARY_SOUNDS, SOUND_NAMES, soundFile, soundName, withDefaultSound } from "../../src/automation/sounds.js";
 
 const weapon = (extra) => ({ type: "weapon", attackKind: "melee", traits: [], damageTypes: ["slashing"], ...extra });
 
@@ -49,6 +49,31 @@ describe("default sounds", () => {
     const own = { ...recipe, sound: { file: "mine.ogg" }, outcomes: { failure: { sound: { file: "m.ogg" } } } };
     expect(withDefaultSound(own, event)).toBe(own);
     expect(withDefaultSound(recipe, { type: "effectRemoved", descriptors: weapon() }).sound).toBeUndefined();
+  });
+
+  it("plays SoundFx Library recordings for the names it covers, the bank for the rest", () => {
+    const first = { library: true, random: () => 0 };
+    const last = { library: true, random: () => 0.999 };
+    expect(soundFile("melee-slash", undefined, 0.6, first)).toEqual({
+      file: "modules/soundfxlibrary/Combat/Single/Melee%20Hit/melee-hit-4.mp3",
+      volume: 0.6
+    });
+    expect(soundFile("melee-slash", undefined, 0.6, last).file).toMatch(/Melee%20Hit\/melee-hit-11\.mp3$/);
+    expect(soundFile("healing", "worlds/w/sfx", 0.6, first).file).toBe("worlds/w/sfx/healing.wav");
+    expect(soundFile("melee-slash").file).toBe("modules/sargas-visual-automation/sounds/melee-slash.wav");
+
+    const event = { type: "attack", descriptors: weapon({ attackKind: "ranged", weaponGroup: "bow" }) };
+    const out = withDefaultSound({ version: 1, preset: "ranged", animation: "x" }, event, first);
+    expect(out.sound.file).toBe("modules/soundfxlibrary/Combat/Single/Arrow%20Fly-By/arrow-fly-by-1.mp3");
+    expect(out.outcomes.criticalSuccess.sound.file).toMatch(/Arrow%20Impact\/arrow-impact-1\.mp3$/);
+  });
+
+  it("the library map only uses known sound names and mp3 files", () => {
+    for (const [name, files] of Object.entries(LIBRARY_SOUNDS)) {
+      expect(SOUND_NAMES, name).toContain(name);
+      expect(files.length, name).toBeGreaterThan(0);
+      for (const f of files) expect(f, name).toMatch(/^(Combat|Creatures|Misc)\/.+\.mp3$/);
+    }
   });
 
   it("every sound the selection can name ships in sounds/", () => {

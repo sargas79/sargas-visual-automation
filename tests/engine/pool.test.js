@@ -69,6 +69,20 @@ function setup(max) {
 const effect = (id, extra = {}) => ({ id, file: "jb2a.aura.blue", atLocation: { x: 0, y: 0 }, ...extra });
 
 describe("engine budget and tear down", () => {
+  it("does not count effects cancelled while loading against the budget", async () => {
+    const { engine, env } = setup(2);
+    let release;
+    env.wait.mockImplementationOnce(() => new Promise((r) => (release = r)));
+    const loading = engine.play(effect("p", { persist: true }));
+    engine.end("p", { immediate: true });
+    await engine.play(effect("b"));
+    await engine.play(effect("c"));
+    release();
+    await loading;
+    expect(engine.active().map((h) => h.id)).toEqual(["b", "c"]);
+    expect(engine.stats()).toMatchObject({ evicted: 0 });
+  });
+
   it("ends the oldest effect when the budget is reached", async () => {
     const { engine } = setup(2);
     const a = await engine.play(effect("a"));

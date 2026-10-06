@@ -100,6 +100,7 @@ export function createDb(options = {}) {
       if (indexed !== undefined) return indexed;
       if (thumbnailCache.has(file)) return thumbnailCache.get(file);
       let found = null;
+      let transient = false;
       for (const candidate of thumbnailCandidates(file)) {
         try {
           const response = await fetch(candidate, { method: "HEAD" });
@@ -107,11 +108,14 @@ export function createDb(options = {}) {
             found = candidate;
             break;
           }
+          if (response.status >= 500) transient = true;
         } catch {
           // network error: try the next candidate
+          transient = true;
         }
       }
-      thumbnailCache.set(file, found);
+      // Remember hits and definitive misses; a miss caused by a network/server error is retried next time.
+      if (found || !transient) thumbnailCache.set(file, found);
       return found;
     },
 

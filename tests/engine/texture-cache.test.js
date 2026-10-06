@@ -83,6 +83,35 @@ describe("TextureCache", () => {
     const results = await cache.preload(["ok.webm", "bad.webm", "ok.webm"]);
     expect(results.map((r) => r.ok)).toEqual([true, false]);
     await expect(cache.acquire("bad.webm")).rejects.toThrow();
-    expect(cache.stats().failures).toBe(2);
+    // The failure is remembered: no second fetch.
+    expect(cache.stats().failures).toBe(1);
+    expect(cache.stats().inUse).toBe(0);
+  });
+
+  it("retries a failed file only after the failure TTL", async () => {
+    const backend = createFakeBackend({ fail: ["bad.webm"] });
+    let now = 0;
+    const cache = new TextureCache({ backend, failureTtl: 1000, now: () => now });
+    await expect(cache.acquire("bad.webm")).rejects.toThrow("missing bad.webm");
+    now = 999;
+    await expect(cache.acquire("bad.webm")).rejects.toThrow("missing bad.webm");
+    expect(backend.load).toHaveBeenCalledTimes(1);
+    now = 1000;
+    await expect(cache.acquire("bad.webm")).rejects.toThrow();
+    expect(backend.load).toHaveBeenCalledTimes(2);
+    expect(cache.size).toBe(0);
+  });
+
+  it("drainPools frees idle instances but keeps prototypes", async () => {
+    const backend = createFakeBackend();
+    const cache = new TextureCache({ backend });
+    cache.release(await cache.acquire("x.webm"));
+    expect(backend.live.size).toBe(1);
+    cache.drainPools();
+    expect(backend.live.size).toBe(0);
+    expect(cache.has("x.webm")).toBe(true);
+    expect(backend.unload).not.toHaveBeenCalled();
+    await cache.acquire("x.webm");
+    expect(backend.load).toHaveBeenCalledTimes(1);
   });
 });

@@ -109,6 +109,10 @@ export class EffectSprite {
     this.isScreen = descriptor.layer === LAYERS.SCREEN;
     this.visionCheckAt = -Infinity;
     this.visionResult = true;
+    // Ids of the tokens the effect is anchored to (not the attachTo token), deduplicated once instead of every tick.
+    this.anchorIds = [
+      ...new Set([descriptor.atLocation?.tokenId, descriptor.stretchTo?.tokenId, descriptor.rotateTowards?.tokenId])
+    ].filter(Boolean);
     // Database files follow the JB2A grid convention; direct URLs (and screen effects) are drawn at native size.
     this.template = !this.isScreen && (resolved?.template || resolved?.path) ? templateOf(resolved) : null;
   }
@@ -212,8 +216,9 @@ export class EffectSprite {
     const ok = d.stretchTo ? this.#refreshStretch(pos, env) : this.#refreshPlaced(pos, env);
     if (!ok) return false;
     this.display.alpha = (d.opacity ?? 1) * env.alpha;
-    this.#refreshDepth();
-    this.display.visible = this.#isVisible(pos);
+    const tokens = this.#anchorTokens();
+    this.#refreshDepth(tokens);
+    this.display.visible = this.#isVisible(pos, tokens);
     return true;
   }
 
@@ -291,33 +296,32 @@ export class EffectSprite {
 
   /** Tokens the effect is anchored to (not the attachTo token). */
   #anchorTokens() {
-    const d = this.descriptor;
-    const ids = [d.atLocation?.tokenId, d.stretchTo?.tokenId, d.rotateTowards?.tokenId];
-    return [...new Set(ids.filter(Boolean))].map((id) => this.#token(id)).filter(Boolean);
+    const tokens = [];
+    for (const id of this.anchorIds) {
+      const token = this.#token(id);
+      if (token) tokens.push(token);
+    }
+    return tokens;
   }
 
-  #refreshDepth() {
+  #refreshDepth(tokens) {
     if (this.display.svaGroup !== "primary") return;
     const d = this.descriptor;
-    const tokens = this.#anchorTokens();
+    const elevations = tokens.map((t) => t.document?.elevation);
     const host = this.#hostToken();
-    if (host && !tokens.includes(host)) tokens.push(host);
-    const elevation = effectElevation({
-      layer: d.layer,
-      base: this.ctx.levelBase(),
-      tokenElevations: tokens.map((t) => t.document?.elevation)
-    });
+    if (host && !tokens.includes(host)) elevations.push(host.document?.elevation);
+    const elevation = effectElevation({ layer: d.layer, base: this.ctx.levelBase(), tokenElevations: elevations });
     this.ctx.layers.setElevation(this.display, elevation);
   }
 
-  #isVisible(pos) {
+  #isVisible(pos, tokens) {
     const d = this.descriptor;
     const attached = d.attachTo?.tokenId ? tokenState(this.#token(d.attachTo.tokenId)) : null;
     return isEffectVisible({
       isGM: this.ctx.isGM(),
       layer: d.layer,
       attached,
-      tokens: this.#anchorTokens().map(tokenState),
+      tokens: tokens.map(tokenState),
       tokenVision: this.ctx.tokenVision(),
       pointVisible: () => {
         if (this.elapsed - this.visionCheckAt >= VISION_TEST_INTERVAL) {

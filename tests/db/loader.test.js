@@ -188,4 +188,29 @@ describe("api.db", () => {
       vi.unstubAllGlobals();
     }
   });
+
+  it("caches definitive thumbnail misses but retries after network or server errors", async () => {
+    resetFoundryMock({ modules: [{ id: "jb2a_patreon", api: { patreonDatabase: loadFixture() } }] });
+    const fetch = vi.fn(async () => {
+      throw new TypeError("Failed to fetch");
+    });
+    vi.stubGlobal("fetch", fetch);
+    try {
+      const db = createDb(FAST);
+      const file = "modules/x/Thing_10x10.webm";
+      await expect(db.findThumbnail(file)).resolves.toBeNull();
+      fetch.mockImplementation(async () => ({ ok: false, status: 503 }));
+      await expect(db.findThumbnail(file)).resolves.toBeNull();
+      fetch.mockImplementation(async (url) => ({ ok: true, status: 200, url }));
+      await expect(db.findThumbnail(file)).resolves.toMatch(/Thumb/);
+      // Definitive 404s are remembered.
+      fetch.mockImplementation(async () => ({ ok: false, status: 404 }));
+      await expect(db.findThumbnail("modules/x/Other_10x10.webm")).resolves.toBeNull();
+      const calls = fetch.mock.calls.length;
+      await db.findThumbnail("modules/x/Other_10x10.webm");
+      expect(fetch.mock.calls.length).toBe(calls);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 });

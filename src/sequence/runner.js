@@ -65,8 +65,15 @@ export async function runSequence(sequence, deps) {
           await task;
           await sleep(step.waitUntilFinished);
         } else pending.push(task);
-      } else if (step.type === "effect") await runEffect(step, sequence, { engine, userId, filterEffect });
-      else log.debug(`Unknown sequence step "${step.type}"`);
+      } else if (step.type === "effect") {
+        const task = runEffect(step, sequence, { engine, userId, filterEffect });
+        if (step.waitUntilFinished !== undefined && step.waitUntilFinished !== null) await task;
+        else {
+          // engine.play() resolves only after the file loads and the effect's delay elapses: don't block the next step
+          // on it (`.delay()` staggers effects in parallel, see docs/api.md).
+          pending.push(task.catch((err) => log.error(`Sequence ${sequence.id} step failed`, err)));
+        }
+      } else log.debug(`Unknown sequence step "${step.type}"`);
     } catch (err) {
       log.error(`Sequence ${sequence.id} step failed`, err);
     }
@@ -111,8 +118,9 @@ async function runEffect(step, sequence, { engine, userId, filterEffect }) {
     return;
   }
   // Negative offset: continue |offset| ms before the end. Only possible when the length is known.
+  // engine.play() resolves once the effect is mounted, i.e. after its delay: the remaining time is just the duration.
   if (Number.isFinite(effect.duration)) {
-    await Promise.race([handle?.finished, sleep((effect.delay ?? 0) + effect.duration + offset)]);
+    await Promise.race([handle?.finished, sleep(effect.duration + offset)]);
   } else {
     // EffectHandle.duration (wall ms) is set by the engine once the video length is known.
     const known = Number(handle?.duration);

@@ -3,6 +3,7 @@ import { expandFlat, parseList, readFormElements } from "../../src/ui/models/for
 import {
   emptyRecipe,
   formToRecipe,
+  jsonFieldError,
   presetChoices,
   presetStages,
   recipeToFormModel,
@@ -182,5 +183,54 @@ describe("resolution summary", () => {
     expect(s.candidates[0]).toMatchObject({ id: "w1", winner: true, reason: "key, type" });
     expect(s.candidates[1]).toMatchObject({ matched: false, reason: "no generic match" });
     expect(summarizeResolution({ result: null, candidates: [], reasons: [] })).toMatchObject({ found: false });
+  });
+
+  it("checks JSON textareas live", () => {
+    expect(jsonFieldError("")).toBeNull();
+    expect(jsonFieldError('{"a": 1}')).toBeNull();
+    expect(jsonFieldError("[1, 2]")).toBeNull();
+    expect(jsonFieldError("{a:")).toBeTruthy();
+    expect(jsonFieldError("[1]", { object: true })).toMatch(/object/);
+    expect(jsonFieldError("3", { object: true })).toMatch(/object/);
+    expect(jsonFieldError("null", { object: true })).toMatch(/object/);
+    expect(jsonFieldError('{"a": 1}', { object: true })).toBeNull();
+  });
+
+  it("marks invalid JSON textareas and clears the mark once fixed", async () => {
+    const { validateJsonField, validateJsonFields } = await import("../../src/ui/apps/recipe-editor.js");
+    const classes = new Set();
+    const attrs = new Map();
+    const hint = {
+      hidden: true,
+      textContent: "",
+      id: "x-error",
+      classList: { contains: (c) => c === "sva-json-error" }
+    };
+    const field = {
+      value: "{oops",
+      dataset: {},
+      nextElementSibling: hint,
+      classList: { toggle: (c, on) => (on ? classes.add(c) : classes.delete(c)) },
+      setAttribute: (k, v) => attrs.set(k, v),
+      removeAttribute: (k) => attrs.delete(k)
+    };
+    expect(validateJsonField(field)).toBe(false);
+    expect(classes.has("sva-invalid")).toBe(true);
+    expect(attrs.get("aria-invalid")).toBe("true");
+    expect(attrs.get("aria-describedby")).toBe("x-error");
+    expect(hint.hidden).toBe(false);
+    expect(hint.textContent).toBe("SVA.UI.Recipe.JsonInvalid");
+
+    field.value = "[1]";
+    field.dataset.svaJson = "object";
+    expect(validateJsonFields({ querySelectorAll: () => [field] })).toBe(false);
+
+    field.value = '{"ok": true}';
+    expect(validateJsonField(field)).toBe(true);
+    expect(classes.has("sva-invalid")).toBe(false);
+    expect(attrs.has("aria-invalid")).toBe(false);
+    expect(attrs.has("aria-describedby")).toBe(false);
+    expect(hint.hidden).toBe(true);
+    expect(validateJsonFields(null)).toBe(true);
   });
 });

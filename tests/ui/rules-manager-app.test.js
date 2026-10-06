@@ -66,4 +66,108 @@ describe("rules manager app", () => {
     const context = await api.ui.openRulesManager()._prepareContext({});
     expect(context.unavailable).toBe(true);
   });
+
+  it("filters and sorts the rules list", async () => {
+    const rules = createRulesApi([
+      { id: "a", label: "Zap", priority: 1, enabled: true, match: { key: "zap" }, recipe: { preset: "melee" } },
+      { id: "b", label: "Arrow", priority: 9, enabled: true, match: { weaponGroup: "bow" }, recipe: {} }
+    ]);
+    const api = { automation: { rules, presets: {} } };
+    await load(api);
+    const app = api.ui.openRulesManager();
+    let context = await app._prepareContext({});
+    expect(context).toMatchObject({ noQuery: true, state: { query: "", sort: "priority" } });
+    expect(Object.keys(context.sorts)).toEqual(["priority", "label", "id"]);
+    expect(context.ruleIdPrefix).toBe(`${app.id}-rule`);
+    app.viewState.sort = "id";
+    expect((await app._prepareContext({})).rows.map((r) => r.id)).toEqual(["a", "b"]);
+    app.viewState.query = "bow";
+    context = await app._prepareContext({});
+    expect(context.rows.map((r) => r.id)).toEqual(["b"]);
+    app.viewState.query = "nothing";
+    context = await app._prepareContext({});
+    expect(context.rows).toEqual([]);
+    expect(context.emptyKey).toBe("SVA.UI.Rules.NoMatches");
+  });
+
+  it("asks before discarding unsaved edits", async () => {
+    const rules = createRulesApi([
+      { id: "a", label: "A", priority: 1, enabled: true, match: { key: "a" }, recipe: { preset: "melee" } },
+      { id: "b", label: "B", priority: 2, enabled: true, match: { key: "b" }, recipe: { preset: "melee" } }
+    ]);
+    const api = { automation: { rules, presets: {} } };
+    await load(api);
+    const app = api.ui.openRulesManager();
+    await app._prepareContext({});
+    const actions = app.constructor.DEFAULT_OPTIONS.actions;
+    const row = (id) => ({ closest: () => ({ dataset: { ruleId: id } }) });
+    const dialog = globalThis.foundry.applications.api.DialogV2.confirm;
+
+    await actions.editRule.call(app, {}, row("a"));
+    expect(app.editing.rule.id).toBe("a");
+    // Clean form: switching needs no confirmation.
+    await actions.editRule.call(app, {}, row("b"));
+    expect(dialog).not.toHaveBeenCalled();
+    expect(app.editing.rule.id).toBe("b");
+
+    app.dirty = true;
+    dialog.mockResolvedValueOnce(false);
+    await actions.editRule.call(app, {}, row("a"));
+    expect(dialog).toHaveBeenCalledTimes(1);
+    expect(app.editing.rule.id).toBe("b");
+
+    // Same rule again: keep the edits, no question.
+    await actions.editRule.call(app, {}, row("b"));
+    expect(dialog).toHaveBeenCalledTimes(1);
+
+    dialog.mockResolvedValueOnce(false);
+    await actions.addRule.call(app);
+    expect(app.editing.isNew).toBe(false);
+    dialog.mockResolvedValueOnce(false);
+    await actions.cancelEdit.call(app);
+    expect(app.editing).not.toBeNull();
+
+    dialog.mockResolvedValueOnce(true);
+    await actions.addRule.call(app);
+    expect(app.editing.isNew).toBe(true);
+    expect(app.dirty).toBe(false);
+    await actions.cancelEdit.call(app);
+    expect(app.editing).toBeNull();
+    expect(dialog).toHaveBeenCalledTimes(4);
+  });
+
+  it("refuses to save a rule without a match criterion", async () => {
+    const rules = createRulesApi([]);
+    const api = { automation: { rules, presets: {} } };
+    await load(api);
+    const app = api.ui.openRulesManager();
+    const listeners = {};
+    const fire = (type, event = {}) => listeners[type]?.forEach((fn) => fn(event));
+    const form = {
+      dataset: {},
+      elements: [
+        { name: "rule.label", value: "No match" },
+        { name: "rule.match.key", value: "" },
+        { name: "recipe.preset", value: "melee" }
+      ],
+      addEventListener: (type, fn) => (listeners[type] ??= []).push(fn),
+      querySelectorAll: () => []
+    };
+    const { setFakeElement } = await import("./helpers/fake-foundry.js");
+    setFakeElement(app, { querySelector: (sel) => (sel === "form.sva-rule-form" ? form : null) });
+    await app.constructor.DEFAULT_OPTIONS.actions.addRule.call(app);
+    app._onRender({}, {});
+    fire("submit", { preventDefault: () => {} });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith("SVA.UI.Rules.NeedMatch");
+    expect(rules.save).not.toHaveBeenCalled();
+
+    fire("input", { target: form.elements[0] });
+    expect(app.dirty).toBe(true);
+    form.elements[1].value = "fire";
+    fire("submit", { preventDefault: () => {} });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(rules.save).toHaveBeenCalledWith(expect.objectContaining({ match: { key: "fire" } }));
+    expect(app.dirty).toBe(false);
+  });
 });

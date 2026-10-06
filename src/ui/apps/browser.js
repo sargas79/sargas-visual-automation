@@ -69,7 +69,15 @@ export function getBrowserClass() {
     constructor({ onPick, path, ...options } = {}) {
       super(options);
       this.onPick = typeof onPick === "function" ? onPick : null;
-      this.viewState = { query: "", page: 0, selected: null, expanded: new Set(), favourites: false };
+      this.viewState = {
+        query: "",
+        page: 0,
+        selected: null,
+        expanded: new Set(),
+        favourites: false,
+        /** Narrow windows only: show the category tree above the grid. */
+        sidebar: false
+      };
       if (path) this.reveal(path);
     }
 
@@ -89,7 +97,8 @@ export function getBrowserClass() {
         pagePrev: SvaAnimationBrowser.#onPagePrev,
         pageNext: SvaAnimationBrowser.#onPageNext,
         showFavourites: SvaAnimationBrowser.#onShowFavourites,
-        clearSearch: SvaAnimationBrowser.#onClearSearch
+        clearSearch: SvaAnimationBrowser.#onClearSearch,
+        toggleSidebar: SvaAnimationBrowser.#onToggleSidebar
       }
     };
 
@@ -134,6 +143,8 @@ export function getBrowserClass() {
       if (db?.ready && typeof db.ready.then === "function") await db.ready;
       Object.assign(context, {
         query: this.viewState.query,
+        noQuery: !this.viewState.query,
+        sidebarOpen: this.viewState.sidebar ? "true" : "false",
         pickMode: !!this.onPick,
         showFavourites: this.viewState.favourites,
         favouritesClass: this.viewState.favourites ? "sva-toggle sva-active" : "sva-toggle",
@@ -184,6 +195,8 @@ export function getBrowserClass() {
       context.pager = {
         hasPrev: page.hasPrev,
         hasNext: page.hasNext,
+        noPrev: !page.hasPrev,
+        noNext: !page.hasNext,
         label: page.pageCount
           ? t("SVA.UI.Browser.PageOf", { page: page.page + 1, pages: page.pageCount })
           : t("SVA.UI.Browser.Page", { page: page.page + 1 })
@@ -194,10 +207,13 @@ export function getBrowserClass() {
     _onRender(context, options) {
       super._onRender?.(context, options);
       const root = this.element;
+      root.classList?.toggle("sva-sidebar-open", this.viewState.sidebar);
       const input = root.querySelector(".sva-browser-header input[name=query]");
       if (input && !input.dataset.svaBound) {
         input.dataset.svaBound = "1";
         input.addEventListener("input", () => {
+          const clear = root.querySelector(".sva-browser-header [data-action=clearSearch]");
+          if (clear) clear.disabled = !input.value;
           clearTimeout(this.#searchTimer);
           this.#searchTimer = setTimeout(() => {
             this.viewState.query = input.value;
@@ -406,6 +422,13 @@ export function getBrowserClass() {
     static #onClearSearch() {
       Object.assign(this.viewState, { query: "", page: 0 });
       this.render({ parts: ["header", "grid"] });
+    }
+
+    /** Narrow windows: show or hide the category tree (no re-render needed). */
+    static #onToggleSidebar(_event, target) {
+      this.viewState.sidebar = !this.viewState.sidebar;
+      this.element?.classList?.toggle("sva-sidebar-open", this.viewState.sidebar);
+      target?.setAttribute?.("aria-pressed", String(this.viewState.sidebar));
     }
   };
   return BrowserClass;

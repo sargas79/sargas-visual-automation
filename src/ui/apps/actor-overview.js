@@ -128,6 +128,7 @@ export function getActorOverviewClass() {
         toggleTooltip: disabled ? "SVA.UI.Overview.EnableActorHint" : "SVA.UI.Overview.DisableActorHint"
       };
       context.state = this.viewState;
+      context.noQuery = !this.viewState.query;
       context.filters = Object.fromEntries(FILTERS.map((id) => [id, t(`SVA.UI.Overview.Filters.${id}`)]));
       if (!api?.automation?.explain) return Object.assign(context, { unavailable: true, groups: [] });
       this.rows ??= this.buildRows();
@@ -161,6 +162,8 @@ export function getActorOverviewClass() {
       if (input && !input.dataset.svaBound) {
         input.dataset.svaBound = "1";
         input.addEventListener("input", () => {
+          const clear = this.element?.querySelector(".sva-overview-toolbar [data-action=clearSearch]");
+          if (clear) clear.disabled = !input.value;
           clearTimeout(this.#searchTimer);
           this.#searchTimer = setTimeout(() => {
             this.viewState.query = input.value;
@@ -329,10 +332,11 @@ export function getActorOverviewClass() {
       this.render();
     }
 
-    static #onClearSearch() {
+    static #onClearSearch(_event, target) {
       this.viewState.query = "";
       const input = this.element?.querySelector("input[name=query]");
       if (input) input.value = "";
+      if (target) target.disabled = true;
       this.render({ parts: ["list"] });
     }
 

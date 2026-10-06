@@ -24,6 +24,7 @@
         data-action="pickAnimation"
         data-target="recipe.animation"
         data-tooltip="SVA.UI.Recipe.Browse"
+        aria-label="{{localize 'SVA.UI.Recipe.Browse'}}"
       >
         <i class="fa-solid fa-film" inert></i>
       </button>
@@ -35,14 +36,15 @@
     <legend>{{localize "SVA.UI.Recipe.Options"}}</legend>
     {{#each optionFields}}
       <div class="form-group">
-        <label>{{localize label}}</label>
+        <label for="{{@root.idPrefix}}-{{name}}">{{localize label}}</label>
         <div class="form-fields sva-path-field">
           {{#if isCheckbox}}
-            <input type="checkbox" name="{{name}}" {{checked checked}} />
+            <input type="checkbox" id="{{@root.idPrefix}}-{{name}}" name="{{name}}" {{checked checked}} />
           {{/if}}
           {{#if isNumber}}
             <input
               type="number"
+              id="{{@root.idPrefix}}-{{name}}"
               name="{{name}}"
               value="{{value}}"
               min="{{min}}"
@@ -52,27 +54,40 @@
             />
           {{/if}}
           {{#if isText}}
-            <input type="text" name="{{name}}" value="{{value}}" placeholder="{{placeholder}}" />
+            <input
+              type="text"
+              id="{{@root.idPrefix}}-{{name}}"
+              name="{{name}}"
+              value="{{value}}"
+              placeholder="{{placeholder}}"
+            />
           {{/if}}
           {{#if isSelect}}
-            <select name="{{name}}">{{selectOptions options selected=value}}</select>
+            <select id="{{@root.idPrefix}}-{{name}}" name="{{name}}">{{selectOptions options selected=value}}</select>
           {{/if}}
           {{#if isColor}}
-            <color-picker name="{{name}}" value="{{value}}"></color-picker>
+            <color-picker id="{{@root.idPrefix}}-{{name}}" name="{{name}}" value="{{value}}"></color-picker>
           {{/if}}
           {{#if isAnimation}}
-            <input type="text" name="{{name}}" value="{{value}}" placeholder="{{placeholder}}" />
+            <input
+              type="text"
+              id="{{@root.idPrefix}}-{{name}}"
+              name="{{name}}"
+              value="{{value}}"
+              placeholder="{{placeholder}}"
+            />
             <button
               type="button"
               data-action="pickAnimation"
               data-target="{{name}}"
               data-tooltip="SVA.UI.Recipe.Browse"
+              aria-label="{{localize 'SVA.UI.Recipe.Browse'}}"
             >
               <i class="fa-solid fa-film" inert></i>
             </button>
           {{/if}}
           {{#if isJson}}
-            <textarea name="{{name}}" rows="3" class="sva-json">{{value}}</textarea>
+            <textarea id="{{@root.idPrefix}}-{{name}}" name="{{name}}" rows="3" class="sva-json">{{value}}</textarea>
           {{/if}}
         </div>
         {{#if hint}}<p class="hint">{{localize hint}}</p>{{/if}}
@@ -81,8 +96,15 @@
       <p class="hint">{{localize "SVA.UI.Recipe.NoSchema"}}</p>
     {{/each}}
     <div class="form-group stacked">
-      <label>{{localize "SVA.UI.Recipe.OptionsExtra"}}</label>
-      <textarea name="recipe.optionsExtra" rows="3" class="sva-json" placeholder="{}">{{optionsExtra}}</textarea>
+      <label for="{{idPrefix}}-options-extra">{{localize "SVA.UI.Recipe.OptionsExtra"}}</label>
+      <textarea
+        id="{{idPrefix}}-options-extra"
+        name="recipe.optionsExtra"
+        rows="3"
+        class="sva-json"
+        data-sva-json="object"
+        placeholder="{}"
+      >{{optionsExtra}}</textarea>
       <p class="hint">{{localize "SVA.UI.Recipe.OptionsExtraHint"}}</p>
     </div>
   </fieldset>
@@ -93,20 +115,28 @@
     <p class="hint">{{localize "SVA.UI.Recipe.StagesHint"}}</p>
     {{#each stages}}
       <div class="sva-subrecipe">
-        <label class="sva-subrecipe-label">{{localize labelKey}}</label>
+        <label class="sva-subrecipe-label" for="{{@root.idPrefix}}-stages-{{key}}">{{localize labelKey}}</label>
         <div class="form-fields sva-path-field">
-          <input type="text" name="recipe.stages.{{key}}.animation" value="{{animation}}" placeholder="jb2a.…" />
+          <input
+            type="text"
+            id="{{@root.idPrefix}}-stages-{{key}}"
+            name="recipe.stages.{{key}}.animation"
+            value="{{animation}}"
+            placeholder="jb2a.…"
+          />
           <button
             type="button"
             data-action="pickAnimation"
             data-target="recipe.stages.{{key}}.animation"
             data-tooltip="SVA.UI.Recipe.Browse"
+            aria-label="{{localize 'SVA.UI.Recipe.Browse'}}"
           >
             <i class="fa-solid fa-film" inert></i>
           </button>
         </div>
         <textarea
           name="recipe.stages.{{key}}.options"
+          aria-label="{{localize labelKey}} — {{localize 'SVA.UI.Recipe.OptionsJson'}}"
           rows="2"
           class="sva-json"
           placeholder="{{localize 'SVA.UI.Recipe.OptionsJson'}}"
@@ -121,20 +151,28 @@
     <p class="hint">{{localize "SVA.UI.Recipe.OutcomesHint"}}</p>
     {{#each outcomes}}
       <div class="sva-subrecipe">
-        <label class="sva-subrecipe-label">{{localize labelKey}}</label>
+        <label class="sva-subrecipe-label" for="{{@root.idPrefix}}-outcomes-{{key}}">{{localize labelKey}}</label>
         <div class="form-fields sva-path-field">
-          <input type="text" name="recipe.outcomes.{{key}}.animation" value="{{animation}}" placeholder="jb2a.…" />
+          <input
+            type="text"
+            id="{{@root.idPrefix}}-outcomes-{{key}}"
+            name="recipe.outcomes.{{key}}.animation"
+            value="{{animation}}"
+            placeholder="jb2a.…"
+          />
           <button
             type="button"
             data-action="pickAnimation"
             data-target="recipe.outcomes.{{key}}.animation"
             data-tooltip="SVA.UI.Recipe.Browse"
+            aria-label="{{localize 'SVA.UI.Recipe.Browse'}}"
           >
             <i class="fa-solid fa-film" inert></i>
           </button>
         </div>
         <textarea
           name="recipe.outcomes.{{key}}.options"
+          aria-label="{{localize labelKey}} — {{localize 'SVA.UI.Recipe.OptionsJson'}}"
           rows="2"
           class="sva-json"
           placeholder="{{localize 'SVA.UI.Recipe.OptionsJson'}}"
@@ -146,29 +184,39 @@
   <details class="sva-section">
     <summary>{{localize "SVA.UI.Recipe.SoundTitle"}}</summary>
     <div class="form-group">
-      <label>{{localize "SVA.UI.Recipe.SoundFile"}}</label>
-      <div class="form-fields">
-        <input type="text" name="recipe.sound.file" value="{{sound.file}}" />
+      <label for="{{idPrefix}}-sound-file">{{localize "SVA.UI.Recipe.SoundFile"}}</label>
+      <div class="form-fields sva-path-field">
+        <input type="text" id="{{idPrefix}}-sound-file" name="recipe.sound.file" value="{{sound.file}}" />
         <button
           type="button"
           data-action="pickSound"
           data-target="recipe.sound.file"
           data-tooltip="SVA.UI.Recipe.BrowseSound"
+          aria-label="{{localize 'SVA.UI.Recipe.BrowseSound'}}"
         >
           <i class="fa-solid fa-file-audio" inert></i>
         </button>
       </div>
     </div>
     <div class="form-group">
-      <label>{{localize "SVA.UI.Recipe.SoundVolume"}}</label>
+      <label for="{{idPrefix}}-sound-volume">{{localize "SVA.UI.Recipe.SoundVolume"}}</label>
       <div class="form-fields">
-        <input type="number" name="recipe.sound.volume" value="{{sound.volume}}" min="0" max="1" step="0.05" />
+        <input
+          type="number"
+          id="{{idPrefix}}-sound-volume"
+          name="recipe.sound.volume"
+          value="{{sound.volume}}"
+          min="0"
+          max="1"
+          step="0.05"
+        />
       </div>
     </div>
     <div class="form-group">
-      <label>{{localize "SVA.UI.Recipe.SoundDelay"}}</label>
+      <label for="{{idPrefix}}-sound-delay">{{localize "SVA.UI.Recipe.SoundDelay"}}</label>
       <div class="form-fields"><input
           type="number"
+          id="{{idPrefix}}-sound-delay"
           name="recipe.sound.delay"
           value="{{sound.delay}}"
           min="0"

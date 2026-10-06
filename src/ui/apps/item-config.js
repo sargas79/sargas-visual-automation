@@ -12,8 +12,16 @@ import {
 } from "../context.js";
 import { cloneJson } from "../models/form-utils.js";
 import { summarizeResolution } from "../models/explain-model.js";
+import { itemDisableToggle } from "../models/item-config-model.js";
 import { itemUpdateAction, isSameItem } from "../models/item-sync.js";
-import { pickAnimationInto, pickFileInto, readRecipe, renderRecipeForm } from "./recipe-editor.js";
+import {
+  bindJsonValidation,
+  pickAnimationInto,
+  pickFileInto,
+  readRecipe,
+  renderRecipeForm,
+  validateJsonFields
+} from "./recipe-editor.js";
 
 let ItemConfigClass = null;
 const openWindows = new Map();
@@ -69,7 +77,8 @@ export function getItemConfigClass() {
         useMatched: SvaItemConfig.#onUseMatched,
         pickSound: SvaItemConfig.#onPickSound,
         reloadItem: SvaItemConfig.#onReloadItem,
-        dismissStale: SvaItemConfig.#onDismissStale
+        dismissStale: SvaItemConfig.#onDismissStale,
+        toggleItemDisabled: SvaItemConfig.#onToggleItemDisabled
       }
     };
 
@@ -106,6 +115,7 @@ export function getItemConfigClass() {
         hasCustom: !!stored,
         noCustom: !stored,
         disabled: isItemDisabled(this.item),
+        toggle: itemDisableToggle(isItemDisabled(this.item)),
         resolution: summarizeResolution(resolution),
         canUseMatched: !!matched,
         stale: this.stale,
@@ -117,6 +127,7 @@ export function getItemConfigClass() {
       super._onFirstRender?.(context, options);
       // The root <form> survives re-renders, so bind once.
       this.element.addEventListener("change", (event) => this.#onChange(event));
+      bindJsonValidation(this.element);
       this.#watchItem();
     }
 
@@ -126,6 +137,7 @@ export function getItemConfigClass() {
         this.baseline = this.#readForm();
         this.#syncBaseline = false;
       }
+      validateJsonFields(this.element);
     }
 
     /** Recipe currently in the form (the draft when the form can't be read). */
@@ -194,13 +206,8 @@ export function getItemConfigClass() {
     }
 
     /** Keep the draft in sync; re-render when the preset (and so the option fields) changes. */
-    async #onChange(event) {
+    #onChange(event) {
       const target = event.target;
-      if (target?.name === "itemDisabled") {
-        await this.#write(() => getApi()?.automation?.setItemDisabled?.(this.item, target.checked));
-        notify("info", target.checked ? "SVA.UI.ItemConfig.DisabledOn" : "SVA.UI.ItemConfig.DisabledOff");
-        return this.render();
-      }
       this.draft = readRecipe(this.element, this.draft).recipe;
       if (target?.hasAttribute?.("data-sva-rerender")) this.render();
     }
@@ -262,6 +269,25 @@ export function getItemConfigClass() {
       if (!pickFileInto(this.element, target.dataset.target, { type: "audio" })) {
         notify("warn", "SVA.UI.Recipe.NoFilePicker");
       }
+    }
+
+    /**
+     * Turn automation of the item off/on right away (like the overview's row toggle);
+     * unsaved recipe edits stay in the form.
+     */
+    static async #onToggleItemDisabled() {
+      const automation = getApi()?.automation;
+      if (!automation?.setItemDisabled) return notify("warn", "SVA.UI.ItemConfig.NoAutomation");
+      const disabled = !isItemDisabled(this.item);
+      this.draft = this.#readForm();
+      try {
+        await this.#write(() => automation.setItemDisabled(this.item, disabled));
+      } catch (err) {
+        log.error("Could not change the item's automation flag", err);
+        return notify("error", "SVA.UI.ItemConfig.SaveFailed");
+      }
+      notify("info", disabled ? "SVA.UI.ItemConfig.DisabledOn" : "SVA.UI.ItemConfig.DisabledOff");
+      this.render();
     }
 
     /** Discard unsaved edits and load the item's current recipe. */

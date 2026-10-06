@@ -1,5 +1,31 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **Buttons no longer clip their text.** One consistent button style across every window: icon buttons are centred squares, text buttons size to their label, and toolbars and footers wrap instead of cutting labels off in narrow windows. The sound browse button matches the other browse buttons.
+- **Item editor:** the disable switch is now a button that applies at once, like the one in the animation overview, and keeps unsaved edits.
+- **Rules manager:** search and sort the rule list, a warning before unsaved edits are discarded, and a rule needs at least one match criterion to save.
+- **JSON option fields** are checked as you type and highlighted when invalid.
+- **Animation browser:** the clear-search button no longer jumps in and out, the play hint moved to an info icon, and in narrow windows the folder tree folds behind a button. The rules manager stacks its columns in narrow windows.
+- Icon-only buttons have accessible labels; form labels are linked to their fields.
+- Textures stay cached across scene changes, so coming back to a scene no longer downloads its animations again. Failed loads are retried after a minute instead of on every play.
+
+### Fixed
+
+- Effects of a sequence no longer wait for the previous effect to load and finish its delay: multi-target projectiles fire in order with their stagger, and impacts no longer pile up their delays. A negative `waitUntilFinished` no longer counts the effect's delay twice.
+- Unloading a cached animation no longer breaks a tile, token or scene image that uses the same file.
+- Players below the minimum trigger role no longer get a warning on every attack or cast.
+- D&D 5e: effects enabled after they were created now animate, and end when disabled again.
+- An effect ended while it was still being stored no longer comes back on reload.
+
+### Security
+
+- Socket messages whose sender the server did not confirm never get GM rights: no teleporting other players' tokens and no clearing scenes by impersonating a GM.
+- Persistent effects remember who created them; only that user or a GM can replace or remove them, and only a GM can clear a scene's effects. Writes to unknown scenes are dropped.
+- Preload messages are role-checked and limited to 50 files.
+
 ## 0.5.0 - 2026-10-05
 
 ### Added

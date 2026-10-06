@@ -59,6 +59,7 @@
                   class="sva-icon-button"
                   data-action="preview"
                   data-tooltip="SVA.UI.Overview.Preview"
+                  aria-label="{{localize 'SVA.UI.Overview.Preview'}}"
                   {{disabled view.noPreview}}
                 >
                   <i class="fa-solid fa-play" inert></i>
@@ -69,10 +70,17 @@
                     class="sva-icon-button"
                     data-action="change"
                     data-tooltip="SVA.UI.Overview.Change"
+                    aria-label="{{localize 'SVA.UI.Overview.Change'}}"
                   >
                     <i class="fa-solid fa-film" inert></i>
                   </button>
-                  <button type="button" class="sva-icon-button" data-action="edit" data-tooltip="SVA.UI.Overview.Edit">
+                  <button
+                    type="button"
+                    class="sva-icon-button"
+                    data-action="edit"
+                    data-tooltip="SVA.UI.Overview.Edit"
+                    aria-label="{{localize 'SVA.UI.Overview.Edit'}}"
+                  >
                     <i class="fa-solid fa-sliders" inert></i>
                   </button>
                   <button
@@ -80,6 +88,7 @@
                     class="sva-icon-button"
                     data-action="reset"
                     data-tooltip="SVA.UI.Overview.Reset"
+                    aria-label="{{localize 'SVA.UI.Overview.Reset'}}"
                     {{disabled view.noReset}}
                   >
                     <i class="fa-solid fa-rotate-left" inert></i>
@@ -89,6 +98,7 @@
                     class="{{view.toggleClass}}"
                     data-action="toggleDisabled"
                     data-tooltip="{{view.toggleTooltip}}"
+                    aria-label="{{localize view.toggleTooltip}}"
                     aria-pressed="{{view.pressed}}"
                   >
                     <i class="fa-solid {{view.toggleIcon}}" inert></i>

@@ -105,6 +105,7 @@ describe("actor animation overview app", () => {
     });
     expect(context.groups[1].rows[0]).toMatchObject({ name: "Sword", found: false, source: "none" });
     expect(context.counts).toEqual({ total: 2, animated: 1, none: 1, disabled: 0 });
+    expect(context.noQuery).toBe(true);
 
     app.viewState.showAll = true;
     const all = await app._prepareContext({});

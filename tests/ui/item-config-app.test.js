@@ -61,6 +61,40 @@ describe("item recipe editor app", () => {
     expect(app.draft.animation).toBe("jb2a.own");
   });
 
+  it("turns automation off and on instantly from the header toggle, keeping unsaved edits", async () => {
+    const automation = createAutomation({ stored: { version: 1, preset: "ranged", animation: "jb2a.own" } });
+    const edited = { ...item, uuid: "Item.toggle", flags: {} };
+    automation.setItemDisabled.mockImplementation(async (target, disabled) => {
+      target.flags = { "sargas-visual-automation": { disabled } };
+    });
+    const api = { automation };
+    await load(api);
+    const app = api.ui.openItemConfig(edited);
+    const fields = [
+      { name: "recipe.preset", value: "ranged" },
+      { name: "recipe.animation", value: "jb2a.own" }
+    ];
+    setFakeElement(app, { addEventListener: vi.fn(), elements: fields });
+    let context = await app._prepareContext({});
+    expect(context.toggle).toMatchObject({
+      disabled: false,
+      pressed: "false",
+      label: "SVA.UI.ItemConfig.Disabled",
+      icon: "fa-toggle-on"
+    });
+    fields[1].value = "jb2a.unsaved";
+    const toggle = app.constructor.DEFAULT_OPTIONS.actions.toggleItemDisabled;
+    await toggle.call(app, {}, null);
+    expect(automation.setItemDisabled).toHaveBeenCalledWith(edited, true);
+    expect(globalThis.ui.notifications.info).toHaveBeenCalledWith("SVA.UI.ItemConfig.DisabledOn");
+    expect(app.draft.animation).toBe("jb2a.unsaved");
+    expect(automation.setItemRecipe).not.toHaveBeenCalled();
+    context = await app._prepareContext({});
+    expect(context.toggle).toMatchObject({ disabled: true, pressed: "true", label: "SVA.UI.ItemConfig.Enable" });
+    await toggle.call(app, {}, null);
+    expect(automation.setItemDisabled).toHaveBeenLastCalledWith(edited, false);
+  });
+
   it("follows updates of its item and unregisters the hooks on close", async () => {
     const hooks = new Map();
     let nextId = 1;

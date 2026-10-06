@@ -4,7 +4,7 @@
     <div class="sva-item-title">
       <h2>{{actor.name}}</h2>
       {{#if counts}}
-        <span class="sva-muted">
+        <span class="sva-muted sva-overview-counts">
           {{localize
             "SVA.UI.Overview.Counts"
             total=counts.total
@@ -30,7 +30,7 @@
         data-tooltip="{{actor.toggleTooltip}}"
       >
         <i class="fa-solid {{actor.toggleIcon}}" inert></i>
-        {{localize actor.toggleLabel}}
+        <span>{{localize actor.toggleLabel}}</span>
       </button>
     {{/if}}
   </div>
@@ -46,7 +46,14 @@
         autocomplete="off"
       />
     </label>
-    <button type="button" class="sva-icon-button" data-action="clearSearch" data-tooltip="SVA.UI.Browser.ClearSearch">
+    <button
+      type="button"
+      class="sva-icon-button"
+      data-action="clearSearch"
+      data-tooltip="SVA.UI.Browser.ClearSearch"
+      aria-label="{{localize 'SVA.UI.Browser.ClearSearch'}}"
+      {{disabled noQuery}}
+    >
       <i class="fa-solid fa-xmark" inert></i>
     </button>
     <select name="filter" aria-label="{{localize 'SVA.UI.Overview.Filter'}}">

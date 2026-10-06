@@ -16,15 +16,25 @@ import { summarizeResolution } from "../models/explain-model.js";
 import {
   duplicateRule,
   formToRule,
+  hasMatchCriterion,
   inspectImport,
   newRule,
+  RULE_SORTS,
   ruleRows,
   ruleToFormModel,
   toExportText
 } from "../models/rules-model.js";
-import { getPresets, pickAnimationInto, pickFileInto, renderRecipeForm } from "./recipe-editor.js";
+import {
+  bindJsonValidation,
+  getPresets,
+  pickAnimationInto,
+  pickFileInto,
+  renderRecipeForm,
+  validateJsonFields
+} from "./recipe-editor.js";
 
 export const EXPORT_FILENAME = "sva-world-rules.json";
+const SEARCH_DEBOUNCE_MS = 150;
 
 let RulesManagerClass = null;
 let sharedManager = null;
@@ -50,7 +60,13 @@ export function getRulesManagerClass() {
       /** Last match-tester result. */
       this.test = null;
       this.rules = [];
+      /** Rules list search + sort. */
+      this.viewState = { query: "", sort: "priority" };
+      /** The editor form has edits that are not saved yet. */
+      this.dirty = false;
     }
+
+    #searchTimer = null;
 
     static DEFAULT_OPTIONS = {
       id: "sva-rules-manager",
@@ -69,11 +85,13 @@ export function getRulesManagerClass() {
         importRules: SvaRulesManager.#onImportClick,
         pickAnimation: SvaRulesManager.#onPickAnimation,
         pickSound: SvaRulesManager.#onPickSound,
-        clearTest: SvaRulesManager.#onClearTest
+        clearTest: SvaRulesManager.#onClearTest,
+        clearSearch: SvaRulesManager.#onClearSearch
       }
     };
 
     static PARTS = {
+      toolbar: { template: templatePath("rules/toolbar.hbs") },
       list: { template: templatePath("rules/list.hbs"), scrollable: [".sva-rules-scroll"] },
       editor: { template: templatePath("rules/editor.hbs"), scrollable: [".sva-rule-form"] }
     };
@@ -81,6 +99,12 @@ export function getRulesManagerClass() {
     async _prepareContext(options) {
       const context = await super._prepareContext(options);
       const rules = rulesApi();
+      Object.assign(context, {
+        state: this.viewState,
+        noQuery: !this.viewState.query,
+        sorts: Object.fromEntries(RULE_SORTS.map((id) => [id, t(`SVA.UI.Rules.Sorts.${id}`)])),
+        ruleIdPrefix: `${this.id}-rule`
+      });
       if (!rules) return Object.assign(context, { unavailable: true, rows: [] });
       try {
         this.rules = (await rules.list()) ?? [];
@@ -89,7 +113,8 @@ export function getRulesManagerClass() {
         this.rules = [];
       }
       Object.assign(context, {
-        rows: ruleRows(this.rules),
+        rows: ruleRows(this.rules, this.viewState),
+        emptyKey: this.rules.length ? "SVA.UI.Rules.NoMatches" : "SVA.UI.Rules.Empty",
         editingId: this.editing?.rule?.id ?? null,
         test: this.test
       });
@@ -112,9 +137,37 @@ export function getRulesManagerClass() {
           event.preventDefault();
           this.#saveForm(form);
         });
+        form.addEventListener("input", () => {
+          this.dirty = true;
+        });
         form.addEventListener("change", (event) => {
+          this.dirty = true;
           this.editing.rule = this.#readForm(form).rule;
           if (event.target?.hasAttribute?.("data-sva-rerender")) this.render({ parts: ["editor"] });
+        });
+        bindJsonValidation(form);
+      }
+      if (form) validateJsonFields(form);
+
+      const search = root.querySelector("input[name=ruleQuery]");
+      if (search && !search.dataset.svaBound) {
+        search.dataset.svaBound = "1";
+        search.addEventListener("input", () => {
+          const clear = root.querySelector(".sva-rules-toolbar [data-action=clearSearch]");
+          if (clear) clear.disabled = !search.value;
+          clearTimeout(this.#searchTimer);
+          this.#searchTimer = setTimeout(() => {
+            this.viewState.query = search.value;
+            this.render({ parts: ["list"] });
+          }, SEARCH_DEBOUNCE_MS);
+        });
+      }
+      const sort = root.querySelector("select[name=ruleSort]");
+      if (sort && !sort.dataset.svaBound) {
+        sort.dataset.svaBound = "1";
+        sort.addEventListener("change", () => {
+          this.viewState.sort = sort.value;
+          this.render({ parts: ["list"] });
         });
       }
 
@@ -148,8 +201,26 @@ export function getRulesManagerClass() {
       });
     }
 
+    /** Start editing a rule (or stop, with null) and forget the unsaved-edits flag. */
+    #setEditing(editing) {
+      this.editing = editing;
+      this.dirty = false;
+    }
+
+    /**
+     * Ask before throwing away unsaved edits of the editor form.
+     * @returns {Promise<boolean>} true when it is fine to replace the editor content
+     */
+    async confirmDiscard() {
+      if (!this.editing || !this.dirty) return true;
+      return confirm("SVA.UI.Rules.UnsavedTitle", "SVA.UI.Rules.UnsavedConfirm", {
+        label: this.editing.rule?.label || this.editing.rule?.id || t("SVA.UI.Rules.NewRule")
+      });
+    }
+
     async #saveForm(form) {
       const { rule, errors } = this.#readForm(form);
+      if (!hasMatchCriterion(rule.match)) return notify("warn", "SVA.UI.Rules.NeedMatch");
       if (errors.length) return notify("error", "SVA.UI.Rules.Invalid", { errors: errors.join("; ") });
       if (this.editing?.isNew && this.rules.some((r) => r.id === rule.id)) {
         return notify("error", "SVA.UI.Rules.DuplicateId", { id: rule.id });
@@ -157,7 +228,7 @@ export function getRulesManagerClass() {
       try {
         await rulesApi().save(rule);
         notify("info", "SVA.UI.Rules.Saved", { label: rule.label });
-        this.editing = { rule, isNew: false };
+        this.#setEditing({ rule, isNew: false });
         this.render();
       } catch (err) {
         log.error("Could not save rule", err);
@@ -194,7 +265,7 @@ export function getRulesManagerClass() {
         // VERIFY(contract): importJSON is assumed to accept the JSON text (string).
         await rulesApi().importJSON(text);
         notify("info", "SVA.UI.Rules.Imported", { count });
-        this.editing = null;
+        this.#setEditing(null);
         this.render();
       } catch (err) {
         log.error("Rule import failed", err);
@@ -207,22 +278,27 @@ export function getRulesManagerClass() {
       return this.rules.find((r) => r.id === id) ?? null;
     }
 
-    static #onAddRule() {
-      this.editing = { rule: newRule(getPresets()), isNew: true };
+    static async #onAddRule() {
+      if (!(await this.confirmDiscard())) return;
+      this.#setEditing({ rule: newRule(getPresets()), isNew: true });
       this.render();
     }
 
-    static #onEditRule(_event, target) {
+    static async #onEditRule(_event, target) {
       const rule = this.#findRule(target);
       if (!rule) return;
-      this.editing = { rule: structuredClone(rule), isNew: false };
+      // Already editing this rule: keep the edits.
+      if (this.dirty && !this.editing?.isNew && this.editing?.rule?.id === rule.id) return;
+      if (!(await this.confirmDiscard())) return;
+      this.#setEditing({ rule: structuredClone(rule), isNew: false });
       this.render();
     }
 
-    static #onDuplicateRule(_event, target) {
+    static async #onDuplicateRule(_event, target) {
       const rule = this.#findRule(target);
       if (!rule) return;
-      this.editing = { rule: duplicateRule(rule, t("SVA.UI.Rules.CopySuffix")), isNew: true };
+      if (!(await this.confirmDiscard())) return;
+      this.#setEditing({ rule: duplicateRule(rule, t("SVA.UI.Rules.CopySuffix")), isNew: true });
       this.render();
     }
 
@@ -234,7 +310,7 @@ export function getRulesManagerClass() {
       });
       if (!ok) return;
       await rulesApi().delete(rule.id);
-      if (this.editing?.rule?.id === rule.id) this.editing = null;
+      if (this.editing?.rule?.id === rule.id) this.#setEditing(null);
       this.render();
     }
 
@@ -245,8 +321,9 @@ export function getRulesManagerClass() {
       this.render({ parts: ["list"] });
     }
 
-    static #onCancelEdit() {
-      this.editing = null;
+    static async #onCancelEdit() {
+      if (!(await this.confirmDiscard())) return;
+      this.#setEditing(null);
       this.render();
     }
 
@@ -275,7 +352,17 @@ export function getRulesManagerClass() {
       this.render({ parts: ["list"] });
     }
 
+    static #onClearSearch(_event, target) {
+      clearTimeout(this.#searchTimer);
+      this.viewState.query = "";
+      const input = this.element?.querySelector("input[name=ruleQuery]");
+      if (input) input.value = "";
+      if (target) target.disabled = true;
+      this.render({ parts: ["list"] });
+    }
+
     async close(options) {
+      clearTimeout(this.#searchTimer);
       if (sharedManager === this) sharedManager = null;
       return super.close(options);
     }

@@ -7,11 +7,23 @@
       <div class="sva-item-title">
         <h2>{{item.name}}</h2>
         <span class="sva-muted">{{item.type}}</span>
+        {{#if toggle.disabled}}
+          <span class="sva-badge sva-actor-off">
+            <i class="fa-solid fa-ban" inert></i>
+            {{localize "SVA.UI.ItemConfig.Off"}}
+          </span>
+        {{/if}}
       </div>
-      <label class="checkbox sva-disable-toggle">
-        <input type="checkbox" name="itemDisabled" {{checked disabled}} />
-        {{localize "SVA.UI.ItemConfig.Disabled"}}
-      </label>
+      <button
+        type="button"
+        class="{{toggle.cssClass}}"
+        data-action="toggleItemDisabled"
+        aria-pressed="{{toggle.pressed}}"
+        data-tooltip="{{toggle.tooltip}}"
+      >
+        <i class="fa-solid {{toggle.icon}}" inert></i>
+        <span>{{localize toggle.label}}</span>
+      </button>
     </header>
 
     <div class="sva-scroll">
@@ -21,9 +33,11 @@
           <span>{{localize "SVA.UI.ItemConfig.Changed"}}</span>
           <button type="button" data-action="reloadItem">
             <i class="fa-solid fa-rotate" inert></i>
-            {{localize "SVA.UI.ItemConfig.Reload"}}
+            <span>{{localize "SVA.UI.ItemConfig.Reload"}}</span>
           </button>
-          <button type="button" data-action="dismissStale">{{localize "SVA.UI.ItemConfig.KeepEdits"}}</button>
+          <button type="button" data-action="dismissStale">
+            <span>{{localize "SVA.UI.ItemConfig.KeepEdits"}}</span>
+          </button>
         </div>
       {{/if}}
       <section class="sva-match">
@@ -62,7 +76,7 @@
         {{#if canUseMatched}}
           <button type="button" class="sva-inline-button" data-action="useMatched">
             <i class="fa-solid fa-rotate-left" inert></i>
-            {{localize "SVA.UI.ItemConfig.UseMatched"}}
+            <span>{{localize "SVA.UI.ItemConfig.UseMatched"}}</span>
           </button>
         {{/if}}
       </section>
@@ -73,15 +87,15 @@
     <footer class="sva-footer form-footer">
       <button type="button" data-action="preview" data-tooltip="SVA.UI.ItemConfig.PreviewHint">
         <i class="fa-solid fa-eye" inert></i>
-        {{localize "SVA.UI.ItemConfig.Preview"}}
+        <span>{{localize "SVA.UI.ItemConfig.Preview"}}</span>
       </button>
       <button type="button" data-action="clearRecipe" {{disabled noCustom}}>
         <i class="fa-solid fa-trash" inert></i>
-        {{localize "SVA.UI.ItemConfig.Clear"}}
+        <span>{{localize "SVA.UI.ItemConfig.Clear"}}</span>
       </button>
       <button type="submit">
         <i class="fa-solid fa-floppy-disk" inert></i>
-        {{localize "SVA.UI.ItemConfig.Save"}}
+        <span>{{localize "SVA.UI.ItemConfig.Save"}}</span>
       </button>
     </footer>
   {{/if}}

@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
   duplicateRule,
+  filterRules,
   formToRule,
+  hasMatchCriterion,
   inspectImport,
   matchText,
   newRule,
   ruleRows,
+  RULE_SORTS,
   ruleToFormModel,
+  sortRules,
   toExportText
 } from "../../src/ui/models/rules-model.js";
 
@@ -84,6 +88,53 @@ describe("rules model", () => {
     });
     expect(matchText({ key: "k", name: "", traits: [] })).toBe("key: k");
     expect(ruleRows(null)).toEqual([]);
+  });
+
+  it("filters rows by label, id, match criteria and animation", () => {
+    const rules = [
+      { id: "fire-bolt", label: "Fire bolt", priority: 1, match: { key: "fire-bolt" }, recipe: { preset: "ranged" } },
+      {
+        id: "bows",
+        label: "All bows",
+        priority: 3,
+        match: { weaponGroup: "bow" },
+        recipe: { preset: "ranged", animation: "jb2a.arrow.physical" }
+      },
+      { id: "heal", label: "Heal", priority: 2, match: { traits: ["healing"] }, recipe: { preset: "onToken" } }
+    ];
+    expect(filterRules(rules, "").map((r) => r.id)).toEqual(["fire-bolt", "bows", "heal"]);
+    expect(filterRules(rules, "FIRE").map((r) => r.id)).toEqual(["fire-bolt"]);
+    expect(filterRules(rules, "bows").map((r) => r.id)).toEqual(["bows"]);
+    expect(filterRules(rules, "weaponGroup").map((r) => r.id)).toEqual(["bows"]);
+    expect(filterRules(rules, "arrow").map((r) => r.id)).toEqual(["bows"]);
+    expect(filterRules(rules, "healing").map((r) => r.id)).toEqual(["heal"]);
+    expect(filterRules(rules, "ranged bow").map((r) => r.id)).toEqual(["bows"]);
+    expect(filterRules(rules, "nothing")).toEqual([]);
+    expect(filterRules(null, "x")).toEqual([]);
+    expect(ruleRows(rules, { query: "heal" }).map((r) => r.id)).toEqual(["heal"]);
+  });
+
+  it("sorts rows by priority, label or id", () => {
+    const rules = [
+      { id: "c", label: "beta", priority: 1 },
+      { id: "a", label: "Gamma", priority: 5 },
+      { id: "b", label: "alpha", priority: 5 }
+    ];
+    expect(RULE_SORTS).toEqual(["priority", "label", "id"]);
+    expect(sortRules(rules).map((r) => r.id)).toEqual(["b", "a", "c"]);
+    expect(sortRules(rules, "label").map((r) => r.id)).toEqual(["b", "c", "a"]);
+    expect(sortRules(rules, "id").map((r) => r.id)).toEqual(["a", "b", "c"]);
+    expect(sortRules(rules, "bogus").map((r) => r.id)).toEqual(["b", "a", "c"]);
+    expect(rules.map((r) => r.id)).toEqual(["c", "a", "b"]);
+    expect(ruleRows(rules, { sort: "id" }).map((r) => r.id)).toEqual(["a", "b", "c"]);
+  });
+
+  it("detects whether a rule has a match criterion", () => {
+    expect(hasMatchCriterion({ key: "x" })).toBe(true);
+    expect(hasMatchCriterion({ traits: ["fire"] })).toBe(true);
+    expect(hasMatchCriterion({ key: "", traits: [], name: null })).toBe(false);
+    expect(hasMatchCriterion({})).toBe(false);
+    expect(hasMatchCriterion(undefined)).toBe(false);
   });
 
   it("normalizes export text and inspects imports", () => {

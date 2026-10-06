@@ -7,6 +7,9 @@
         "Tree": "Animation categories",
         "SearchPlaceholder": "Search animations (e.g. fire bolt orange)",
         "ClearSearch": "Clear search",
+        "ToggleTree": "Show or hide the animation categories",
+        "ToggleNode": "Expand or collapse {name}",
+        "Home": "All animations",
         "SearchResults": "Results for \"{query}\"",
         "NoResults": "No animation matches this search.",
         "Favourites": "Favourites",
@@ -23,6 +26,8 @@
         "ToggleFavourite": "Toggle favourite",
         "Page": "Page {page}",
         "PageOf": "Page {page} of {pages}",
+        "PrevPage": "Previous page",
+        "NextPage": "Next page",
         "NoTokens": "Select (control) at least one token to play the animation on.",
         "NoSequence": "The sequence player is not available.",
         "PlayFailed": "Could not play {path}. See the console for details."
@@ -135,7 +140,8 @@
           "areaPlaced": "Area placed",
           "effectApplied": "Effect applied"
         },
-        "Invalid": "The recipe has errors: {errors}"
+        "Invalid": "The recipe has errors: {errors}",
+        "JsonInvalid": "Invalid JSON: {error}"
       },
       "Source": {
         "item": "Item recipe",
@@ -148,6 +154,8 @@
         "Title": "Animation",
         "TitleFor": "Animation: {name}",
         "Disabled": "Disable automation",
+        "Enable": "Enable automation",
+        "Off": "Automation off",
         "DisabledOn": "Automation disabled for this item.",
         "DisabledOff": "Automation enabled for this item.",
         "CurrentMatch": "Currently used",
@@ -186,6 +194,14 @@
         "Duplicate": "Duplicate",
         "Delete": "Delete",
         "Empty": "No world rules yet. System rule packs and the generic fallback still apply.",
+        "NoMatches": "No rule matches this search.",
+        "SearchPlaceholder": "Search rules (label, id, match, animation)",
+        "Sort": "Sort",
+        "Sorts": {
+          "priority": "Priority (highest first)",
+          "label": "Label",
+          "id": "Id"
+        },
         "Tester": "Match tester",
         "DropHint": "Drop an item here to see which recipe and rule it resolves to.",
         "ClearTest": "Clear result",
@@ -211,6 +227,9 @@
         "SelectHint": "Select a rule to edit it, or add a new one.",
         "CopySuffix": "(copy)",
         "Invalid": "The rule has errors: {errors}",
+        "NeedMatch": "Add at least one match criterion: a rule without one would match nothing.",
+        "UnsavedTitle": "Unsaved changes",
+        "UnsavedConfirm": "Discard your unsaved changes to <strong>{label}</strong>?",
         "DuplicateId": "A rule with id {id} already exists.",
         "Saved": "Saved rule {label}.",
         "SaveFailed": "Could not save the rule. See the console for details.",

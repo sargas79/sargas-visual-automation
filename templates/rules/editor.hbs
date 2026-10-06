@@ -10,26 +10,48 @@
       </h3>
 
       <div class="form-group">
-        <label>{{localize "SVA.UI.Rules.Id"}}</label>
+        <label for="{{ruleIdPrefix}}-id">{{localize "SVA.UI.Rules.Id"}}</label>
         <div class="form-fields">
           {{#if rule.isNew}}
-            <input type="text" name="rule.id" value="{{rule.id}}" placeholder="{{localize 'SVA.UI.Rules.IdAuto'}}" />
+            <input
+              type="text"
+              id="{{ruleIdPrefix}}-id"
+              name="rule.id"
+              value="{{rule.id}}"
+              placeholder="{{localize 'SVA.UI.Rules.IdAuto'}}"
+            />
           {{else}}
-            <input type="text" name="rule.id" value="{{rule.id}}" readonly />
+            <input type="text" id="{{ruleIdPrefix}}-id" name="rule.id" value="{{rule.id}}" readonly />
           {{/if}}
         </div>
       </div>
       <div class="form-group">
-        <label>{{localize "SVA.UI.Rules.Label"}}</label>
-        <div class="form-fields"><input type="text" name="rule.label" value="{{rule.label}}" /></div>
+        <label for="{{ruleIdPrefix}}-label">{{localize "SVA.UI.Rules.Label"}}</label>
+        <div class="form-fields"><input
+            type="text"
+            id="{{ruleIdPrefix}}-label"
+            name="rule.label"
+            value="{{rule.label}}"
+          /></div>
       </div>
       <div class="form-group">
-        <label>{{localize "SVA.UI.Rules.Enabled"}}</label>
-        <div class="form-fields"><input type="checkbox" name="rule.enabled" {{checked rule.enabled}} /></div>
+        <label for="{{ruleIdPrefix}}-enabled">{{localize "SVA.UI.Rules.Enabled"}}</label>
+        <div class="form-fields"><input
+            type="checkbox"
+            id="{{ruleIdPrefix}}-enabled"
+            name="rule.enabled"
+            {{checked rule.enabled}}
+          /></div>
       </div>
       <div class="form-group">
-        <label>{{localize "SVA.UI.Rules.Priority"}}</label>
-        <div class="form-fields"><input type="number" name="rule.priority" value="{{rule.priority}}" step="1" /></div>
+        <label for="{{ruleIdPrefix}}-priority">{{localize "SVA.UI.Rules.Priority"}}</label>
+        <div class="form-fields"><input
+            type="number"
+            id="{{ruleIdPrefix}}-priority"
+            name="rule.priority"
+            value="{{rule.priority}}"
+            step="1"
+          /></div>
         <p class="hint">{{localize "SVA.UI.Rules.PriorityHint"}}</p>
       </div>
 
@@ -37,34 +59,59 @@
         <legend>{{localize "SVA.UI.Rules.Match"}}</legend>
         <p class="hint">{{localize "SVA.UI.Rules.MatchHint"}}</p>
         <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchKey"}}</label>
-          <div class="form-fields"><input type="text" name="rule.match.key" value="{{rule.match.key}}" /></div>
+          <label for="{{ruleIdPrefix}}-match-key">{{localize "SVA.UI.Rules.MatchKey"}}</label>
+          <div class="form-fields"><input
+              type="text"
+              id="{{ruleIdPrefix}}-match-key"
+              name="rule.match.key"
+              value="{{rule.match.key}}"
+            /></div>
         </div>
         <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchName"}}</label>
-          <div class="form-fields"><input type="text" name="rule.match.name" value="{{rule.match.name}}" /></div>
+          <label for="{{ruleIdPrefix}}-match-name">{{localize "SVA.UI.Rules.MatchName"}}</label>
+          <div class="form-fields"><input
+              type="text"
+              id="{{ruleIdPrefix}}-match-name"
+              name="rule.match.name"
+              value="{{rule.match.name}}"
+            /></div>
         </div>
         <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchRegex"}}</label>
-          <div class="form-fields"><input type="text" name="rule.match.regex" value="{{rule.match.regex}}" /></div>
+          <label for="{{ruleIdPrefix}}-match-regex">{{localize "SVA.UI.Rules.MatchRegex"}}</label>
+          <div class="form-fields"><input
+              type="text"
+              id="{{ruleIdPrefix}}-match-regex"
+              name="rule.match.regex"
+              value="{{rule.match.regex}}"
+            /></div>
         </div>
         <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchType"}}</label>
+          <label for="{{ruleIdPrefix}}-match-type">{{localize "SVA.UI.Rules.MatchType"}}</label>
           <div class="form-fields">
-            <select name="rule.match.type">{{selectOptions rule.typeOptions selected=rule.match.type}}</select>
+            <select id="{{ruleIdPrefix}}-match-type" name="rule.match.type">{{selectOptions
+                rule.typeOptions
+                selected=rule.match.type
+              }}</select>
           </div>
         </div>
         <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchTraits"}}</label>
-          <div class="form-fields">
-            <input type="text" name="rule.match.traits" value="{{rule.match.traits}}" placeholder="fire, cantrip" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchActorTraits"}}</label>
+          <label for="{{ruleIdPrefix}}-match-traits">{{localize "SVA.UI.Rules.MatchTraits"}}</label>
           <div class="form-fields">
             <input
               type="text"
+              id="{{ruleIdPrefix}}-match-traits"
+              name="rule.match.traits"
+              value="{{rule.match.traits}}"
+              placeholder="fire, cantrip"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="{{ruleIdPrefix}}-match-actor-traits">{{localize "SVA.UI.Rules.MatchActorTraits"}}</label>
+          <div class="form-fields">
+            <input
+              type="text"
+              id="{{ruleIdPrefix}}-match-actor-traits"
               name="rule.match.actorTraits"
               value="{{rule.match.actorTraits}}"
               placeholder="dragon, size:large"
@@ -73,23 +120,35 @@
           <p class="hint">{{localize "SVA.UI.Rules.MatchActorTraitsHint"}}</p>
         </div>
         <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchAttackKind"}}</label>
+          <label for="{{ruleIdPrefix}}-match-attack-kind">{{localize "SVA.UI.Rules.MatchAttackKind"}}</label>
           <div class="form-fields">
-            <select name="rule.match.attackKind">
+            <select id="{{ruleIdPrefix}}-match-attack-kind" name="rule.match.attackKind">
               {{selectOptions rule.attackKindOptions selected=rule.match.attackKind}}
             </select>
           </div>
         </div>
         <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchWeaponGroup"}}</label>
+          <label for="{{ruleIdPrefix}}-match-weapon-group">{{localize "SVA.UI.Rules.MatchWeaponGroup"}}</label>
           <div class="form-fields">
-            <input type="text" name="rule.match.weaponGroup" value="{{rule.match.weaponGroup}}" placeholder="sword" />
+            <input
+              type="text"
+              id="{{ruleIdPrefix}}-match-weapon-group"
+              name="rule.match.weaponGroup"
+              value="{{rule.match.weaponGroup}}"
+              placeholder="sword"
+            />
           </div>
         </div>
         <div class="form-group">
-          <label>{{localize "SVA.UI.Rules.MatchBaseItem"}}</label>
+          <label for="{{ruleIdPrefix}}-match-base-item">{{localize "SVA.UI.Rules.MatchBaseItem"}}</label>
           <div class="form-fields">
-            <input type="text" name="rule.match.baseItem" value="{{rule.match.baseItem}}" placeholder="longsword" />
+            <input
+              type="text"
+              id="{{ruleIdPrefix}}-match-base-item"
+              name="rule.match.baseItem"
+              value="{{rule.match.baseItem}}"
+              placeholder="longsword"
+            />
           </div>
         </div>
       </fieldset>
@@ -102,11 +161,11 @@
       <footer class="sva-footer">
         <button type="button" data-action="cancelEdit">
           <i class="fa-solid fa-xmark" inert></i>
-          {{localize "SVA.UI.Rules.Cancel"}}
+          <span>{{localize "SVA.UI.Rules.Cancel"}}</span>
         </button>
         <button type="submit">
           <i class="fa-solid fa-floppy-disk" inert></i>
-          {{localize "SVA.UI.Rules.Save"}}
+          <span>{{localize "SVA.UI.Rules.Save"}}</span>
         </button>
       </footer>
     </form>

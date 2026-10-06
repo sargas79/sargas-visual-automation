@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import { SystemAdapter } from "../../../src/shared/adapter.js";
 
 /**
@@ -45,7 +46,19 @@ export function fakeItem({ name = "Item", uuid = "Item.x", flags = {}, sva = {},
     async unsetFlag(scope, key) {
       if (item.flags[scope]) delete item.flags[scope][key];
       return item;
-    }
+    },
+    /** Dot-path update; a "-=key" segment deletes that key (Foundry deletion syntax), applied in key order. */
+    update: vi.fn(async (changes) => {
+      for (const [path, value] of Object.entries(changes)) {
+        const keys = path.split(".");
+        const last = keys.pop();
+        let node = item;
+        for (const key of keys) node = node[key] ??= {};
+        if (last.startsWith("-=")) delete node[last.slice(2)];
+        else node[last] = structuredClone(value);
+      }
+      return item;
+    })
   };
   return item;
 }

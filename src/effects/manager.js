@@ -14,11 +14,22 @@
  * or effects whose write is still in flight) end everywhere too.
  *
  * Replay: on `canvasReady` every stored effect of the scene is played again locally.
+ *
+ * Write permissions (requests from other clients, checked by the active GM): each stored
+ * effect records the `userId` that created it. `set` may not overwrite, nor `delete` remove,
+ * another user's effect (or a legacy one without `userId`) unless the requester is a GM;
+ * `clear` is GM-only. GM rights need a server-verified sender id (net `resolveSender`).
+ * Ids ended in the last ENDED_TTL_MS are remembered so a `set` still in flight when the
+ * effect was ended does not store it again.
  */
 import { MODULE_ID } from "../constants.js";
 import { log } from "../logger.js";
+import { resolveSender } from "../net/preferences.js";
 import { resolveEffect } from "../sequence/runner.js";
 import { FLAG_KEY, collectPersistent, getStored, matches, referencesToken } from "./store.js";
+
+/** How long the active GM ignores `set` requests for an id that was just ended. */
+export const ENDED_TTL_MS = 10000;
 
 /**
  * @param {object} api  Module api (engine, net).
@@ -30,6 +41,8 @@ export function createEffectsManager(api, deps = {}) {
     getViewedScene = () => globalThis.canvas?.scene ?? null,
     getUser = () => globalThis.game?.user ?? null,
     getActiveGM = () => globalThis.game?.users?.activeGM ?? null,
+    getUsers = () => globalThis.game?.users ?? null,
+    now = () => Date.now(),
     warn = (key, fallback) => {
       const i18n = globalThis.game?.i18n;
       globalThis.ui?.notifications?.warn(i18n?.has?.(key) ? i18n.localize(key) : fallback);
@@ -41,6 +54,19 @@ export function createEffectsManager(api, deps = {}) {
   let snapshotSceneId = null;
   /** Ids this client already asked its engine to end. */
   const ending = new Set();
+  /** Recently ended ids → expiry time (see ENDED_TTL_MS). */
+  const ended = new Map();
+
+  function rememberEnded(ids) {
+    const until = now() + ENDED_TTL_MS;
+    for (const id of ids) if (id) ended.set(id, until);
+  }
+
+  function recentlyEnded(id) {
+    const t = now();
+    for (const [key, until] of ended) if (until <= t) ended.delete(key);
+    return ended.has(id);
+  }
 
   const viewedSceneId = () => getViewedScene()?.id ?? null;
   const isActiveGM = () => {
@@ -67,6 +93,7 @@ export function createEffectsManager(api, deps = {}) {
 
   /** End live local effects matching a selector on the viewed scene. */
   function endLocal({ sceneId, id, name, all = false, tokenId } = {}) {
+    if (id) rememberEnded([id]);
     const viewed = viewedSceneId();
     if (sceneId && viewed && sceneId !== viewed) return;
     const ids = [];
@@ -77,34 +104,47 @@ export function createEffectsManager(api, deps = {}) {
         if (referencesToken(d, tokenId)) ids.push(handle.id);
       } else if (all || ((id || name) && matches(d, { id, name }))) ids.push(handle.id);
     }
+    rememberEnded(ids);
     endLocalIds(ids);
   }
 
   // ---- GM-authoritative writes -------------------------------------------
 
-  /** Apply a write on this (GM) client. */
-  async function applyWrite(op) {
+  /**
+   * Apply a write on this (GM) client, on behalf of `userId`.
+   * @param {object} op
+   * @param {{userId?: string|null, privileged?: boolean}} [by] privileged: GM rights (any effect, `clear`).
+   */
+  async function applyWrite(op, { userId = getUser()?.id ?? null, privileged = true } = {}) {
     const scene = getScene(op?.sceneId);
     if (!scene) return;
+    const stored = getStored(scene);
+    const mayChange = (id) => privileged || (!!userId && stored[id]?.userId === userId);
+    const path = `flags.${MODULE_ID}.${FLAG_KEY}`;
+    const update = {};
     if (op.op === "set") {
-      const update = {};
       for (const effect of op.effects ?? []) {
-        if (effect?.id && effect.file) update[`flags.${MODULE_ID}.${FLAG_KEY}.${effect.id}`] = effect;
+        if (!effect?.id || !effect.file || (effect.id in stored && !mayChange(effect.id))) continue;
+        update[`${path}.${effect.id}`] = { ...effect, userId: stored[effect.id]?.userId ?? userId };
       }
-      if (Object.keys(update).length) await scene.update(update);
     } else if (op.op === "delete") {
-      const stored = getStored(scene);
-      // VERIFY(v14): unsetFlag deletes one nested key per update; fine for the few ids involved.
-      for (const id of op.ids ?? []) if (id in stored) await scene.unsetFlag(MODULE_ID, `${FLAG_KEY}.${id}`);
+      const ids = (op.ids ?? []).filter((id) => id in stored && mayChange(id));
+      rememberEnded(ids);
+      // VERIFY(v14): "-=key" deletes a key in Document#update (all ids in one update).
+      for (const id of ids) update[`${path}.-=${id}`] = null;
     } else if (op.op === "clear") {
-      if (Object.keys(getStored(scene)).length) await scene.unsetFlag(MODULE_ID, FLAG_KEY);
+      if (!privileged || !Object.keys(stored).length) return;
+      rememberEnded(Object.keys(stored));
+      update[`flags.${MODULE_ID}.-=${FLAG_KEY}`] = null;
     }
+    if (Object.keys(update).length) await scene.update(update);
   }
 
   /** Write directly as GM, or ask the active GM. @returns {Promise<boolean>} whether it was sent/applied. */
   async function write(op) {
-    if (getUser()?.isGM) {
-      await applyWrite(op);
+    const user = getUser();
+    if (user?.isGM) {
+      await applyWrite(op, { userId: user.id ?? null, privileged: true });
       return true;
     }
     if (!getActiveGM()) {
@@ -115,10 +155,24 @@ export function createEffectsManager(api, deps = {}) {
     return true;
   }
 
-  async function onWriteRequest(data) {
+  /** effectsWrite handler; `payload` is the net payload (sender id, `verified`). */
+  async function onWriteRequest(data, payload) {
     if (!isActiveGM()) return;
     if (!data || !["set", "delete", "clear"].includes(data.op) || typeof data.sceneId !== "string") return;
-    await applyWrite(data);
+    // Unknown scene: nothing to write (and no flag created for a made-up id).
+    if (!getScene(data.sceneId)) return;
+    const { user, privileged } = resolveSender(payload, getUsers());
+    if (!user) {
+      log.debug(`Rejected "${data.op}" write from unknown or disconnected user ${payload?.senderId}`);
+      return;
+    }
+    let op = data;
+    if (data.op === "set") {
+      const effects = (Array.isArray(data.effects) ? data.effects : []).filter((e) => !recentlyEnded(e?.id));
+      if (!effects.length) return;
+      op = { ...data, effects };
+    }
+    await applyWrite(op, { userId: user.id, privileged });
   }
 
   // ---- public surface -----------------------------------------------------

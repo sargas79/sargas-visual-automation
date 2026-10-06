@@ -291,6 +291,10 @@ export function createAutomation(api, rules) {
       }
       if (event.userId !== game.user?.id) return false;
       if (!enabled()) return false;
+      // Below the world's minimum trigger role nothing would play: skip quietly (playSequence's warning is meant
+      // for explicit calls, not for every attack). Removals still run so stored auras can end.
+      const prefs = api.net?.prefs;
+      if (event.type !== EVENT_TYPES.EFFECT_REMOVED && prefs?.canTrigger && !prefs.canTrigger()) return false;
       if (isDuplicate(event)) {
         log.debug("Duplicate automation event dropped", event);
         return false;

@@ -49,6 +49,7 @@ export default class Dnd5eAdapter extends SystemAdapter {
     this._unregisterSheet = null;
     this._seen = new Set();
     this._useSeq = 0;
+    this._toggleSeq = 0;
   }
 
   register() {
@@ -72,6 +73,10 @@ export default class Dnd5eAdapter extends SystemAdapter {
     );
     this._on("deleteActiveEffect", (effect, options, userId) =>
       this.onEffect(effect, options, userId, EVENT_TYPES.EFFECT_REMOVED)
+    );
+    // Toggling `disabled` on an existing effect: enabling animates like a creation, disabling ends like a deletion.
+    this._on("updateActiveEffect", (effect, changes, options, userId) =>
+      this.onEffectToggled(effect, changes, options, userId)
     );
     this._unregisterSheet = registerSheetControls(this.ctx?.api);
   }
@@ -152,6 +157,19 @@ export default class Dnd5eAdapter extends SystemAdapter {
     if (!this._isOwnAction(userId)) return;
     if (!this._markSeen(`${type}:${effect?.uuid ?? effect?.id}`)) return;
     this._emit(eventFromEffect(effect, type, { userId, conditions: this._conditionsEnabled() }));
+  }
+
+  onEffectToggled(effect, changes, _options, userId) {
+    if (typeof changes?.disabled !== "boolean" || !this._isOwnAction(userId)) return;
+    const type = changes.disabled ? EVENT_TYPES.EFFECT_REMOVED : EVENT_TYPES.EFFECT_APPLIED;
+    // Every toggle is a new event (creation / deletion ids are used once); the modified time dedupes repeated hook
+    // calls for the same update. VERIFY(v14): Document#_stats.modifiedTime is bumped on each update.
+    this._toggleSeq += 1;
+    const stamp = effect?._stats?.modifiedTime ?? `n${this._toggleSeq}`;
+    const id = `toggle:${type}:${effect?.uuid ?? effect?.id}:${stamp}`;
+    if (!this._markSeen(id)) return;
+    const event = eventFromEffect(effect, type, { userId, conditions: this._conditionsEnabled() });
+    if (event) this._emit({ ...event, id });
   }
 
   getItemKey(item) {

@@ -13,6 +13,7 @@
  * The message types live here (module-level `api.net.on/emit`); the net protocol version is unchanged.
  */
 import { log } from "../logger.js";
+import { resolveSender } from "../net/preferences.js";
 import { compileTeleportPhases } from "./compile.js";
 import { teleportDestination } from "./presets.js";
 import { recipeForOutcome } from "./steps.js";
@@ -143,15 +144,28 @@ export function sightBlocked(doc, point) {
 }
 
 /**
+ * Ownership granted explicitly (own id or default level) on the token's actor, or the token itself, ignoring the
+ * implicit GM ownership that testUserPermission adds. VERIFY(v14): Document#ownership, DOCUMENT_OWNERSHIP_LEVELS.
+ */
+function explicitOwner(doc, user) {
+  const levels = (doc.actor ?? doc).ownership ?? {};
+  const owner = globalThis.CONST?.DOCUMENT_OWNERSHIP_LEVELS?.OWNER ?? 3;
+  return Number(levels[user?.id] ?? levels.default ?? 0) >= owner;
+}
+
+/**
  * Apply a move as the GM. Players may only move tokens they own.
+ * @param {{trustGM?: boolean}} [opts] trustGM: false when `user` is only a claimed (unverified) sender, so a
+ *   GM id gets no bypass and must own the token explicitly.
  * @returns {Promise<{ok: boolean, reason?: string}>}
  */
-export async function applyMove({ sceneId, tokenId, x, y }, user) {
+export async function applyMove({ sceneId, tokenId, x, y }, user, { trustGM = true } = {}) {
   if (!Number.isFinite(x) || !Number.isFinite(y)) return { ok: false, reason: "invalid" };
   const doc = tokenDocument(sceneId, tokenId);
   if (!doc) return { ok: false, reason: "missing" };
   // VERIFY(v14): Document#testUserPermission(user, "OWNER").
-  if (!user?.isGM && !doc.testUserPermission?.(user, "OWNER")) return { ok: false, reason: "denied" };
+  const allowed = user?.isGM ? trustGM || explicitOwner(doc, user) : !!doc.testUserPermission?.(user, "OWNER");
+  if (!allowed) return { ok: false, reason: "denied" };
   try {
     // VERIFY(v14): update({x, y}, {animate: false}) moves without the slide animation. The v13+ movement API
     // (TokenDocument#move with a "blink"/"displace" action) is an alternative if plain updates get constrained.
@@ -181,8 +195,8 @@ export function createTeleport(api, { playAll }) {
 
   api.net?.on?.(TELEPORT_MESSAGES.MOVE, async (data, payload) => {
     if (!isResponsibleGM() || !data?.requestId) return;
-    const user = globalThis.game?.users?.get?.(payload?.senderId) ?? null;
-    const result = user ? await applyMove(data, user) : { ok: false, reason: "denied" };
+    const { user, privileged } = resolveSender(payload);
+    const result = user ? await applyMove(data, user, { trustGM: privileged }) : { ok: false, reason: "denied" };
     api.net.emit(TELEPORT_MESSAGES.MOVED, { requestId: data.requestId, ...result });
   });
 

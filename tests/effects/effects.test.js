@@ -29,7 +29,8 @@ function createWorld(users) {
   const hub = createSocketHub();
   const clients = [];
   const scene = createMockScene("scene1", { onUpdate: (s) => clients.forEach((c) => c.manager.onSceneUpdate(s)) });
-  const world = { hub, scene, clients, activeGM: users.find((u) => u.isGM) ?? null, warn: vi.fn() };
+  const world = { hub, scene, clients, activeGM: users.find((u) => u.isGM) ?? null, warn: vi.fn(), time: 0 };
+  const userMap = new Map(users.map((u) => [u.id, u]));
   for (const user of users) {
     const socket = hub.createSocket(user.id);
     const net = createNet({ getSocket: () => socket, getUserId: () => user.id });
@@ -40,10 +41,12 @@ function createWorld(users) {
       getViewedScene: () => scene,
       getUser: () => user,
       getActiveGM: () => world.activeGM,
+      getUsers: () => userMap,
+      now: () => world.time,
       warn: world.warn
     });
     api.effects = manager.effects;
-    net.on("effectsWrite", (d) => manager.onWriteRequest(d));
+    net.on("effectsWrite", (d, payload) => manager.onWriteRequest(d, payload));
     net.on("end", (d) => manager.endLocal(d));
     const client = { user, api, manager, socket };
     clients.push(client);
@@ -51,9 +54,11 @@ function createWorld(users) {
   return world;
 }
 
-const GM = { id: "gm", isGM: true };
-const P1 = { id: "p1", isGM: false };
-const P2 = { id: "p2", isGM: false };
+const GM = { id: "gm", isGM: true, active: true };
+const P1 = { id: "p1", isGM: false, active: true };
+const P2 = { id: "p2", isGM: false, active: true };
+/** Net payload as handlers receive it. */
+const from = (senderId, verified = true) => ({ senderId, verified });
 
 describe("store helpers", () => {
   it("reads the flag and matches selectors", () => {
@@ -99,7 +104,7 @@ describe("persistence writes", () => {
     await flush();
     expect(player.socket.emitted[0].payload).toMatchObject({ type: "effectsWrite", data: { op: "set" } });
     expect(world.scene.update).toHaveBeenCalledTimes(1);
-    expect(getStored(world.scene).a).toBeDefined();
+    expect(getStored(world.scene).a).toMatchObject({ id: "a", userId: "p1" });
   });
 
   it("warns when no GM is connected", async () => {
@@ -124,7 +129,7 @@ describe("ending effects", () => {
   let world;
   beforeEach(async () => {
     world = createWorld([GM, P1, P2]);
-    world.scene._store(aura("a"), aura("b"));
+    world.scene._store(aura("a", { userId: "p1" }), aura("b"));
     for (const c of world.clients) await c.manager.replay(world.scene);
   });
 
@@ -172,6 +177,92 @@ describe("ending effects", () => {
 
   it("requires an id or a name", async () => {
     await expect(world.clients[0].api.effects.end({})).rejects.toThrow();
+  });
+});
+
+describe("write permissions", () => {
+  const set = (...effects) => ({ op: "set", sceneId: "scene1", effects });
+  let world;
+  let gm;
+  beforeEach(() => {
+    world = createWorld([GM, P1, P2]);
+    [gm] = world.clients;
+    world.scene._store(aura("mine", { userId: "p1" }), aura("legacy"));
+  });
+
+  it("records the creator; only the creator or a GM may overwrite or delete", async () => {
+    await gm.manager.onWriteRequest(set(aura("new")), from("p2"));
+    expect(getStored(world.scene).new.userId).toBe("p2");
+    await gm.manager.onWriteRequest(set(aura("mine", { file: "jb2a.other" })), from("p2"));
+    await gm.manager.onWriteRequest({ op: "delete", sceneId: "scene1", ids: ["mine", "legacy"] }, from("p2"));
+    expect(getStored(world.scene).mine.file).toBe("jb2a.aura");
+    expect(getStored(world.scene).legacy).toBeDefined();
+
+    await gm.manager.onWriteRequest({ op: "delete", sceneId: "scene1", ids: ["mine", "legacy"] }, from("p1"));
+    expect(Object.keys(getStored(world.scene))).toEqual(["legacy", "new"]);
+    await gm.manager.onWriteRequest({ op: "delete", sceneId: "scene1", ids: ["legacy", "new"] }, from("gm"));
+    expect(getStored(world.scene)).toEqual({});
+  });
+
+  it("deletes several ids in one scene update", async () => {
+    await gm.manager.applyWrite({ op: "delete", sceneId: "scene1", ids: ["mine", "legacy", "ghost"] });
+    expect(world.scene.update).toHaveBeenCalledTimes(1);
+    expect(world.scene.update).toHaveBeenCalledWith({
+      [`flags.${MODULE_ID}.effects.-=mine`]: null,
+      [`flags.${MODULE_ID}.effects.-=legacy`]: null
+    });
+    expect(world.scene.unsetFlag).not.toHaveBeenCalled();
+  });
+
+  it("clear is GM-only and needs a verified GM", async () => {
+    const clear = { op: "clear", sceneId: "scene1" };
+    await gm.manager.onWriteRequest(clear, from("p1"));
+    await gm.manager.onWriteRequest(clear, from("gm", false));
+    expect(Object.keys(getStored(world.scene))).toHaveLength(2);
+    await gm.manager.onWriteRequest(clear, from("gm"));
+    expect(getStored(world.scene)).toEqual({});
+  });
+
+  it("an unverified GM claim is treated like that user without GM rights", async () => {
+    await gm.manager.onWriteRequest({ op: "delete", sceneId: "scene1", ids: ["mine"] }, from("gm", false));
+    expect(getStored(world.scene).mine).toBeDefined();
+  });
+
+  it("rejects unknown or disconnected senders and unknown scenes", async () => {
+    world.clients[2].user.active = false;
+    try {
+      await gm.manager.onWriteRequest(set(aura("x")), from("p2", false));
+      await gm.manager.onWriteRequest(set(aura("y")), from("ghost"));
+      await gm.manager.onWriteRequest({ ...set(aura("z")), sceneId: "nowhere" }, from("p1"));
+      expect(world.scene.update).not.toHaveBeenCalled();
+      // The server vouches for the id: connection state does not matter.
+      await gm.manager.onWriteRequest(set(aura("x")), from("p2"));
+      expect(getStored(world.scene).x).toBeDefined();
+    } finally {
+      world.clients[2].user.active = true;
+    }
+  });
+});
+
+describe("end while a set is in flight", () => {
+  it("the GM drops a set for an id ended in the last 10 s", async () => {
+    const world = createWorld([GM, P1]);
+    const [gm, player] = world.clients;
+    // The end reaches the GM before the player's earlier set request.
+    gm.manager.endLocal({ sceneId: "scene1", id: "late" });
+    await gm.manager.onWriteRequest({ op: "set", sceneId: "scene1", effects: [aura("late")] }, from("p1"));
+    expect(getStored(world.scene).late).toBeUndefined();
+
+    // Ids matched by name on the GM's live effects count too.
+    await gm.api.engine.play(aura("named"));
+    await player.api.effects.end({ name: "aura:named" });
+    await flush();
+    await gm.manager.onWriteRequest({ op: "set", sceneId: "scene1", effects: [aura("named")] }, from("p1"));
+    expect(getStored(world.scene).named).toBeUndefined();
+
+    world.time += 10_000;
+    await gm.manager.onWriteRequest({ op: "set", sceneId: "scene1", effects: [aura("late")] }, from("p1"));
+    expect(getStored(world.scene).late).toBeDefined();
   });
 });
 

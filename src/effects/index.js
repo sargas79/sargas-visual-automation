@@ -13,7 +13,7 @@ export function init(api) {
   const manager = createEffectsManager(api);
   api.effects = manager.effects;
 
-  api.net?.on("effectsWrite", (data) => manager.onWriteRequest(data));
+  api.net?.on("effectsWrite", (data, payload) => manager.onWriteRequest(data, payload));
   api.net?.on("end", (data) => manager.endLocal(data ?? {}));
 
   const guard =

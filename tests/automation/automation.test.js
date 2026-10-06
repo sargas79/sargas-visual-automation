@@ -42,6 +42,16 @@ describe("handle()", () => {
     expect(api.playSequence).not.toHaveBeenCalled();
   });
 
+  it("skips silently below the minimum trigger role, but still ends auras", async () => {
+    const effects = { list: vi.fn(() => [{ id: "x" }]), end: vi.fn(async () => {}) };
+    const { api } = bootAutomation({ items: [sword()], effects });
+    api.net = { prefs: { canTrigger: () => false } };
+    expect(await api.automation.handle(attack())).toBe(false);
+    expect(api.playSequence).not.toHaveBeenCalled();
+    expect(await api.automation.handle(attack({ type: "effectRemoved" }))).toBe(true);
+    expect(effects.end).toHaveBeenCalledTimes(1);
+  });
+
   it("drops duplicate events", async () => {
     const { api } = bootAutomation({ items: [sword()] });
     expect(await api.automation.handle(attack())).toBe(true);

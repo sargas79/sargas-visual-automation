@@ -99,7 +99,15 @@ describe("createNet", () => {
     const handler = vi.fn();
     netB.on("end", handler);
     await netB.receive(createPayload("end", {}, "spoofed"), "userA");
-    expect(handler.mock.calls[0][1].senderId).toBe("userA");
+    expect(handler.mock.calls[0][1]).toMatchObject({ senderId: "userA", verified: true });
+  });
+
+  it("marks a client-claimed sender id as unverified", async () => {
+    const { netB } = twoClients();
+    const handler = vi.fn();
+    netB.on("end", handler);
+    await netB.receive({ ...createPayload("end", {}, "userA"), verified: true });
+    expect(handler.mock.calls[0][1]).toMatchObject({ senderId: "userA", verified: false });
   });
 
   it("applies the accept filter", async () => {
@@ -129,5 +137,23 @@ describe("net area", () => {
     await api.net.preload(["jb2a.b"]);
     expect(api.engine.preload).toHaveBeenLastCalledWith(["jb2a.b"]);
     expect(game.socket.emitted.at(-1).payload).toMatchObject({ type: "preload", data: { files: ["jb2a.b"] } });
+  });
+
+  it("caps incoming preload lists and splits outgoing ones", async () => {
+    const hub = createSocketHub();
+    game.socket = hub.createSocket("user1");
+    const other = hub.createSocket("user2");
+    const api = { engine: { preload: vi.fn(async () => {}) } };
+    netArea.init(api);
+    const many = Array.from({ length: 120 }, (_, i) => `jb2a.f${i}`);
+
+    other.emit(SOCKET_NAME, createPayload("preload", { files: many }, "user2"));
+    await flush();
+    expect(api.engine.preload).toHaveBeenCalledWith(many.slice(0, netArea.PRELOAD_MAX_FILES));
+
+    await api.net.preload(many);
+    const sent = game.socket.emitted.map((e) => e.payload.data.files);
+    expect(sent.map((f) => f.length)).toEqual([50, 50, 20]);
+    expect(sent.flat()).toEqual(many);
   });
 });

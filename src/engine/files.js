@@ -15,16 +15,19 @@ export function directFile(file) {
 /**
  * @param {object} api            Module api (only `api.db` is used).
  * @param {string} file           Database path or URL.
- * @param {{distance?: number}} [options]  Distance in scene units, for stretched effects.
+ * @param {{distance?: number, seed?: string}} [options]  Distance in scene units, for stretched effects; `seed`
+ *   (the effect id) makes random variant picks identical on every client.
  * @returns {Promise<object|null>} ResolvedFile or null when it cannot be resolved.
  */
-export async function resolveFile(api, file, { distance } = {}) {
+export async function resolveFile(api, file, { distance, seed } = {}) {
   if (!file || typeof file !== "string") return null;
   if (isDirectFile(file)) return directFile(file);
   const db = api?.db;
   if (!db?.resolve) return null;
   if (db.ready && typeof db.ready.then === "function") await db.ready;
-  return db.resolve(file, Number.isFinite(distance) ? { distance } : {}) ?? null;
+  const options = Number.isFinite(distance) ? { distance } : {};
+  if (seed !== undefined && seed !== null) options.seed = seed;
+  return db.resolve(file, options) ?? null;
 }
 
 /** Most files a single branch path expands to when preloading (e.g. every distance variant of a projectile). */

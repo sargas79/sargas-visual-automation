@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Effects whose animation path leaves a choice open (for example an aura without a fixed colour) were resolved separately on every client, so each player could see a different colour or variant of the same effect. The pick is now seeded by the effect's id, so every client (including ones that reload or join later and see persisted effects) shows the same variant.
+
 ## 0.5.0 - 2026-10-05
 
 ### Added

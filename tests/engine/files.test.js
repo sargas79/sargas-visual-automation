@@ -14,6 +14,8 @@ describe("resolveFile", () => {
     const db = createMockDb();
     const r = await resolveFile({ db }, "jb2a.fire_bolt.orange", { distance: 25 });
     expect(db.resolve).toHaveBeenCalledWith("jb2a.fire_bolt.orange", { distance: 25 });
+    await resolveFile({ db }, "jb2a.fire_bolt", { seed: "effect1" });
+    expect(db.resolve).toHaveBeenLastCalledWith("jb2a.fire_bolt", { seed: "effect1" });
     expect(r.distance).toBe("30ft");
   });
 

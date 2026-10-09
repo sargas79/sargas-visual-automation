@@ -178,7 +178,8 @@ export class EffectEngine {
       const from = descriptor.atLocation ?? { tokenId: descriptor.attachTo?.tokenId };
       distance = this.env.measure?.(from, descriptor.stretchTo) ?? undefined;
     }
-    const resolved = await resolveFile(this.api, descriptor.file, { distance });
+    // Seeded by the effect id (shared by every client and persisted), so a branch path picks the same variant everywhere.
+    const resolved = await resolveFile(this.api, descriptor.file, { distance, seed: descriptor.id });
     if (!resolved?.file) throw new Error(`Unknown animation "${descriptor.file}"`);
     const instance = await this.textures.acquire(resolved.file);
     return { resolved, instance };

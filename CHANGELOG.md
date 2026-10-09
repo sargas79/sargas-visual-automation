@@ -19,6 +19,7 @@
 - Players below the minimum trigger role no longer get a warning on every attack or cast.
 - D&D 5e: effects enabled after they were created now animate, and end when disabled again.
 - An effect ended while it was still being stored no longer comes back on reload.
+- Effects whose animation path leaves a choice open (for example an aura without a fixed colour) were resolved separately on every client, so each player could see a different colour or variant of the same effect. The pick is now seeded by the effect's id, so every client (including ones that reload or join later and see persisted effects) shows the same variant.
 
 ### Security
 

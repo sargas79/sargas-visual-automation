@@ -3,6 +3,13 @@ name: Release
 on:
   release:
     types: [published]
+  # Manual release: creates the tag and the GitHub release (notes from CHANGELOG.md) on the chosen commit,
+  # then builds and uploads the assets like a published release does.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release, e.g. v0.6.0 (must match the version in module.json and a CHANGELOG.md section)"
+        required: true
 
 permissions:
   contents: write
@@ -10,6 +17,8 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
     steps:
       - uses: actions/checkout@v5
 
@@ -18,12 +27,34 @@ jobs:
           node-version: lts/*
           cache: npm
 
+      - name: Check version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          version="$(node -p 'require("./module.json").version')"
+          if [ "v$version" != "$TAG" ]; then
+            echo "Tag $TAG does not match module.json version $version" >&2
+            exit 1
+          fi
+
       - run: npm ci
       - run: npm test
       - run: npm run build
 
+      - name: Create release
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${TAG#v}"
+          awk -v v="$version" '$0 ~ "^## " v " " {on=1; next} on && /^## / {exit} on' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "No CHANGELOG.md section for $version" >&2
+            exit 1
+          fi
+          gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --notes-file notes.md
+
       - name: Stamp manifest
-        run: node tools/release-manifest.mjs "${{ github.event.release.tag_name }}"
+        run: node tools/release-manifest.mjs "$TAG"
 
       - name: Package
         run: cd dist && zip -r ../module.zip .
@@ -31,4 +62,4 @@ jobs:
       - name: Upload release assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${{ github.event.release.tag_name }}" module.zip dist/module.json --clobber
+        run: gh release upload "$TAG" module.zip dist/module.json --clobber

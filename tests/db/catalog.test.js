@@ -92,6 +92,19 @@ describe("resolve", () => {
     expect(last.path).toBe("jb2a.fire_bolt.dark_red");
   });
 
+  it("picks the same variant for the same seed, whatever the client's own random source", () => {
+    const a = new Catalog(loadFixture(), { random: () => 0 });
+    const b = new Catalog(loadFixture(), { random: () => 0.99 });
+    for (const seed of ["effect1", "abcdef0123456789", "x"]) {
+      expect(a.resolve("jb2a.fire_bolt", { distance: 30, seed })).toEqual(
+        b.resolve("jb2a.fire_bolt", { distance: 30, seed })
+      );
+    }
+    const paths = new Set();
+    for (let i = 0; i < 40; i++) paths.add(a.resolve("jb2a.fire_bolt", { distance: 30, seed: `id${i}` }).path);
+    expect(paths.size).toBeGreaterThan(1);
+  });
+
   it("only ever returns valid leaves for partial paths", () => {
     const catalog = new Catalog(loadFixture());
     for (let i = 0; i < 50; i++) {

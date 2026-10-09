@@ -52,6 +52,19 @@ export function normalizePath(path) {
   return parts.join(".");
 }
 
+/** Deterministic [0, 1) generator from a string seed (FNV-1a hash feeding mulberry32). */
+export function seededRandom(seed) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 0x01000193);
+  let a = h >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 export class Catalog {
   /**
    * @param {object} database   Raw JB2A database object (`_templates` + categories).
@@ -165,11 +178,14 @@ export class Catalog {
    * - branch: random playable unit below it (uniform over units)
    * - distance group: closest variant to `distance` (scene units)
    * - array leaf: random file; `path.N` picks element N
+   * A `seed` (e.g. the effect id) makes the random picks deterministic, so every client resolves the same
+   * effect to the same variant (colour) instead of rolling its own.
    * @param {string} path
-   * @param {{distance?: number, gridDistance?: number}} [options]
+   * @param {{distance?: number, gridDistance?: number, seed?: string|number}} [options]
    * @returns {ResolvedFile|null}
    */
-  resolve(path, { distance, gridDistance } = {}) {
+  resolve(path, { distance, gridDistance, seed } = {}) {
+    const random = seed === undefined || seed === null || seed === "" ? this.random : seededRandom(String(seed));
     let node = this.node(path);
     let index = null;
     if (!node) {
@@ -185,7 +201,7 @@ export class Catalog {
     if (!node.isLeaf && !node.isUnit) {
       const units = this.#unitsBelow(node);
       if (!units.length) return null;
-      node = units[Math.floor(this.random() * units.length) % units.length];
+      node = units[Math.floor(random() * units.length) % units.length];
     }
     let reportPath = node.path;
     if (node.isDistanceGroup) {
@@ -195,7 +211,7 @@ export class Catalog {
       reportPath = node.parent.path;
     }
     if (!node?.isLeaf) return null;
-    const file = index ?? Math.floor(this.random() * node.files.length) % node.files.length;
+    const file = index ?? Math.floor(random() * node.files.length) % node.files.length;
     const chosen = node.files[file];
     return {
       path: reportPath,

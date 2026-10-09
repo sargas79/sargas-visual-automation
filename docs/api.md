@@ -228,6 +228,7 @@ await SVA.effects.endAll({ sceneId });
 
 - Ending a persistent effect plays its outro (the part after `_markers.loop`) or its `fadeOut`.
 - Deleting a token ends every persistent effect anchored or attached to it.
+- A player may replace or remove the stored effects they created, and remove the auras of actors they own. Only a GM can call `endAll`.
 - Automation names aura effects `aura:<actorId>:<itemKey>`; avoid that prefix in your macros.
 
 ## `SVA.db` - the JB2A catalog

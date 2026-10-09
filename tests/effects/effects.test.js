@@ -167,6 +167,16 @@ describe("ending effects", () => {
     expect(player.api.engine.handles.size).toBe(0);
   });
 
+  it("endAll is GM-only: a player's call warns and ends nothing", async () => {
+    const [gm, player] = world.clients;
+    const before = Object.keys(getStored(world.scene));
+    await player.api.effects.endAll();
+    await flush();
+    expect(world.warn).toHaveBeenCalledWith("SVA.Net.EndAllGMOnly", expect.any(String));
+    expect(Object.keys(getStored(world.scene))).toEqual(before);
+    expect(gm.api.engine.handles.size).toBeGreaterThan(0);
+  });
+
   it("deleting a token ends its effects and removes them from the flag", async () => {
     world.scene._store(aura("c", { atLocation: { x: 0, y: 0 }, attachTo: undefined }));
     const tokenDoc = { id: "tok1", parent: { id: "scene1" } };
@@ -202,6 +212,32 @@ describe("write permissions", () => {
     expect(Object.keys(getStored(world.scene))).toEqual(["legacy", "new"]);
     await gm.manager.onWriteRequest({ op: "delete", sceneId: "scene1", ids: ["legacy", "new"] }, from("gm"));
     expect(getStored(world.scene)).toEqual({});
+  });
+
+  it("the owner of an aura's actor may delete it, whoever stored it", async () => {
+    const owners = { hero: new Set(["p2"]) };
+    const actors = (id) =>
+      owners[id] ? { testUserPermission: (user, level) => level === "OWNER" && owners[id].has(user.id) } : null;
+    const manager = createEffectsManager(gm.api, {
+      getScene: (id) => (id === world.scene.id ? world.scene : null),
+      getViewedScene: () => world.scene,
+      getUser: () => GM,
+      getActiveGM: () => GM,
+      getUsers: () => new Map([GM, P1, P2].map((u) => [u.id, u])),
+      getActor: actors
+    });
+    world.scene._store(
+      aura("buff", { name: "aura:hero:bless", userId: "p1" }),
+      aura("old", { name: "aura:hero:shield" }),
+      aura("other", { name: "aura:villain:x", userId: "p1" })
+    );
+    const del = { op: "delete", sceneId: "scene1", ids: ["buff", "old", "other"] };
+    await manager.onWriteRequest(del, from("p2"));
+    expect(Object.keys(getStored(world.scene)).sort()).toEqual(["legacy", "mine", "other"]);
+    // Owning the actor allows deleting, not overwriting.
+    world.scene._store(aura("buff2", { name: "aura:hero:haste", userId: "p1" }));
+    await manager.onWriteRequest(set(aura("buff2", { name: "aura:hero:haste", file: "jb2a.other" })), from("p2"));
+    expect(getStored(world.scene).buff2.file).toBe("jb2a.aura");
   });
 
   it("deletes several ids in one scene update", async () => {

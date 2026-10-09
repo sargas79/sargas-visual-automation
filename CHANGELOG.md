@@ -24,7 +24,8 @@
 ### Security
 
 - Socket messages whose sender the server did not confirm never get GM rights: no teleporting other players' tokens and no clearing scenes by impersonating a GM.
-- Persistent effects remember who created them; only that user or a GM can replace or remove them, and only a GM can clear a scene's effects. Writes to unknown scenes are dropped.
+- Persistent effects remember who created them. Only that user or a GM can replace or remove them, and only a GM can clear a scene's effects (`SVA.effects.endAll` warns for players). A player can still remove the auras of actors they own, so removing an effect someone else put on your character, or one stored before this version, ends its aura for good. Writes to unknown scenes are dropped.
+- Users below the minimum trigger role can still end their stored auras.
 - Preload messages are role-checked and limited to 50 files.
 
 ## 0.5.0 - 2026-10-05

@@ -42,6 +42,7 @@ export function createEffectsManager(api, deps = {}) {
     getUser = () => globalThis.game?.user ?? null,
     getActiveGM = () => globalThis.game?.users?.activeGM ?? null,
     getUsers = () => globalThis.game?.users ?? null,
+    getActor = (id) => globalThis.game?.actors?.get?.(id) ?? null,
     now = () => Date.now(),
     warn = (key, fallback) => {
       const i18n = globalThis.game?.i18n;
@@ -57,15 +58,30 @@ export function createEffectsManager(api, deps = {}) {
   /** Recently ended ids → expiry time (see ENDED_TTL_MS). */
   const ended = new Map();
 
+  function pruneEnded(t = now()) {
+    for (const [key, until] of ended) if (until <= t) ended.delete(key);
+  }
+
   function rememberEnded(ids) {
-    const until = now() + ENDED_TTL_MS;
-    for (const id of ids) if (id) ended.set(id, until);
+    const t = now();
+    pruneEnded(t);
+    for (const id of ids) if (id) ended.set(id, t + ENDED_TTL_MS);
   }
 
   function recentlyEnded(id) {
-    const t = now();
-    for (const [key, until] of ended) if (until <= t) ended.delete(key);
+    pruneEnded();
     return ended.has(id);
+  }
+
+  /** Does `user` own the actor an automation aura (`aura:<actorId>:<key>`) belongs to? */
+  function ownsAuraActor(effect, user) {
+    const actorId = /^aura:([^:]+):/.exec(effect?.name ?? "")?.[1];
+    if (!actorId || !user) return false;
+    try {
+      return !!getActor(actorId)?.testUserPermission?.(user, "OWNER");
+    } catch {
+      return false;
+    }
   }
 
   const viewedSceneId = () => getViewedScene()?.id ?? null;
@@ -113,9 +129,11 @@ export function createEffectsManager(api, deps = {}) {
   /**
    * Apply a write on this (GM) client, on behalf of `userId`.
    * @param {object} op
-   * @param {{userId?: string|null, privileged?: boolean}} [by] privileged: GM rights (any effect, `clear`).
+   * @param {{user?: object|null, userId?: string|null, privileged?: boolean}} [by] privileged: GM rights (any
+   *   effect, `clear`). Without them a user may change the effects they created, and also delete the auras of
+   *   actors they own (an aura stored by someone else, or before creators were recorded, still has to end).
    */
-  async function applyWrite(op, { userId = getUser()?.id ?? null, privileged = true } = {}) {
+  async function applyWrite(op, { user = null, userId = user?.id ?? getUser()?.id ?? null, privileged = true } = {}) {
     const scene = getScene(op?.sceneId);
     if (!scene) return;
     const stored = getStored(scene);
@@ -128,7 +146,7 @@ export function createEffectsManager(api, deps = {}) {
         update[`${path}.${effect.id}`] = { ...effect, userId: stored[effect.id]?.userId ?? userId };
       }
     } else if (op.op === "delete") {
-      const ids = (op.ids ?? []).filter((id) => id in stored && mayChange(id));
+      const ids = (op.ids ?? []).filter((id) => id in stored && (mayChange(id) || ownsAuraActor(stored[id], user)));
       rememberEnded(ids);
       // VERIFY(v14): "-=key" deletes a key in Document#update (all ids in one update).
       for (const id of ids) update[`${path}.-=${id}`] = null;
@@ -172,7 +190,7 @@ export function createEffectsManager(api, deps = {}) {
       if (!effects.length) return;
       op = { ...data, effects };
     }
-    await applyWrite(op, { userId: user.id, privileged });
+    await applyWrite(op, { user, privileged });
   }
 
   // ---- public surface -----------------------------------------------------
@@ -202,6 +220,11 @@ export function createEffectsManager(api, deps = {}) {
 
     /** Remove every stored effect of a scene and end its live effects on all clients. */
     async endAll({ sceneId } = {}) {
+      // Only a GM may clear a scene: a player's request would end everything live but leave it all stored.
+      if (!getUser()?.isGM) {
+        warn("SVA.Net.EndAllGMOnly", "Only a GM can end all persistent animations of a scene.");
+        return;
+      }
       sceneId ??= viewedSceneId();
       const message = { sceneId, all: true };
       api.net?.emit("end", message);

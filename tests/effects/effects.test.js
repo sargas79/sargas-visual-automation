@@ -47,7 +47,7 @@ function createWorld(users) {
     });
     api.effects = manager.effects;
     net.on("effectsWrite", (d, payload) => manager.onWriteRequest(d, payload));
-    net.on("end", (d) => manager.endLocal(d));
+    net.on("end", (d, payload) => manager.endLocal(d, payload));
     const client = { user, api, manager, socket };
     clients.push(client);
   }
@@ -281,17 +281,17 @@ describe("write permissions", () => {
 });
 
 describe("end while a set is in flight", () => {
-  it("the GM drops a set for an id ended in the last 10 s", async () => {
-    const world = createWorld([GM, P1]);
-    const [gm, player] = world.clients;
-    // The end reaches the GM before the player's earlier set request.
+  it("the GM drops another user's set for an id ended in the last 10 s", async () => {
+    const world = createWorld([GM, P1, P2]);
+    const [gm, , p2] = world.clients;
+    // The GM's end reaches its own manager before the player's earlier set request.
     gm.manager.endLocal({ sceneId: "scene1", id: "late" });
     await gm.manager.onWriteRequest({ op: "set", sceneId: "scene1", effects: [aura("late")] }, from("p1"));
     expect(getStored(world.scene).late).toBeUndefined();
 
     // Ids matched by name on the GM's live effects count too.
     await gm.api.engine.play(aura("named"));
-    await player.api.effects.end({ name: "aura:named" });
+    await p2.api.effects.end({ name: "aura:named" });
     await flush();
     await gm.manager.onWriteRequest({ op: "set", sceneId: "scene1", effects: [aura("named")] }, from("p1"));
     expect(getStored(world.scene).named).toBeUndefined();
@@ -299,6 +299,44 @@ describe("end while a set is in flight", () => {
     world.time += 10_000;
     await gm.manager.onWriteRequest({ op: "set", sceneId: "scene1", effects: [aura("late")] }, from("p1"));
     expect(getStored(world.scene).late).toBeDefined();
+  });
+
+  it("the ender's own later set is a new store", async () => {
+    const world = createWorld([GM, P1]);
+    const [gm, player] = world.clients;
+    await player.manager.effects.store({
+      sceneId: "scene1",
+      steps: [{ type: "effect", effect: aura("shield", { name: "shield" }) }]
+    });
+    await flush();
+    expect(getStored(world.scene).shield).toBeDefined();
+    await player.api.effects.end({ id: "shield" });
+    await flush();
+    expect(getStored(world.scene).shield).toBeUndefined();
+    await gm.manager.onWriteRequest({ op: "set", sceneId: "scene1", effects: [aura("shield")] }, from("p1"));
+    expect(getStored(world.scene).shield).toBeDefined();
+  });
+
+  it("an end for another scene does not block a set on this one", async () => {
+    const world = createWorld([GM, P1]);
+    const [gm] = world.clients;
+    gm.manager.endLocal({ sceneId: "elsewhere", id: "x" });
+    await gm.manager.onWriteRequest({ op: "set", sceneId: "scene1", effects: [aura("x")] }, from("p1"));
+    expect(getStored(world.scene).x).toBeDefined();
+  });
+
+  it("an end that reaches the GM removes the stored effect its sender may delete", async () => {
+    const world = createWorld([GM, P1, P2]);
+    const [, p1, p2] = world.clients;
+    // Stored by the GM after the player listed nothing to delete: the end alone removes it.
+    world.scene._store(aura("mine", { userId: "p1" }), aura("theirs", { userId: "p2" }));
+    p1.api.net.emit("end", { sceneId: "scene1", id: "mine" });
+    p1.api.net.emit("end", { sceneId: "scene1", id: "theirs" });
+    await flush();
+    expect(Object.keys(getStored(world.scene))).toEqual(["theirs"]);
+    p2.api.net.emit("end", { sceneId: "scene1", id: "theirs" });
+    await flush();
+    expect(getStored(world.scene)).toEqual({});
   });
 });
 

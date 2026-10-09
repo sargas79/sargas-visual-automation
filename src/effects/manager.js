@@ -19,8 +19,14 @@
  * effect records the `userId` that created it. `set` may not overwrite, nor `delete` remove,
  * another user's effect (or a legacy one without `userId`) unless the requester is a GM;
  * `clear` is GM-only. GM rights need a server-verified sender id (net `resolveSender`).
- * Ids ended in the last ENDED_TTL_MS are remembered so a `set` still in flight when the
- * effect was ended does not store it again.
+ * A user may also delete the stored auras of actors they own.
+ *
+ * Ending races: one client's socket messages arrive in order, so a `set` can only overtake an
+ * `end` sent by ANOTHER user. Ids ended in the last ENDED_TTL_MS are remembered per scene with
+ * the user who ended them; the active GM drops a `set` for such an id from anyone else, while
+ * the ender's own later `set` is a new store. An `end` that reaches the active GM also deletes
+ * the matching stored effects its sender may delete, in case the sender's own `delete` listed
+ * nothing because the effect was not stored yet when it ended it.
  */
 import { MODULE_ID } from "../constants.js";
 import { log } from "../logger.js";
@@ -28,7 +34,7 @@ import { resolveSender } from "../net/preferences.js";
 import { resolveEffect } from "../sequence/runner.js";
 import { FLAG_KEY, collectPersistent, getStored, matches, referencesToken } from "./store.js";
 
-/** How long the active GM ignores `set` requests for an id that was just ended. */
+/** How long the active GM ignores another user's `set` requests for an id that was just ended. */
 export const ENDED_TTL_MS = 10000;
 
 /**
@@ -55,22 +61,30 @@ export function createEffectsManager(api, deps = {}) {
   let snapshotSceneId = null;
   /** Ids this client already asked its engine to end. */
   const ending = new Set();
-  /** Recently ended ids → expiry time (see ENDED_TTL_MS). */
+  /** Recently ended "sceneId/id" → {until, by: user who ended it} (see ENDED_TTL_MS). */
   const ended = new Map();
+  const endedKey = (sceneId, id) => `${sceneId ?? ""}/${id}`;
 
   function pruneEnded(t = now()) {
-    for (const [key, until] of ended) if (until <= t) ended.delete(key);
+    for (const [key, entry] of ended) if (entry.until <= t) ended.delete(key);
   }
 
-  function rememberEnded(ids) {
+  function rememberEnded(sceneId, ids, by = getUser()?.id ?? null) {
     const t = now();
     pruneEnded(t);
-    for (const id of ids) if (id) ended.set(id, t + ENDED_TTL_MS);
+    for (const id of ids) if (id) ended.set(endedKey(sceneId, id), { until: t + ENDED_TTL_MS, by });
   }
 
-  function recentlyEnded(id) {
+  /** Was `id` just ended on `sceneId` by someone other than `userId`? Their own later `set` is a new store. */
+  function endedByOther(sceneId, id, userId) {
     pruneEnded();
-    return ended.has(id);
+    for (const key of [endedKey(sceneId, id), endedKey(null, id)]) {
+      const entry = ended.get(key);
+      if (!entry) continue;
+      if (entry.by !== userId) return true;
+      ended.delete(key);
+    }
+    return false;
   }
 
   /** Does `user` own the actor an automation aura (`aura:<actorId>:<key>`) belongs to? */
@@ -107,9 +121,19 @@ export function createEffectsManager(api, deps = {}) {
     }
   }
 
-  /** End live local effects matching a selector on the viewed scene. */
-  function endLocal({ sceneId, id, name, all = false, tokenId } = {}) {
-    if (id) rememberEnded([id]);
+  /**
+   * End live local effects matching a selector on the viewed scene.
+   * @param {object} selector
+   * @param {object} [payload]  Net payload when the selector came from another client's `end` message.
+   */
+  function endLocal({ sceneId, id, name, all = false, tokenId } = {}, payload = null) {
+    const by = payload ? (payload.senderId ?? null) : (getUser()?.id ?? null);
+    if (id) rememberEnded(sceneId, [id], by);
+    if (payload && (id || name) && !all && !tokenId) {
+      deleteEndedRemotely({ sceneId, id, name }, payload).catch((err) =>
+        log.error("Could not remove ended persistent effects", err)
+      );
+    }
     const viewed = viewedSceneId();
     if (sceneId && viewed && sceneId !== viewed) return;
     const ids = [];
@@ -118,10 +142,23 @@ export function createEffectsManager(api, deps = {}) {
       if (d.sceneId && sceneId && d.sceneId !== sceneId) continue;
       if (tokenId) {
         if (referencesToken(d, tokenId)) ids.push(handle.id);
-      } else if (all || ((id || name) && matches(d, { id, name }))) ids.push(handle.id);
+      } else if (all || ((id || name) && matches(d, { id, name }))) {
+        rememberEnded(d.sceneId ?? sceneId, [handle.id], by);
+        ids.push(handle.id);
+      }
     }
-    rememberEnded(ids);
     endLocalIds(ids);
+  }
+
+  /** Active GM: delete the stored effects another client's `end` matched, within that sender's rights. */
+  async function deleteEndedRemotely({ sceneId, id, name }, payload) {
+    if (!isActiveGM() || typeof sceneId !== "string") return;
+    const ids = Object.values(getStored(getScene(sceneId)))
+      .filter((e) => matches(e, { id, name }))
+      .map((e) => e.id);
+    if (!ids.length) return;
+    const { user, privileged } = resolveSender(payload, getUsers());
+    if (user) await applyWrite({ op: "delete", sceneId, ids }, { user, privileged });
   }
 
   // ---- GM-authoritative writes -------------------------------------------
@@ -147,12 +184,12 @@ export function createEffectsManager(api, deps = {}) {
       }
     } else if (op.op === "delete") {
       const ids = (op.ids ?? []).filter((id) => id in stored && (mayChange(id) || ownsAuraActor(stored[id], user)));
-      rememberEnded(ids);
+      rememberEnded(op.sceneId, ids, userId);
       // VERIFY(v14): "-=key" deletes a key in Document#update (all ids in one update).
       for (const id of ids) update[`${path}.-=${id}`] = null;
     } else if (op.op === "clear") {
       if (!privileged || !Object.keys(stored).length) return;
-      rememberEnded(Object.keys(stored));
+      rememberEnded(op.sceneId, Object.keys(stored), userId);
       update[`flags.${MODULE_ID}.-=${FLAG_KEY}`] = null;
     }
     if (Object.keys(update).length) await scene.update(update);
@@ -186,7 +223,9 @@ export function createEffectsManager(api, deps = {}) {
     }
     let op = data;
     if (data.op === "set") {
-      const effects = (Array.isArray(data.effects) ? data.effects : []).filter((e) => !recentlyEnded(e?.id));
+      const effects = (Array.isArray(data.effects) ? data.effects : []).filter(
+        (e) => !endedByOther(data.sceneId, e?.id, user.id)
+      );
       if (!effects.length) return;
       op = { ...data, effects };
     }

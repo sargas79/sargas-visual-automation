@@ -66,12 +66,17 @@ export async function runSequence(sequence, deps) {
           await sleep(step.waitUntilFinished);
         } else pending.push(task);
       } else if (step.type === "effect") {
-        const task = runEffect(step, sequence, { engine, userId, filterEffect });
+        let loaded;
+        const ready = new Promise((resolve) => (loaded = resolve));
+        const task = runEffect(step, sequence, { engine, userId, filterEffect, onLoaded: loaded });
         if (step.waitUntilFinished !== undefined && step.waitUntilFinished !== null) await task;
         else {
-          // engine.play() resolves only after the file loads and the effect's delay elapses: don't block the next step
-          // on it (`.delay()` staggers effects in parallel, see docs/api.md).
-          pending.push(task.catch((err) => log.error(`Sequence ${sequence.id} step failed`, err)));
+          // engine.play() resolves only after the file loads and the effect's delay elapses. The next step waits for
+          // the load, so later waits and sounds are timed from when the effect can show, but not for the delay
+          // (`.delay()` staggers effects in parallel, see docs/api.md).
+          const guarded = task.catch((err) => log.error(`Sequence ${sequence.id} step failed`, err));
+          pending.push(guarded);
+          await Promise.race([ready, guarded]);
         }
       } else log.debug(`Unknown sequence step "${step.type}"`);
     } catch (err) {
@@ -96,7 +101,7 @@ export function resolveEffect(effect, sequence) {
   return out;
 }
 
-async function runEffect(step, sequence, { engine, userId, filterEffect }) {
+async function runEffect(step, sequence, { engine, userId, filterEffect, onLoaded }) {
   const resolved = resolveEffect(step.effect, sequence);
   if (!isVisibleTo(resolved.users, userId)) return;
   const effect = filterEffect(resolved);
@@ -105,7 +110,7 @@ async function runEffect(step, sequence, { engine, userId, filterEffect }) {
     log.warn("Rendering engine unavailable, skipping effect");
     return;
   }
-  const handle = await engine.play(effect);
+  const handle = await engine.play(effect, { onLoaded });
   const offset = step.waitUntilFinished;
   if (offset === undefined || offset === null) return;
   if (effect.persist) {

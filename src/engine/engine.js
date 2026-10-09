@@ -105,9 +105,11 @@ export class EffectEngine {
   /**
    * Play an effect locally.
    * @param {object} effect  EffectDescriptor (normalized here if needed).
+   * @param {{onLoaded?: () => void}} [options]  onLoaded: called once the file is loaded (or failed to), before the
+   *   effect's delay has elapsed. Not called when the effect is skipped (the returned promise resolves right away).
    * @returns {Promise<EffectHandle>} resolves once the sprite is on the canvas (or right away when skipped).
    */
-  async play(effect) {
+  async play(effect, { onLoaded } = {}) {
     let descriptor;
     try {
       descriptor = normalizeEffect(effect);
@@ -135,7 +137,8 @@ export class EffectEngine {
     this.counters.played++;
     this.counters.peak = Math.max(this.counters.peak, this.#records.size);
     try {
-      const [prepared] = await Promise.all([this.#prepare(descriptor), (this.env.wait ?? wait)(descriptor.delay ?? 0)]);
+      const preparing = this.#prepare(descriptor).finally(() => onLoaded?.());
+      const [prepared] = await Promise.all([preparing, (this.env.wait ?? wait)(descriptor.delay ?? 0)]);
       record.instance = prepared.instance;
       if (record.cancelled) {
         this.#remove(record);

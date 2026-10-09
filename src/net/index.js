@@ -5,7 +5,7 @@
  * One channel (`module.sargas-visual-automation`), payload `{ v: 1, type, data, senderId }`.
  * Handlers for `play` live in src/sequence, `end` / `effectsWrite` in src/effects,
  * `preload` here. Incoming messages are dropped when the sender's role is below the
- * `netMinTriggerRole` world setting. Handlers get `payload.verified` (see ./channel.js)
+ * `netMinTriggerRole` world setting (removals excepted, see isRemoval). Handlers get `payload.verified` (see ./channel.js)
  * and use `resolveSender` before granting GM rights.
  */
 import { log } from "../logger.js";
@@ -19,6 +19,15 @@ export { NET_SETTINGS, resolveSender } from "./preferences.js";
 /** Most files one `preload` message may ask for. */
 export const PRELOAD_MAX_FILES = 50;
 
+/**
+ * Ending one effect and deleting stored ones are accepted from users below the minimum trigger role, so an aura
+ * stored before the role was raised can still end. The effects manager decides which deletions are allowed.
+ */
+function isRemoval({ type, data } = {}) {
+  if (type === MESSAGE_TYPES.END) return !data?.all;
+  return type === MESSAGE_TYPES.EFFECTS_WRITE && data?.op === "delete";
+}
+
 /** @param {object} api */
 export function init(api) {
   prefs.registerNetSettings({
@@ -28,7 +37,8 @@ export function init(api) {
   });
 
   const net = createNet({
-    accept: (payload) => prefs.senderAllowed(payload.senderId, { verified: payload.verified })
+    accept: (payload) =>
+      prefs.senderAllowed(payload.senderId, { verified: payload.verified, anyRole: isRemoval(payload) })
   });
   net.types = MESSAGE_TYPES;
 

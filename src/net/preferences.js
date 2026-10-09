@@ -98,14 +98,14 @@ export function canTrigger(user = globalThis.game?.user) {
  * Unknown senders are accepted when the users collection is not available (tests).
  * An unverified (client-claimed) sender must also be a connected user.
  * @param {string|null} senderId
- * @param {{verified?: boolean}} [opts]
+ * @param {{verified?: boolean, anyRole?: boolean}} [opts] anyRole: skip the minimum trigger role check.
  */
-export function senderAllowed(senderId, { verified = true } = {}) {
+export function senderAllowed(senderId, { verified = true, anyRole = false } = {}) {
   const users = globalThis.game?.users;
   if (!users?.get) return true;
   const sender = users.get(senderId);
   if (!sender || (!verified && !sender.active)) return false;
-  return canTrigger(sender);
+  return anyRole || canTrigger(sender);
 }
 
 /**

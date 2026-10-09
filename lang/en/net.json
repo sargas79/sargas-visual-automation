@@ -2,6 +2,7 @@
   "SVA": {
     "Net": {
       "NoGM": "No GM is connected: persistent animation changes cannot be saved.",
+      "EndAllGMOnly": "Only a GM can end all persistent animations of a scene.",
       "Settings": {
         "MinTriggerRole": {
           "Name": "Minimum role to trigger animations",

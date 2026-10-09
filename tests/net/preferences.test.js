@@ -149,6 +149,29 @@ describe("net area with permissions", () => {
     expect(api.engine.preload).toHaveBeenCalledWith(["g"]);
   });
 
+  it("accepts single ends and stored deletions from senders below the minimum role", async () => {
+    const api = { engine: { endAll: vi.fn() } };
+    netArea.init(api);
+    await game.settings.set(MODULE_ID, NET_SETTINGS.MIN_TRIGGER_ROLE, 2);
+    const ends = vi.fn();
+    const writes = vi.fn();
+    api.net.on("end", ends);
+    api.net.on("effectsWrite", writes);
+    const low = hub.createSocket("low");
+    const ghost = hub.createSocket("ghost");
+    low.emit(SOCKET_NAME, createPayload("end", { sceneId: "s", name: "aura:a:x" }, "low"));
+    low.emit(SOCKET_NAME, createPayload("end", { sceneId: "s", all: true }, "low"));
+    low.emit(SOCKET_NAME, createPayload("effectsWrite", { op: "delete", sceneId: "s", ids: ["a"] }, "low"));
+    low.emit(SOCKET_NAME, createPayload("effectsWrite", { op: "set", sceneId: "s", effects: [] }, "low"));
+    // Unknown users are still dropped.
+    ghost.emit(SOCKET_NAME, createPayload("end", { sceneId: "s", name: "x" }, "ghost"));
+    await flush();
+    expect(ends).toHaveBeenCalledTimes(1);
+    expect(ends.mock.calls[0][0]).toEqual({ sceneId: "s", name: "aura:a:x" });
+    expect(writes).toHaveBeenCalledTimes(1);
+    expect(writes.mock.calls[0][0]).toMatchObject({ op: "delete" });
+  });
+
   it("ends local effects when effects get disabled", async () => {
     const api = { engine: { endAll: vi.fn() } };
     netArea.init(api);

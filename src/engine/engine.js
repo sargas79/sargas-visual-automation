@@ -87,7 +87,10 @@ export class EffectEngine {
 
   /** Make room for a new effect within the budget; false when it must be skipped. */
   #makeRoom(descriptor) {
-    const active = [...this.#records.values()].map((r) => ({ id: r.id, persist: !!r.descriptor.persist }));
+    // Cancelled records (still loading, dropped when their load completes) no longer count against the budget.
+    const active = [];
+    for (const r of this.#records.values())
+      if (!r.cancelled) active.push({ id: r.id, persist: !!r.descriptor.persist });
     const plan = planCapacity({ active, max: this.maxEffects(), incomingPersist: !!descriptor.persist });
     for (const id of plan.evict) {
       const record = this.#records.get(id);
@@ -219,7 +222,8 @@ export class EffectEngine {
   }
 
   #tick(dt) {
-    for (const record of [...this.#records.values()]) {
+    // Iterating the Map directly is safe while #remove deletes entries (no per-frame array copy).
+    for (const record of this.#records.values()) {
       if (!record.sprite || record.removed || !record.sprite.display) continue;
       let alive = false;
       try {

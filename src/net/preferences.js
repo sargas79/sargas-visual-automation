@@ -96,12 +96,29 @@ export function canTrigger(user = globalThis.game?.user) {
 /**
  * Whether an incoming message from `senderId` should be honoured.
  * Unknown senders are accepted when the users collection is not available (tests).
+ * An unverified (client-claimed) sender must also be a connected user.
+ * @param {string|null} senderId
+ * @param {{verified?: boolean}} [opts]
  */
-export function senderAllowed(senderId) {
+export function senderAllowed(senderId, { verified = true } = {}) {
   const users = globalThis.game?.users;
   if (!users?.get) return true;
   const sender = users.get(senderId);
-  return !!sender && canTrigger(sender);
+  if (!sender || (!verified && !sender.active)) return false;
+  return canTrigger(sender);
+}
+
+/**
+ * The user behind an incoming message (`payload` as handed to net handlers), for privileged decisions.
+ * `user` is null when the sender is unknown, or claimed (unverified) but not connected. `privileged` (GM rights)
+ * is only granted to a GM whose id the server vouched for: a claimed GM id may be a player impersonating a GM.
+ * @returns {{user: object|null, verified: boolean, privileged: boolean}}
+ */
+export function resolveSender(payload, users = globalThis.game?.users) {
+  const verified = payload?.verified === true;
+  const user = users?.get?.(payload?.senderId) ?? null;
+  if (!user || (!verified && !user.active)) return { user: null, verified, privileged: false };
+  return { user, verified, privileged: verified && !!user.isGM };
 }
 
 /**

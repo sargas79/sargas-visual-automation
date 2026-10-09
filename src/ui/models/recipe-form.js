@@ -175,3 +175,18 @@ export function formToRecipe(flat, { presets, base = null } = {}) {
 
   return { recipe, errors };
 }
+
+/**
+ * Live check of a JSON textarea (`.sva-json`): "" when empty or valid, else the error.
+ * @param {string} text
+ * @param {{object?: boolean}} [options]  object: the value must be a JSON object
+ * @returns {string|null} error message, or null when valid
+ */
+export function jsonFieldError(text, { object = false } = {}) {
+  const { value, error } = parseJsonText(text);
+  if (error) return error;
+  if (object && value !== undefined && (typeof value !== "object" || value === null || Array.isArray(value))) {
+    return "must be a JSON object";
+  }
+  return null;
+}

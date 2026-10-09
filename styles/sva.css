@@ -8,6 +8,11 @@
   --sva-surface: color-mix(in srgb, currentcolor 6%, transparent);
   --sva-surface-strong: color-mix(in srgb, currentcolor 12%, transparent);
   --sva-gap: 0.5rem;
+  --sva-error: var(--color-level-error, var(--color-text-danger, #d33));
+  /* Square icon-only buttons: width = height = this size. */
+  --sva-icon-button: 1.75rem;
+  /* Space between the icon and the label of a text button. */
+  --sva-button-gap: 0.35rem;
 }
 
 .sva-app .sva-muted {
@@ -32,16 +37,104 @@
   color: var(--sva-accent);
 }
 
+/* ---------- Buttons ----------
+ * Icon-only buttons are fixed squares with the icon centred; text buttons size to
+ * their content (icon + label never clip) and only ellipsize when the row is
+ * narrower than a single button. */
+
 .sva-app .sva-icon-button,
 .sva-app .sva-card-actions button,
-.sva-app .sva-tree-toggle {
+.sva-app .sva-tree-toggle,
+.sva-app .sva-pager button,
+.sva-app .sva-path-field button {
+  display: inline-flex;
   flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  box-sizing: border-box;
+  width: var(--sva-icon-button);
+  min-width: var(--sva-icon-button);
+  max-width: var(--sva-icon-button);
+  height: var(--sva-icon-button);
+  min-height: var(--sva-icon-button);
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  line-height: normal;
+}
+
+.sva-app .sva-icon-button > i,
+.sva-app .sva-card-actions button > i,
+.sva-app .sva-tree-toggle > i,
+.sva-app .sva-pager button > i,
+.sva-app .sva-path-field button > i {
+  margin: 0;
+  line-height: 1;
+  text-align: center;
+}
+
+.sva-app .sva-toolbar button,
+.sva-app .sva-footer button,
+.sva-app button.sva-disable-toggle,
+.sva-app .sva-stale-notice button,
+.sva-app .sva-inline-button,
+.sva-app .sva-browser-header .sva-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sva-button-gap);
+  box-sizing: border-box;
   width: auto;
-  min-width: 1.75rem;
-  padding: 0 0.35rem;
+  max-width: 100%;
+  min-height: var(--sva-icon-button);
+  margin: 0;
+  padding: 0 0.6rem;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.sva-app .sva-toolbar button > i,
+.sva-app .sva-footer button > i,
+.sva-app button.sva-disable-toggle > i,
+.sva-app .sva-stale-notice button > i,
+.sva-app .sva-inline-button > i,
+.sva-app .sva-browser-header .sva-toggle > i {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.sva-app .sva-toolbar button > span,
+.sva-app .sva-footer button > span,
+.sva-app button.sva-disable-toggle > span,
+.sva-app .sva-stale-notice button > span,
+.sva-app .sva-inline-button > span,
+.sva-app .sva-browser-header .sva-toggle > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sva-app .sva-search {
+  display: flex;
+  flex: 1 1 12rem;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 10rem;
+}
+
+.sva-app .sva-search input {
+  flex: 1;
+  min-width: 0;
 }
 
 /* ---------- Animation browser (#36) ---------- */
+
+/* The window is the size container: .window-content itself is the grid that changes. */
+.sva-browser {
+  container: sva-browser / inline-size;
+}
 
 .sva-browser .window-content {
   display: grid;
@@ -55,24 +148,14 @@
 .sva-browser .sva-browser-header {
   grid-column: 1 / -1;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--sva-gap);
 }
 
-.sva-browser .sva-search {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.sva-browser .sva-search input {
-  flex: 1;
-}
-
-.sva-browser .sva-toggle {
-  flex: 0 0 auto;
-  width: auto;
+/* Only shown in narrow windows (see the container query below). */
+.sva-browser .sva-tree-switch {
+  display: none;
 }
 
 .sva-browser .sva-tree {
@@ -98,8 +181,11 @@
   font-weight: bold;
 }
 
+.sva-browser .sva-tree {
+  --sva-icon-button: 1.5rem;
+}
+
 .sva-browser .sva-tree-toggle {
-  height: 1.4rem;
   border: none;
   background: none;
 }
@@ -123,6 +209,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sva-gap);
+  min-width: 0;
 }
 
 .sva-browser .sva-grid-heading {
@@ -149,7 +236,8 @@
 }
 
 .sva-browser .sva-hint {
-  font-size: var(--font-size-12, 0.75rem);
+  flex: 0 0 auto;
+  cursor: help;
 }
 
 .sva-browser .sva-grid {
@@ -256,14 +344,10 @@
 
 .sva-browser .sva-card-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.15rem;
   padding: 0.2rem;
-}
-
-.sva-browser .sva-card-actions button {
-  height: 1.5rem;
-  line-height: 1;
 }
 
 .sva-browser .sva-pager {
@@ -273,9 +357,31 @@
   gap: var(--sva-gap);
 }
 
-.sva-browser .sva-pager button {
-  flex: 0 0 auto;
-  width: 2rem;
+/* Narrow windows: one column; the category tree sits above the grid on demand. */
+@container sva-browser (width < 640px) {
+  .sva-browser .window-content {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .sva-browser .sva-tree-switch {
+    display: inline-flex;
+  }
+
+  .sva-browser .sva-tree {
+    display: none;
+    border-right: none;
+    border-bottom: 1px solid var(--sva-border);
+    padding: 0 0 0.25rem;
+  }
+
+  .sva-browser.sva-sidebar-open .window-content {
+    grid-template-rows: auto minmax(0, 2fr) minmax(0, 3fr);
+  }
+
+  .sva-browser.sva-sidebar-open .sva-tree {
+    display: block;
+  }
 }
 
 /* ---------- Recipe form + item recipe editor (#37) ---------- */
@@ -304,6 +410,7 @@
 
 .sva-app .sva-item-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--sva-gap);
   padding-bottom: var(--sva-gap);
@@ -317,8 +424,11 @@
   object-fit: contain;
 }
 
+/* Takes the free space but may shrink (and wrap its text) so the toggle stays intact. */
 .sva-app .sva-item-title {
-  flex: 1;
+  flex: 1 1 12rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .sva-app .sva-item-title h2 {
@@ -328,15 +438,16 @@
 
 .sva-app .sva-disable-toggle {
   flex: 0 0 auto;
+  margin-left: auto;
   white-space: nowrap;
 }
 
-.sva-app button.sva-disable-toggle {
-  width: auto;
-}
-
 .sva-app .sva-actor-off {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   margin-left: var(--sva-gap);
+  white-space: nowrap;
 }
 
 .sva-app .sva-match {
@@ -355,10 +466,6 @@
 
 .sva-app .sva-match p {
   margin: 0.2rem 0;
-}
-
-.sva-app .sva-inline-button {
-  width: auto;
 }
 
 .sva-app .sva-candidates {
@@ -381,15 +488,31 @@
   gap: 0.25rem;
 }
 
-.sva-app .sva-path-field button {
-  flex: 0 0 auto;
-  width: 2rem;
+.sva-app .sva-path-field {
+  align-items: center;
+}
+
+.sva-app .sva-path-field input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .sva-app .sva-json {
   width: 100%;
   font-family: var(--font-mono, monospace);
   font-size: var(--font-size-12, 0.75rem);
+}
+
+.sva-app .sva-json.sva-invalid {
+  border-color: var(--sva-error);
+  outline: 1px solid var(--sva-error);
+  outline-offset: -1px;
+}
+
+.sva-app .sva-json-error {
+  flex-basis: 100%;
+  margin: 0.15rem 0 0;
+  color: var(--sva-error);
 }
 
 .sva-app .sva-section {
@@ -421,22 +544,64 @@
 
 .sva-app .sva-footer {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--sva-gap);
   padding-top: var(--sva-gap);
 }
 
+/* Share the row, never shrink below the label; wrap to a new row instead. */
 .sva-app .sva-footer button {
-  flex: 1;
+  flex: 1 0 auto;
 }
 
 /* ---------- Rules manager (#38) ---------- */
 
+.sva-rules-manager {
+  container: sva-rules / inline-size;
+}
+
 .sva-rules-manager .window-content {
   display: grid;
+  grid-template-areas:
+    "toolbar editor"
+    "list editor";
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   gap: var(--sva-gap);
   padding: var(--sva-gap);
   overflow: hidden;
+}
+
+.sva-rules-manager .sva-rules-toolbar {
+  grid-area: toolbar;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sva-gap);
+  min-width: 0;
+}
+
+.sva-rules-manager .sva-rules-panel {
+  grid-area: list;
+}
+
+.sva-rules-manager .sva-rule-editor {
+  grid-area: editor;
+}
+
+.sva-rules-manager .sva-rules-filter {
+  align-items: center;
+}
+
+.sva-rules-manager .sva-sort {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.sva-rules-manager .sva-sort select {
+  width: auto;
 }
 
 .sva-rules-manager .sva-rules-panel,
@@ -465,12 +630,10 @@
 
 .sva-app .sva-toolbar {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: var(--sva-gap);
-}
-
-.sva-app .sva-toolbar button {
-  flex: 0 0 auto;
-  width: auto;
+  min-width: 0;
 }
 
 .sva-rules-manager .sva-rules-scroll {
@@ -524,6 +687,29 @@
 .sva-rules-manager .sva-drop-zone.sva-drag-over {
   border-color: var(--sva-accent);
   color: var(--sva-accent);
+}
+
+.sva-rules-manager .sva-tester .sva-icon-button {
+  vertical-align: middle;
+}
+
+/* Narrow windows: the editor goes below the list. */
+@container sva-rules (width < 820px) {
+  .sva-rules-manager .window-content {
+    grid-template-areas:
+      "toolbar"
+      "list"
+      "editor";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1.4fr);
+  }
+
+  .sva-rules-manager .sva-rule-editor {
+    padding-top: var(--sva-gap);
+    padding-left: 0;
+    border-top: 1px solid var(--sva-border);
+    border-left: none;
+  }
 }
 
 .sva-rules-manager .sva-test-img {
@@ -583,11 +769,6 @@
   flex: 1 1 12rem;
 }
 
-.sva-item-config .sva-stale-notice button {
-  flex: 0 0 auto;
-  width: auto;
-}
-
 /* ---------- Actor animation overview (#74) ---------- */
 
 .sva-overview .window-content {
@@ -600,20 +781,14 @@
 
 .sva-overview .sva-overview-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--sva-gap);
   padding-top: var(--sva-gap);
 }
 
-.sva-overview .sva-search {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.sva-overview .sva-search input {
-  flex: 1;
+.sva-overview .sva-overview-counts {
+  display: block;
 }
 
 .sva-overview .sva-overview-toolbar select {
@@ -751,6 +926,8 @@
 
 .sva-overview .sva-overview-actions {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 0.2rem;
 }
 

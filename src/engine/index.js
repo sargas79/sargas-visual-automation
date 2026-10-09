@@ -57,12 +57,13 @@ export function init(api) {
     }
   };
 
-  // Scene change: remove effects before Foundry destroys the canvas groups, free sprites and video elements.
+  // Scene change: remove effects before Foundry destroys the canvas groups, free sprites and idle video elements.
+  // Prototypes stay cached (bounded by the LRU) so returning to a scene does not download its videos again.
   Hooks.on("canvasTearDown", () => {
     engine.tearDown();
     layers.tearDown();
     overlay.tearDown();
-    engine.textures.clear();
+    engine.textures.drainPools();
   });
   Hooks.on("canvasReady", () => overlay.show());
 }

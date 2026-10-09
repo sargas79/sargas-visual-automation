@@ -2,12 +2,12 @@
   <nav class="sva-toolbar">
     <button type="button" data-action="openBrowser">
       <i class="fa-solid fa-film" inert></i>
-      {{localize "SVA.UI.Browser.Title"}}
+      <span>{{localize "SVA.UI.Browser.Title"}}</span>
     </button>
     {{#if isGM}}
       <button type="button" data-action="openRules">
         <i class="fa-solid fa-list-check" inert></i>
-        {{localize "SVA.UI.Rules.Title"}}
+        <span>{{localize "SVA.UI.Rules.Title"}}</span>
       </button>
     {{/if}}
   </nav>
@@ -68,7 +68,7 @@
   <footer class="sva-footer form-footer">
     <button type="submit">
       <i class="fa-solid fa-floppy-disk" inert></i>
-      {{localize "SVA.UI.SettingsPanel.Save"}}
+      <span>{{localize "SVA.UI.SettingsPanel.Save"}}</span>
     </button>
   </footer>
 </div>

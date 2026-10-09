@@ -194,7 +194,7 @@ describe("player requests go through the GM", () => {
     createTeleport({ net }, { playAll: vi.fn() });
     await net.handlers.get(TELEPORT_MESSAGES.MOVE)(
       { requestId: "r1", sceneId: "scene1", tokenId: "tok1", x: 100, y: 200 },
-      { senderId: "p1" }
+      { senderId: "p1", verified: true }
     );
     expect(world.doc.testUserPermission).toHaveBeenCalledWith(player, "OWNER");
     expect(world.doc.update).toHaveBeenCalledWith({ x: 100, y: 200 }, { animate: false });
@@ -208,20 +208,59 @@ describe("player requests go through the GM", () => {
     const net = fakeNet();
     createTeleport({ net }, { playAll: vi.fn() });
     const request = { requestId: "r2", sceneId: "scene1", tokenId: "tok1", x: 1, y: 2 };
-    await net.handlers.get(TELEPORT_MESSAGES.MOVE)(request, { senderId: "p1" });
+    await net.handlers.get(TELEPORT_MESSAGES.MOVE)(request, { senderId: "p1", verified: true });
     expect(world.doc.update).not.toHaveBeenCalled();
     expect(net.emit).toHaveBeenCalledWith(TELEPORT_MESSAGES.MOVED, { requestId: "r2", ok: false, reason: "denied" });
 
     net.emit.mockClear();
     game.users.activeGM = { id: "gm" };
-    await net.handlers.get(TELEPORT_MESSAGES.MOVE)(request, { senderId: "p1" });
+    await net.handlers.get(TELEPORT_MESSAGES.MOVE)(request, { senderId: "p1", verified: true });
     expect(net.emit).not.toHaveBeenCalled();
+  });
+
+  it("an unverified sender id never gets the GM bypass", async () => {
+    const world = installWorld({ owner: true });
+    game.users.activeGM = { id: "user1" };
+    game.users.set("gm", { id: "gm", isGM: true, active: true });
+    game.users.set("p1", { id: "p1", isGM: false, active: false });
+    const net = fakeNet();
+    createTeleport({ net }, { playAll: vi.fn() });
+    const move = (requestId, payload) =>
+      net.handlers.get(TELEPORT_MESSAGES.MOVE)({ requestId, sceneId: "scene1", tokenId: "tok1", x: 1, y: 2 }, payload);
+
+    // A player claiming to be the GM (no server-provided id): the GM has no explicit ownership of the token.
+    await move("r1", { senderId: "gm", verified: false });
+    expect(net.emit).toHaveBeenLastCalledWith(TELEPORT_MESSAGES.MOVED, {
+      requestId: "r1",
+      ok: false,
+      reason: "denied"
+    });
+    // A claimed user that is not connected is rejected outright.
+    await move("r2", { senderId: "p1", verified: false });
+    expect(net.emit).toHaveBeenLastCalledWith(TELEPORT_MESSAGES.MOVED, {
+      requestId: "r2",
+      ok: false,
+      reason: "denied"
+    });
+    expect(world.doc.update).not.toHaveBeenCalled();
+    // The same GM id vouched for by the server keeps the bypass.
+    await move("r3", { senderId: "gm", verified: true });
+    expect(net.emit).toHaveBeenLastCalledWith(TELEPORT_MESSAGES.MOVED, { requestId: "r3", ok: true });
   });
 });
 
 describe("helpers", () => {
   it("topLeftFor centres the token on the point", () => {
     expect(topLeftFor({ width: 2, height: 2 }, { x: 500, y: 500 }, 100)).toEqual({ x: 400, y: 400 });
+  });
+
+  it("applyMove without GM trust needs explicit ownership", async () => {
+    const world = installWorld({ owner: true });
+    const gm = { id: "gm", isGM: true };
+    const move = { sceneId: "scene1", tokenId: "tok1", x: 0, y: 0 };
+    expect(await applyMove(move, gm, { trustGM: false })).toEqual({ ok: false, reason: "denied" });
+    world.doc.actor = { ownership: { default: 0, gm: 3 } };
+    expect(await applyMove(move, gm, { trustGM: false })).toEqual({ ok: true });
   });
 
   it("applyMove rejects invalid coordinates and unknown tokens", async () => {

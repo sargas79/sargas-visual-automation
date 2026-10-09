@@ -59,7 +59,7 @@ SVA looks for a recipe in this order and uses the first one it finds:
 3. **System rule pack**: the defaults shipped with SVA for your game system (`rules/pf2e.json`: common spells, cantrips and every weapon group; `rules/dnd5e.json`: SRD spells, every base weapon, healing potions, spell effects and conditions; `rules/gurps.json`: weapon families, unarmed and natural attacks, firearms and common GURPS Magic spells).
 4. **Generic fallback**: based on what the item is (melee, ranged or thrown attack, damage type, healing). Creature attacks named after a body part (jaws, claws, stings, tails, wings, slams…) get a bite, claw or slam animation sized to the creature and coloured by its energy damage or creature type (a fire-breathing dragon's jaws glow orange, a ghoul's claws purple).
 
-If the item's **Disable automation** box is ticked, nothing plays for it, whatever the rules say.
+If automation is disabled for the item (**Disable automation** in its configuration, or the toggle in the animation overview), nothing plays for it, whatever the rules say.
 
 To see why an item plays what it plays, use **Which rule matches?** in the rules manager, or in the console:
 
@@ -127,7 +127,7 @@ Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condi
 
 1. **Preset**: pick one of the presets above.
 2. **Animation**: type a JB2A path or click the picker to choose one in the animation browser. Pick a **colour** variant if the animation has several.
-3. **Options**: scale, layer, delay, and the preset's own options.
+3. **Options**: scale, layer, delay, and the preset's own options. JSON fields are checked as you type: invalid JSON is outlined in red with the error below it.
 4. **Outcomes**: optional overrides for critical success, success, failure and critical failure.
 5. **Stages**: optional cast, projectile, impact, on-source and on-target animations. Under **Sound**, the file button opens Foundry's file browser to pick an audio file.
 6. **Preview**: select a token and target others, then click Preview. Only you see the preview.
@@ -135,7 +135,7 @@ Open an item sheet (for PF2e: weapon, spell, action, consumable, effect or condi
 
 If the item is changed elsewhere while the window is open (another user, a macro), the editor reloads it. When you have unsaved edits it keeps them and asks instead: **Reload** discards your edits, **Keep my edits** lets you save over the other change.
 
-Tick **Disable automation** to silence an item. Click **Reset** to remove the item's own recipe and go back to the rules.
+Click **Disable automation** in the header to silence an item; it takes effect immediately (no need to save) and the button becomes **Enable automation**. Unsaved recipe edits stay in the form. Click **Remove item recipe** to remove the item's own recipe and go back to the rules.
 
 The recipe is stored in the item's flags, so it travels with the item when you copy it to another actor or export it to a compendium.
 
@@ -180,6 +180,8 @@ A world rule matches items and gives them a recipe. Use rules to change the defa
 | Match    | Any combination of: **key** (PF2e slug, D&D 5e identifier or GURPS name slug, e.g. `electric-arc`, `fire-bolt`, `fireball`), exact **name**, **regex** on the name, item **type**, **traits** (all must be present), **attack kind** (melee/ranged/thrown), **weapon group**, **base item** (e.g. `longsword`: every longsword variant). |
 | Recipe   | Same editor as the item configuration.                                                                                                                                                                                                                                                                                                   |
 
+- **Search** the list (label, id, match criteria, preset or animation) and **sort** it by priority (default), label or id.
+- Switching to another rule, adding one or cancelling asks first when the editor has unsaved changes. A rule needs at least one match criterion to be saved.
 - **Which rule matches?** Drop an item on the manager (or pick one) to see the winning recipe and every candidate.
 - **Export** saves all world rules to a JSON file; **Import** loads such a file (share rule sets between worlds). Rules round-trip without changes.
 - World rules always win over the system rule pack, and lose to an item's own recipe.
@@ -193,6 +195,7 @@ Open it from the **Animation browser** button in the module settings (and in the
 - **Copy path** copies the database path (`jb2a.fire_bolt.orange`) for macros and recipes.
 - **Play on selected token** plays it on the selected token (and to the target, for projectiles).
 - **Favourites** keep the animations you use most at the top.
+- In a narrow window the category tree is hidden; the tree button next to the search box shows it above the grid.
 
 ## Example macros
 

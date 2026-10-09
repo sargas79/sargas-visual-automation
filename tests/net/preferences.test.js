@@ -8,6 +8,7 @@ import {
   getVolume,
   NET_SETTINGS,
   registerNetSettings,
+  resolveSender,
   senderAllowed
 } from "../../src/net/preferences.js";
 import { createPayload } from "../../src/net/protocol.js";
@@ -55,6 +56,27 @@ describe("permissions", () => {
     expect(senderAllowed("low")).toBe(false);
     expect(senderAllowed("high")).toBe(true);
     expect(senderAllowed("ghost")).toBe(false);
+    // A client-claimed (unverified) id must also be a connected user.
+    expect(senderAllowed("high", { verified: false })).toBe(false);
+    game.users.get("high").active = true;
+    expect(senderAllowed("high", { verified: false })).toBe(true);
+  });
+
+  it("grants GM rights only to a server-verified GM sender", () => {
+    const users = new Map([
+      ["gm", { id: "gm", isGM: true, active: true }],
+      ["away", { id: "away", isGM: false, active: false }]
+    ]);
+    expect(resolveSender({ senderId: "gm", verified: true }, users)).toMatchObject({ privileged: true });
+    expect(resolveSender({ senderId: "gm", verified: false }, users)).toMatchObject({
+      user: users.get("gm"),
+      verified: false,
+      privileged: false
+    });
+    expect(resolveSender({ senderId: "away", verified: false }, users).user).toBeNull();
+    expect(resolveSender({ senderId: "away", verified: true }, users).user).toBe(users.get("away"));
+    expect(resolveSender({ senderId: "ghost", verified: true }, users).user).toBeNull();
+    expect(resolveSender({ senderId: "gm", verified: true }, null).user).toBeNull();
   });
 });
 
@@ -117,11 +139,14 @@ describe("net area with permissions", () => {
     // A spoofed senderId is replaced by the id the server reports.
     low.emit(SOCKET_NAME, createPayload("play", { n: 3 }, "gm"));
     gm.emit(SOCKET_NAME, createPayload("play", { n: 2 }, "gm"));
+    // preload follows the same role check.
     low.emit(SOCKET_NAME, createPayload("preload", { files: ["f"] }, "low"));
+    gm.emit(SOCKET_NAME, createPayload("preload", { files: ["g"] }, "gm"));
     await flush();
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler.mock.calls[0][0]).toEqual({ n: 2 });
-    expect(api.engine.preload).toHaveBeenCalledWith(["f"]);
+    expect(api.engine.preload).toHaveBeenCalledTimes(1);
+    expect(api.engine.preload).toHaveBeenCalledWith(["g"]);
   });
 
   it("ends local effects when effects get disabled", async () => {

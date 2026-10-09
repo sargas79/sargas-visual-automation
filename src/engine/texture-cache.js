@@ -30,6 +30,8 @@ export class TextureCache {
   #lru;
   /** Entries whose prototype is still loading. @type {Map<string, object>} */
   #loading = new Map();
+  /** Recently failed loads, so a missing file is not fetched again on every play. @type {Map<string, {error: any, until: number}>} */
+  #failed = new Map();
 
   counters = { loads: 0, hits: 0, failures: 0, clonesCreated: 0, clonesDestroyed: 0, clonesReused: 0, evictions: 0 };
 
@@ -38,10 +40,14 @@ export class TextureCache {
    * @param {TextureBackend} options.backend
    * @param {number} [options.max=30]       Prototypes kept in memory (LRU, in-use files are never evicted).
    * @param {number} [options.poolSize=4]   Idle instances kept per file for reuse.
+   * @param {number} [options.failureTtl=60000]  How long (ms) a failed load is remembered before it is retried.
+   * @param {() => number} [options.now]     Clock (tests).
    */
-  constructor({ backend, max = 30, poolSize = 4 }) {
+  constructor({ backend, max = 30, poolSize = 4, failureTtl = 60_000, now = () => Date.now() }) {
     this.backend = backend;
     this.poolSize = poolSize;
+    this.failureTtl = failureTtl;
+    this.now = now;
     this.#lru = new LruCache({
       max,
       isPinned: (entry) => entry.refs > 0,
@@ -73,6 +79,20 @@ export class TextureCache {
       return cached;
     }
     if (this.#loading.has(src)) return this.#loading.get(src);
+    const failed = this.#failed.get(src);
+    if (failed && failed.until > this.now()) {
+      // Never cached: a throwaway entry whose load fails right away with the remembered error.
+      return {
+        src,
+        proto: null,
+        refs: 0,
+        pool: [],
+        evicted: true,
+        unloaded: true,
+        ready: Promise.reject(failed.error)
+      };
+    }
+    this.#failed.delete(src);
     this.counters.loads++;
     const entry = { src, proto: null, refs: 0, pool: [], evicted: false, unloaded: false, ready: null };
     entry.ready = this.backend.load(src).then(
@@ -85,6 +105,7 @@ export class TextureCache {
       (err) => {
         this.#loading.delete(src);
         this.counters.failures++;
+        if (this.failureTtl > 0) this.#failed.set(src, { error: err, until: this.now() + this.failureTtl });
         throw err;
       }
     );
@@ -194,6 +215,7 @@ export class TextureCache {
 
   /** Drop everything. Instances still in use are destroyed when released. */
   clear() {
+    this.#failed.clear();
     this.#lru.clear();
   }
 

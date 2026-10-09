@@ -1,5 +1,5 @@
 /**
- * Foundry v14 / PIXI 7 glue for the texture cache (#13). Not unit tested (needs a browser + Foundry).
+ * Foundry v14 / PIXI 7 glue for the texture cache (#13). Needs a browser + Foundry; only isUsedByCanvas is unit tested.
  *
  * Loading: `foundry.canvas.loadTexture(src)` goes through Foundry's TextureLoader and PIXI.Assets. For videos PIXI's
  * `loadVideo` parser fetches the file ONCE into a Blob and builds a `<video>` on a `blob:` URL. That element is the
@@ -23,6 +23,40 @@ function videoOf(texture) {
 function videoDurationMs(video) {
   const d = video?.duration;
   return Number.isFinite(d) ? d * 1000 : 0;
+}
+
+const normalizeSrc = (src) => {
+  let s = String(src ?? "");
+  try {
+    s = decodeURI(s);
+  } catch {
+    // keep as is
+  }
+  return s.replace(/^\/+/, "").split("?")[0];
+};
+
+/**
+ * Is the canvas drawing this file outside SVA? A prototype we loaded first lives in Foundry's (and PIXI.Assets')
+ * cache, so a tile, token or scene image using the same file later gets the very same texture. Unloading it would
+ * destroy a texture Foundry still draws, so we check the current canvas before unloading.
+ * @param {{src: string, texture?: any}} proto
+ */
+export function isUsedByCanvas(proto) {
+  const c = globalThis.canvas;
+  if (!c) return false;
+  const base = proto.texture?.baseTexture;
+  const src = normalizeSrc(proto.src);
+  const scene = c.scene;
+  // VERIFY(v14): scene.background.src / scene.foreground hold the scene image paths.
+  for (const path of [scene?.background?.src, scene?.foreground]) if (path && normalizeSrc(path) === src) return true;
+  for (const layer of [c.tiles, c.tokens]) {
+    for (const p of layer?.placeables ?? []) {
+      if (base && (p.texture?.baseTexture === base || p.mesh?.texture?.baseTexture === base)) return true;
+      const path = p.document?.texture?.src;
+      if (path && normalizeSrc(path) === src) return true;
+    }
+  }
+  return false;
 }
 
 /** @type {import("./texture-cache.js").TextureBackend} */
@@ -104,6 +138,13 @@ export const foundryTextureBackend = {
 
   unload(proto) {
     // Only unload what we loaded; files already cached by Foundry (tiles, tokens...) stay under its control.
-    if (proto.owned) PIXI.Assets.unload(proto.src).catch(() => {});
+    if (!proto.owned) return;
+    // Foundry may have started using the file after we loaded it: then it is Foundry's texture now (its own cache
+    // expires it), we only drop our reference. Our clones have their own base textures and are destroyed separately.
+    if (isUsedByCanvas(proto)) {
+      proto.owned = false;
+      return;
+    }
+    PIXI.Assets.unload(proto.src).catch(() => {});
   }
 };

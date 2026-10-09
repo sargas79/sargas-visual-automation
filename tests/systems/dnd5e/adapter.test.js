@@ -49,6 +49,7 @@ describe("Dnd5eAdapter skeleton", () => {
       "createMeasuredTemplate",
       "createActiveEffect",
       "deleteActiveEffect",
+      "updateActiveEffect",
       "getHeaderControlsDocumentSheetV2"
     ]) {
       expect(Hooks._handlers.get(hook)?.length, hook).toBe(1);
@@ -165,6 +166,43 @@ describe("hooks → events", () => {
     game.settings.set("sargas-visual-automation", SETTING_CONDITIONS, false);
     Hooks.callAll("createActiveEffect", { ...prone, uuid: "Actor.goblin.ActiveEffect.e2" }, {}, "user1");
     expect(emit).toHaveBeenCalledTimes(2);
+  });
+
+  it("animates effects enabled after creation and ends them when disabled again", () => {
+    const { emit, goblin } = env;
+    const bless = {
+      id: "e3",
+      uuid: "Actor.goblin.ActiveEffect.e3",
+      parent: goblin,
+      name: "Bless",
+      type: "base",
+      statuses: new Set(),
+      disabled: true,
+      _stats: { modifiedTime: 1 }
+    };
+    Hooks.callAll("createActiveEffect", bless, {}, "user1");
+    expect(emit).not.toHaveBeenCalled();
+
+    bless.disabled = false;
+    Hooks.callAll("updateActiveEffect", bless, { disabled: false }, {}, "user2");
+    Hooks.callAll("updateActiveEffect", bless, { name: "Blessed" }, {}, "user1");
+    expect(emit).not.toHaveBeenCalled();
+    Hooks.callAll("updateActiveEffect", bless, { disabled: false }, {}, "user1");
+    Hooks.callAll("updateActiveEffect", bless, { disabled: false }, {}, "user1"); // same update twice
+    expect(emit).toHaveBeenCalledTimes(1);
+    expect(emit.mock.calls[0][0]).toMatchObject({ type: EVENT_TYPES.EFFECT_APPLIED, descriptors: { key: "bless" } });
+
+    bless.disabled = true;
+    bless._stats.modifiedTime = 2;
+    Hooks.callAll("updateActiveEffect", bless, { disabled: true }, {}, "user1");
+    expect(emit.mock.calls[1][0].type).toBe(EVENT_TYPES.EFFECT_REMOVED);
+
+    // Re-enabling later is a new event with a new id.
+    bless.disabled = false;
+    bless._stats.modifiedTime = 3;
+    Hooks.callAll("updateActiveEffect", bless, { disabled: false }, {}, "user1");
+    expect(emit).toHaveBeenCalledTimes(3);
+    expect(new Set(emit.mock.calls.map((c) => c[0].id)).size).toBe(3);
   });
 });
 

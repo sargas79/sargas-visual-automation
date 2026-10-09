@@ -19,7 +19,7 @@ function deletePath(target, path) {
 }
 
 /**
- * Scene document stand-in with flags, `update` (dot paths) and `unsetFlag`.
+ * Scene document stand-in with flags, `update` (dot paths, "-=key" deletions) and `unsetFlag`.
  * `onUpdate(scene)` is called after every change, like the updateScene hook.
  */
 export function createMockScene(id = "scene1", { onUpdate = () => {} } = {}) {
@@ -27,7 +27,12 @@ export function createMockScene(id = "scene1", { onUpdate = () => {} } = {}) {
     id,
     flags: {},
     update: vi.fn(async (changes) => {
-      for (const [path, value] of Object.entries(changes)) setPath(scene, path, value);
+      for (const [path, value] of Object.entries(changes)) {
+        // Foundry deletion syntax: "flags.x.-=key" removes `key`.
+        const last = path.split(".").at(-1);
+        if (last.startsWith("-=")) deletePath(scene, `${path.slice(0, -last.length)}${last.slice(2)}`);
+        else setPath(scene, path, value);
+      }
       onUpdate(scene);
       return scene;
     }),

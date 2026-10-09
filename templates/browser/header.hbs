@@ -1,4 +1,14 @@
 <header class="sva-browser-header">
+  <button
+    type="button"
+    class="sva-icon-button sva-tree-switch"
+    data-action="toggleSidebar"
+    data-tooltip="SVA.UI.Browser.ToggleTree"
+    aria-label="{{localize 'SVA.UI.Browser.ToggleTree'}}"
+    aria-pressed="{{sidebarOpen}}"
+  >
+    <i class="fa-solid fa-sitemap" inert></i>
+  </button>
   <label class="sva-search">
     <i class="fa-solid fa-magnifying-glass" inert></i>
     <input
@@ -10,14 +20,19 @@
       autocomplete="off"
     />
   </label>
-  {{#if query}}
-    <button type="button" class="sva-icon-button" data-action="clearSearch" data-tooltip="SVA.UI.Browser.ClearSearch">
-      <i class="fa-solid fa-xmark" inert></i>
-    </button>
-  {{/if}}
+  <button
+    type="button"
+    class="sva-icon-button"
+    data-action="clearSearch"
+    data-tooltip="SVA.UI.Browser.ClearSearch"
+    aria-label="{{localize 'SVA.UI.Browser.ClearSearch'}}"
+    {{disabled noQuery}}
+  >
+    <i class="fa-solid fa-xmark" inert></i>
+  </button>
   <button type="button" class="{{favouritesClass}}" data-action="showFavourites" aria-pressed="{{showFavourites}}">
     <i class="fa-solid fa-star" inert></i>
-    {{localize "SVA.UI.Browser.Favourites"}}
+    <span>{{localize "SVA.UI.Browser.Favourites"}}</span>
   </button>
   {{#if pickMode}}<span class="sva-badge">{{localize "SVA.UI.Browser.PickMode"}}</span>{{/if}}
   {{#if provider}}<span class="sva-muted sva-provider">{{provider}}</span>{{/if}}

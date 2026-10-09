@@ -7,13 +7,23 @@
         <h3 class="sva-grid-heading">{{heading}}</h3>
       {{else}}
         <ol class="sva-breadcrumbs">
-          <li data-path=""><a data-action="selectNode"><i class="fa-solid fa-house" inert></i></a></li>
+          <li data-path=""><a
+              data-action="selectNode"
+              data-tooltip="SVA.UI.Browser.Home"
+              aria-label="{{localize 'SVA.UI.Browser.Home'}}"
+            ><i class="fa-solid fa-house" inert></i></a></li>
           {{#each crumbs}}
             <li data-path="{{path}}"><a data-action="selectNode">{{name}}</a></li>
           {{/each}}
         </ol>
       {{/if}}
-      <span class="sva-muted sva-hint">{{localize "SVA.UI.Browser.PlayHint"}}</span>
+      <i
+        class="fa-solid fa-circle-info sva-muted sva-hint"
+        role="img"
+        tabindex="0"
+        data-tooltip="SVA.UI.Browser.PlayHint"
+        aria-label="{{localize 'SVA.UI.Browser.PlayHint'}}"
+      ></i>
     </div>
     <div class="sva-grid">
       {{#each cards}}
@@ -42,16 +52,31 @@
           <div class="sva-card-name">{{name}}</div>
           <div class="sva-card-actions">
             {{#if pickMode}}
-              <button type="button" data-action="pick" data-tooltip="SVA.UI.Browser.Pick">
+              <button
+                type="button"
+                data-action="pick"
+                data-tooltip="SVA.UI.Browser.Pick"
+                aria-label="{{localize 'SVA.UI.Browser.Pick'}}"
+              >
                 <i class="fa-solid fa-check" inert></i>
               </button>
             {{/if}}
             {{#if isLeaf}}
-              <button type="button" data-action="play" data-tooltip="SVA.UI.Browser.Play">
+              <button
+                type="button"
+                data-action="play"
+                data-tooltip="SVA.UI.Browser.Play"
+                aria-label="{{localize 'SVA.UI.Browser.Play'}}"
+              >
                 <i class="fa-solid fa-play" inert></i>
               </button>
             {{/if}}
-            <button type="button" data-action="copy" data-tooltip="SVA.UI.Browser.CopyPath">
+            <button
+              type="button"
+              data-action="copy"
+              data-tooltip="SVA.UI.Browser.CopyPath"
+              aria-label="{{localize 'SVA.UI.Browser.CopyPath'}}"
+            >
               <i class="fa-solid fa-copy" inert></i>
             </button>
             <button
@@ -59,6 +84,7 @@
               class="{{favClass}}"
               data-action="favourite"
               data-tooltip="SVA.UI.Browser.ToggleFavourite"
+              aria-label="{{localize 'SVA.UI.Browser.ToggleFavourite'}}"
               aria-pressed="{{favourite}}"
             >
               <i class="{{favIcon}}" inert></i>
@@ -70,17 +96,27 @@
       {{/each}}
     </div>
     <footer class="sva-pager">
-      {{#if pager.hasPrev}}
-        <button type="button" data-action="pagePrev"><i class="fa-solid fa-chevron-left" inert></i></button>
-      {{else}}
-        <button type="button" disabled><i class="fa-solid fa-chevron-left" inert></i></button>
-      {{/if}}
+      <button
+        type="button"
+        class="sva-icon-button"
+        data-action="pagePrev"
+        data-tooltip="SVA.UI.Browser.PrevPage"
+        aria-label="{{localize 'SVA.UI.Browser.PrevPage'}}"
+        {{disabled pager.noPrev}}
+      >
+        <i class="fa-solid fa-chevron-left" inert></i>
+      </button>
       <span>{{pager.label}}</span>
-      {{#if pager.hasNext}}
-        <button type="button" data-action="pageNext"><i class="fa-solid fa-chevron-right" inert></i></button>
-      {{else}}
-        <button type="button" disabled><i class="fa-solid fa-chevron-right" inert></i></button>
-      {{/if}}
+      <button
+        type="button"
+        class="sva-icon-button"
+        data-action="pageNext"
+        data-tooltip="SVA.UI.Browser.NextPage"
+        aria-label="{{localize 'SVA.UI.Browser.NextPage'}}"
+        {{disabled pager.noNext}}
+      >
+        <i class="fa-solid fa-chevron-right" inert></i>
+      </button>
     </footer>
   {{/if}}
 </section>

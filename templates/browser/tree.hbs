@@ -1,7 +1,13 @@
 <nav class="sva-tree" aria-label="{{localize 'SVA.UI.Browser.Tree'}}">
   {{#each rows}}
     <div class="{{cssClass}}" data-path="{{path}}" style="padding-left: {{indent}}px">
-      <button type="button" class="sva-tree-toggle" data-action="toggleNode" aria-expanded="{{expanded}}">
+      <button
+        type="button"
+        class="sva-tree-toggle"
+        data-action="toggleNode"
+        aria-expanded="{{expanded}}"
+        aria-label="{{localize 'SVA.UI.Browser.ToggleNode' name=name}}"
+      >
         <i class="fa-solid {{caret}}" inert></i>
       </button>
       <a class="sva-tree-label" data-action="selectNode">{{name}}</a>

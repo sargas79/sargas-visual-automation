@@ -55,6 +55,37 @@ describe("animation browser app", () => {
     expect(context.cards.map((c) => [c.path, c.favourite])).toEqual([["jb2a.fire_bolt.purple", true]]);
   });
 
+  it("always offers the clear-search button and labels the pager", async () => {
+    const api = { db: createFakeDb() };
+    await load(api);
+    const app = api.ui.openBrowser({ path: "jb2a.fire_bolt.orange" });
+    let context = await app._prepareContext({});
+    expect(context.noQuery).toBe(true);
+    expect(context.pager).toMatchObject({ noPrev: true, noNext: true });
+    app.viewState.query = "orange";
+    context = await app._prepareContext({});
+    expect(context.noQuery).toBe(false);
+  });
+
+  it("toggles the narrow-window category tree without re-rendering", async () => {
+    const api = { db: createFakeDb() };
+    await load(api);
+    const { setFakeElement } = await import("./helpers/fake-foundry.js");
+    const app = api.ui.openBrowser();
+    const classes = new Set();
+    setFakeElement(app, { classList: { toggle: (c, on) => (on ? classes.add(c) : classes.delete(c)) } });
+    expect((await app._prepareContext({})).sidebarOpen).toBe("false");
+    const button = { setAttribute: vi.fn() };
+    const renders = app.renderCalls.length;
+    app.constructor.DEFAULT_OPTIONS.actions.toggleSidebar.call(app, {}, button);
+    expect(classes.has("sva-sidebar-open")).toBe(true);
+    expect(button.setAttribute).toHaveBeenCalledWith("aria-pressed", "true");
+    expect(app.renderCalls.length).toBe(renders);
+    expect((await app._prepareContext({})).sidebarOpen).toBe("true");
+    app.constructor.DEFAULT_OPTIONS.actions.toggleSidebar.call(app, {}, button);
+    expect(classes.has("sva-sidebar-open")).toBe(false);
+  });
+
   it("uses captured frames for missing thumbnails and re-renders once the index is built", async () => {
     let finish;
     const db = createFakeDb();

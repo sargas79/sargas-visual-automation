@@ -59,19 +59,25 @@ export function createNet({
       const socket = getSocket();
       if (!socket) return false;
       // VERIFY(v14): module socket handlers receive (data, senderUserId); we prefer the server-provided id when present.
+      // Without it the sender id is only claimed by the client, see `verified` below.
       socket.on(SOCKET_NAME, (payload, senderUserId) => net.receive(payload, senderUserId));
       listening = true;
       return true;
     },
 
-    /** Dispatch an incoming payload (exposed for tests and local loopback). */
+    /**
+     * Dispatch an incoming payload (exposed for tests and local loopback).
+     * Handlers get the payload with `verified: true` when the sender id came from the server, `false` when it is
+     * the client-set `senderId` (a claim: privileged decisions must not grant GM rights on it).
+     */
     async receive(raw, senderUserId) {
       const parsed = parsePayload(raw);
       if (!parsed) {
         log.debug("Ignoring socket message", raw);
         return;
       }
-      const payload = typeof senderUserId === "string" ? { ...parsed, senderId: senderUserId } : parsed;
+      const verified = typeof senderUserId === "string" && !!senderUserId;
+      const payload = { ...parsed, senderId: verified ? senderUserId : parsed.senderId, verified };
       const self = getUserId();
       if (self && payload.senderId === self) return;
       if (!accept(payload)) {

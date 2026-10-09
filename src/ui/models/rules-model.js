@@ -113,7 +113,7 @@ export function formToRule(flat, { base = null, presets, generateId } = {}) {
     }
   }
   rule.match = { ...previous, ...match };
-  if (!Object.keys(rule.match).length) errors.push("match: at least one criterion is required");
+  if (!hasMatchCriterion(rule.match)) errors.push("match: at least one criterion is required");
 
   const recipe = formToRecipe(flat, { presets, base: base?.recipe ?? null });
   errors.push(...recipe.errors);
@@ -129,27 +129,69 @@ export function matchText(match) {
     .join(" · ");
 }
 
-/** Rows for the rules table, highest priority first. */
-export function ruleRows(rules) {
+/** Sort orders offered by the rules list ("priority" = highest first). */
+export const RULE_SORTS = ["priority", "label", "id"];
+
+const ruleName = (rule) => String(rule?.label || rule?.id || "");
+
+/** True when a match object has at least one non-empty criterion. */
+export function hasMatchCriterion(match) {
+  return Object.values(match ?? {}).some(
+    (v) => v !== undefined && v !== null && v !== "" && !(Array.isArray(v) && !v.length)
+  );
+}
+
+/**
+ * Rules whose label, id, match criteria, preset or animation contain every
+ * whitespace-separated term of `query` (case-insensitive).
+ */
+export function filterRules(rules, query) {
   const list = Array.isArray(rules) ? rules : [];
-  return [...list]
-    .sort(
-      (a, b) => (b.priority ?? 0) - (a.priority ?? 0) || String(a.label ?? a.id).localeCompare(String(b.label ?? b.id))
-    )
-    .map((rule) => {
-      const enabled = rule.enabled !== false;
-      return {
-        id: rule.id,
-        label: rule.label || rule.id,
-        enabled,
-        priority: rule.priority ?? 0,
-        matchText: matchText(rule.match),
-        preset: rule.recipe?.preset ?? "",
-        animation: rule.recipe?.animation ?? "",
-        rowClass: enabled ? "sva-rule-row" : "sva-rule-row sva-rule-disabled",
-        toggleIcon: enabled ? "fa-toggle-on" : "fa-toggle-off"
-      };
-    });
+  const terms = String(query ?? "")
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (!terms.length) return [...list];
+  return list.filter((rule) => {
+    const haystack = [rule?.label, rule?.id, matchText(rule?.match), rule?.recipe?.preset, rule?.recipe?.animation]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return terms.every((term) => haystack.includes(term));
+  });
+}
+
+/** Copy of `rules` in the given order (unknown sorts fall back to "priority"). */
+export function sortRules(rules, sort = "priority") {
+  const list = Array.isArray(rules) ? [...rules] : [];
+  const byName = (a, b) => ruleName(a).localeCompare(ruleName(b));
+  const byId = (a, b) => String(a?.id ?? "").localeCompare(String(b?.id ?? ""));
+  if (sort === "label") return list.sort((a, b) => byName(a, b) || byId(a, b));
+  if (sort === "id") return list.sort(byId);
+  return list.sort((a, b) => (b?.priority ?? 0) - (a?.priority ?? 0) || byName(a, b));
+}
+
+/**
+ * Rows for the rules table: filtered by `query`, ordered by `sort`
+ * (default: highest priority first).
+ * @param {object[]} rules
+ * @param {{query?: string, sort?: string}} [options]
+ */
+export function ruleRows(rules, { query = "", sort = "priority" } = {}) {
+  return sortRules(filterRules(rules, query), sort).map((rule) => {
+    const enabled = rule.enabled !== false;
+    return {
+      id: rule.id,
+      label: rule.label || rule.id,
+      enabled,
+      priority: rule.priority ?? 0,
+      matchText: matchText(rule.match),
+      preset: rule.recipe?.preset ?? "",
+      animation: rule.recipe?.animation ?? "",
+      rowClass: enabled ? "sva-rule-row" : "sva-rule-row sva-rule-disabled",
+      toggleIcon: enabled ? "fa-toggle-on" : "fa-toggle-off"
+    };
+  });
 }
 
 /** Normalize exportJSON output to a pretty JSON string. */

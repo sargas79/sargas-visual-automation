@@ -15,6 +15,9 @@ import { ENGINE_SETTINGS, getEngineSetting, registerEngineSettings } from "./set
 import { TextureCache } from "./texture-cache.js";
 import { foundryTextureBackend } from "./video-backend.js";
 
+/** On a scene change, cached files unused for this long are unloaded. */
+export const SCENE_CHANGE_KEEP_MS = 10 * 60_000;
+
 /** @type {EffectEngine|null} */
 let engine = null;
 /** @type {LayerManager|null} */
@@ -44,7 +47,7 @@ export function init(api) {
   overlay.enabled = !!getEngineSetting(ENGINE_SETTINGS.DEBUG_OVERLAY);
 
   api.engine = {
-    play: (effect) => engine.play(effect),
+    play: (effect, options) => engine.play(effect, options),
     get: (id) => engine.get(id),
     active: () => engine.active(),
     end: (id, options) => engine.end(id, options),
@@ -58,12 +61,14 @@ export function init(api) {
   };
 
   // Scene change: remove effects before Foundry destroys the canvas groups, free sprites and idle video elements.
-  // Prototypes stay cached (bounded by the LRU) so returning to a scene does not download its videos again.
+  // Recently used prototypes stay cached (bounded by the LRU) so returning to a scene does not download its videos
+  // again; the others are unloaded, and failed files are retried on the new scene.
   Hooks.on("canvasTearDown", () => {
     engine.tearDown();
     layers.tearDown();
     overlay.tearDown();
     engine.textures.drainPools();
+    engine.textures.pruneIdle(SCENE_CHANGE_KEEP_MS);
   });
   Hooks.on("canvasReady", () => overlay.show());
 }

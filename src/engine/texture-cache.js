@@ -13,6 +13,7 @@ import { LruCache } from "./lru.js";
  *
  * @typedef {object} TextureBackend
  * @property {(src: string) => Promise<object>} load            Load a prototype ({texture, video, width, height, duration}).
+ *   A rejection whose error has `transient: true` (network or server error) is not remembered: the next play retries.
  * @property {(proto: object) => Promise<object>} clone         New instance of a prototype ({texture, video, width, height, duration}).
  * @property {(instance: object) => boolean|void} reset         Rewind an instance for reuse; return false to refuse pooling.
  * @property {(instance: object) => void} destroyClone          Destroy an instance (pause, drop the element, free the GPU texture).
@@ -30,7 +31,7 @@ export class TextureCache {
   #lru;
   /** Entries whose prototype is still loading. @type {Map<string, object>} */
   #loading = new Map();
-  /** Recently failed loads, so a missing file is not fetched again on every play. @type {Map<string, {error: any, until: number}>} */
+  /** Recently failed loads, so a missing or broken file is not fetched again on every play. @type {Map<string, {error: any, until: number}>} */
   #failed = new Map();
 
   counters = { loads: 0, hits: 0, failures: 0, clonesCreated: 0, clonesDestroyed: 0, clonesReused: 0, evictions: 0 };
@@ -76,6 +77,7 @@ export class TextureCache {
     const cached = this.#lru.get(src);
     if (cached) {
       this.counters.hits++;
+      cached.lastUsed = this.now();
       return cached;
     }
     if (this.#loading.has(src)) return this.#loading.get(src);
@@ -94,7 +96,16 @@ export class TextureCache {
     }
     this.#failed.delete(src);
     this.counters.loads++;
-    const entry = { src, proto: null, refs: 0, pool: [], evicted: false, unloaded: false, ready: null };
+    const entry = {
+      src,
+      proto: null,
+      refs: 0,
+      pool: [],
+      evicted: false,
+      unloaded: false,
+      ready: null,
+      lastUsed: this.now()
+    };
     entry.ready = this.backend.load(src).then(
       (proto) => {
         entry.proto = proto;
@@ -105,7 +116,8 @@ export class TextureCache {
       (err) => {
         this.#loading.delete(src);
         this.counters.failures++;
-        if (this.failureTtl > 0) this.#failed.set(src, { error: err, until: this.now() + this.failureTtl });
+        if (this.failureTtl > 0 && !err?.transient)
+          this.#failed.set(src, { error: err, until: this.now() + this.failureTtl });
         throw err;
       }
     );
@@ -173,6 +185,7 @@ export class TextureCache {
     if (!entry || instance._released) return;
     instance._released = true;
     entry.refs = Math.max(0, entry.refs - 1);
+    entry.lastUsed = this.now();
     const clone = instance._clone;
     const poolable = !destroy && !entry.evicted && entry.pool.length < this.poolSize;
     if (poolable && this.backend.reset(clone) !== false) entry.pool.push(clone);
@@ -211,6 +224,18 @@ export class TextureCache {
   /** Drop every idle instance (keep prototypes). */
   drainPools() {
     for (const entry of this.#lru.values()) for (const clone of entry.pool.splice(0)) this.#destroyClone(clone);
+  }
+
+  /**
+   * Unload prototypes not used for `maxIdleMs` (files in use are kept) and forget remembered failures. Called on
+   * scene changes: recently used files stay cached, so returning to a scene does not download them again.
+   */
+  pruneIdle(maxIdleMs) {
+    this.#failed.clear();
+    const t = this.now();
+    for (const entry of this.#lru.values()) {
+      if (entry.refs === 0 && t - entry.lastUsed >= maxIdleMs) this.#lru.delete(entry.src);
+    }
   }
 
   /** Drop everything. Instances still in use are destroyed when released. */

@@ -102,6 +102,34 @@ describe("TextureCache", () => {
     expect(cache.size).toBe(0);
   });
 
+  it("retries a transient failure right away", async () => {
+    const backend = createFakeBackend({ flaky: ["slow.webm"] });
+    const cache = new TextureCache({ backend });
+    expect((await cache.preload(["slow.webm"]))[0].ok).toBe(false);
+    await expect(cache.acquire("slow.webm")).rejects.toThrow("network error");
+    expect(backend.load).toHaveBeenCalledTimes(2);
+  });
+
+  it("pruneIdle unloads files unused for a while and forgets failures", async () => {
+    const backend = createFakeBackend({ fail: ["bad.webm"] });
+    let now = 0;
+    const cache = new TextureCache({ backend, now: () => now });
+    cache.release(await cache.acquire("old.webm"));
+    await expect(cache.acquire("bad.webm")).rejects.toThrow();
+    now = 500;
+    cache.release(await cache.acquire("recent.webm"));
+    const held = await cache.acquire("held.webm");
+    now = 1000;
+    cache.pruneIdle(600);
+    expect(cache.has("old.webm")).toBe(false);
+    expect(cache.has("recent.webm")).toBe(true);
+    expect(cache.has("held.webm")).toBe(true);
+    expect(backend.unload).toHaveBeenCalledTimes(1);
+    await expect(cache.acquire("bad.webm")).rejects.toThrow();
+    expect(backend.load.mock.calls.filter(([src]) => src === "bad.webm")).toHaveLength(2);
+    cache.release(held);
+  });
+
   it("drainPools frees idle instances but keeps prototypes", async () => {
     const backend = createFakeBackend();
     const cache = new TextureCache({ backend });

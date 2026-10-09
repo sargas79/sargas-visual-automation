@@ -14,7 +14,7 @@ export function init(api) {
   api.effects = manager.effects;
 
   api.net?.on("effectsWrite", (data, payload) => manager.onWriteRequest(data, payload));
-  api.net?.on("end", (data) => manager.endLocal(data ?? {}));
+  api.net?.on("end", (data, payload) => manager.endLocal(data ?? {}, payload));
 
   const guard =
     (label, fn) =>

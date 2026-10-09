@@ -1,13 +1,14 @@
 import { vi } from "vitest";
 
 /** In-memory TextureBackend that counts loads and live "video elements". */
-export function createFakeBackend({ duration = 2000, width = 400, height = 400, fail = [] } = {}) {
+export function createFakeBackend({ duration = 2000, width = 400, height = 400, fail = [], flaky = [] } = {}) {
   const live = new Set();
   let nextId = 0;
   const backend = {
     live,
     load: vi.fn(async (src) => {
       if (fail.includes(src)) throw new Error(`missing ${src}`);
+      if (flaky.includes(src)) throw Object.assign(new Error(`network error ${src}`), { transient: true });
       return { src, texture: { id: `proto:${src}` }, video: { src }, width, height, duration };
     }),
     clone: vi.fn(async (proto) => {

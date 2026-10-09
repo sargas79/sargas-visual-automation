@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Sequences wait for each effect's file to load again before the next step, without waiting for its delay. Later `wait` and `sound` steps are timed from when the effect can show, and effects appear in order even when an earlier file is slow to load. Delays still stagger instead of adding up.
+- A file that failed to load because of a network hiccup or a server error is retried on the next play. Only missing or broken files are remembered, for a minute.
+- On a scene change, cached animations not used for 10 minutes are unloaded, and failed files are retried on the new scene. Recently used files stay cached, so returning to a scene is still fast.
+- Ending and replaying a persistent effect with the same id within 10 seconds stores it again. Only a store from another user is still ignored after an end. An end on another scene no longer blocks it.
+- An effect played and ended before the GM had stored it no longer comes back on reload.
+
 ## 0.6.1 - 2026-10-09
 
 ### Fixed

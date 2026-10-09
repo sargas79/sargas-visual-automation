@@ -33,3 +33,38 @@ describe("video backend unload safety", () => {
     expect(unload).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("video backend load failures", () => {
+  afterEach(() => {
+    delete globalThis.PIXI;
+    delete globalThis.foundry;
+    vi.unstubAllGlobals();
+  });
+
+  async function failure({ response, network = false, throws = false }) {
+    globalThis.PIXI = { Assets: { cache: new Map() } };
+    globalThis.foundry = {
+      canvas: { loadTexture: vi.fn(async () => (throws ? Promise.reject(new Error("decode")) : null)) }
+    };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        if (network) throw new TypeError("Failed to fetch");
+        return response;
+      })
+    );
+    return foundryTextureBackend.load("modules/jb2a/x.webm").catch((err) => err);
+  }
+
+  it("flags network and server errors as transient", async () => {
+    expect((await failure({ network: true })).transient).toBe(true);
+    expect((await failure({ response: { ok: false, status: 503 } })).transient).toBe(true);
+  });
+
+  it("treats a missing or undecodable file as definitive", async () => {
+    expect((await failure({ response: { ok: false, status: 404 } })).transient).toBeUndefined();
+    const broken = await failure({ response: { ok: true, status: 200 }, throws: true });
+    expect(broken.message).toBe("decode");
+    expect(broken.transient).toBeUndefined();
+  });
+});

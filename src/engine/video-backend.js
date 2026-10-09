@@ -59,12 +59,32 @@ export function isUsedByCanvas(proto) {
   return false;
 }
 
+/**
+ * The error for a failed load, flagged `transient` when the file may load on a retry: the server could not be
+ * reached or answered with a server error. A missing file or one that exists but cannot be decoded is definitive.
+ */
+async function loadError(src, cause) {
+  const error = cause instanceof Error ? cause : new Error(`Could not load ${src}`);
+  try {
+    const response = await fetch(src, { method: "HEAD" });
+    if (response.status >= 500 || response.status === 408 || response.status === 429) error.transient = true;
+  } catch {
+    error.transient = true;
+  }
+  return error;
+}
+
 /** @type {import("./texture-cache.js").TextureBackend} */
 export const foundryTextureBackend = {
   async load(src) {
     const wasCached = !!PIXI.Assets.cache?.has?.(src);
-    const texture = await foundry.canvas.loadTexture(src);
-    if (!texture?.valid) throw new Error(`Could not load ${src}`);
+    let texture;
+    try {
+      texture = await foundry.canvas.loadTexture(src);
+    } catch (err) {
+      throw await loadError(src, err);
+    }
+    if (!texture?.valid) throw await loadError(src);
     const video = videoOf(texture);
     // PIXI's loadVideo autoplays freshly loaded prototypes; we only ever play clones.
     if (video && !wasCached) video.pause();

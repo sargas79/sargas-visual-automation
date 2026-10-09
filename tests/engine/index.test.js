@@ -33,4 +33,20 @@ describe("engine area lifecycle", () => {
     await api.engine.preload(["modules/x/a.webm"]);
     expect(backend.current.load).toHaveBeenCalledTimes(1);
   });
+
+  it("unloads prototypes left unused for a while on a scene change", async () => {
+    vi.useFakeTimers();
+    try {
+      const { init, SCENE_CHANGE_KEEP_MS } = await import("../../src/engine/index.js");
+      const api = {};
+      init(api);
+      await api.engine.preload(["modules/x/a.webm"]);
+      vi.advanceTimersByTime(SCENE_CHANGE_KEEP_MS);
+      hooks.canvasTearDown();
+      expect(api.engine.debug.stats().textures.cached).toBe(0);
+      expect(backend.current.unload).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

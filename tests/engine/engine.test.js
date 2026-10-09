@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { EffectEngine, skipReason } from "../../src/engine/engine.js";
 import { TextureCache } from "../../src/engine/texture-cache.js";
 import { createFakeBackend } from "./helpers/fake-backend.js";
@@ -66,6 +66,23 @@ describe("EffectEngine", () => {
     const h = await engine.play(effect({ file: "jb2a.nope" }));
     await h.finished;
     expect(engine.active()).toHaveLength(0);
+  });
+
+  it("reports the file as loaded before the effect's delay has elapsed", async () => {
+    const { engine, env } = setup();
+    let endDelay;
+    env.wait.mockImplementationOnce(() => new Promise((resolve) => (endDelay = resolve)));
+    const onLoaded = vi.fn();
+    const playing = engine.play(effect({ id: "late", delay: 500 }), { onLoaded });
+    await vi.waitFor(() => expect(onLoaded).toHaveBeenCalledTimes(1));
+    expect(env.createSprite).not.toHaveBeenCalled();
+    endDelay();
+    await playing;
+    expect(env.createSprite).toHaveBeenCalledTimes(1);
+
+    const failed = vi.fn();
+    await engine.play(effect({ id: "bad", file: "jb2a.nope" }), { onLoaded: failed });
+    expect(failed).toHaveBeenCalledTimes(1);
   });
 
   it("returns the existing handle for a duplicate id", async () => {

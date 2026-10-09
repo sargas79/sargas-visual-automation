@@ -109,16 +109,23 @@ describe("runSequence", () => {
 });
 
 /**
- * Engine whose play() behaves like the real one: resolves after the file loads AND the effect's delay elapses
- * (in parallel), then the effect runs for `duration` ms.
+ * Engine whose play() behaves like the real one: the file loads (`loadMs` the first time, then cached) while the
+ * effect's delay elapses, `onLoaded` is called once the file is loaded, and play() resolves when both are done.
+ * The effect then runs for `duration` ms.
  */
 function createTimedEngine({ loadMs = 50 } = {}) {
   const log = [];
+  const loads = new Map();
   const engine = {
     log,
-    play: vi.fn(async (effect) => {
-      log.push(`start:${effect.id}@${Date.now()}`);
-      await new Promise((r) => setTimeout(r, Math.max(loadMs, effect.delay ?? 0)));
+    play: vi.fn(async (effect, { onLoaded } = {}) => {
+      const start = Date.now();
+      log.push(`start:${effect.id}@${start}`);
+      if (!loads.has(effect.file)) loads.set(effect.file, new Promise((r) => setTimeout(r, loadMs)));
+      await loads.get(effect.file);
+      onLoaded?.();
+      const rest = start + (effect.delay ?? 0) - Date.now();
+      if (rest > 0) await new Promise((r) => setTimeout(r, rest));
       log.push(`mounted:${effect.id}@${Date.now()}`);
       const finished = new Promise((r) => setTimeout(r, effect.duration ?? 1000));
       return { id: effect.id, finished };
@@ -134,19 +141,35 @@ describe("runSequence timing with a loading engine", () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it("starts effects in order and in parallel: delays stagger instead of accumulating", async () => {
+  it("starts effects in order once loaded: delays stagger instead of accumulating", async () => {
     const engine = createTimedEngine();
     const seq = createSequence([fx("a"), fx("b", { delay: 100 }), fx("c", { delay: 200 })], { sceneId: "scene1" });
     const run = runSequence(seq, deps(engine));
     await vi.advanceTimersByTimeAsync(0);
-    expect(engine.log).toEqual(["start:a@0", "start:b@0", "start:c@0"]);
+    expect(engine.log).toEqual(["start:a@0"]);
+    await vi.advanceTimersByTimeAsync(50);
+    expect(engine.log).toEqual(["start:a@0", "mounted:a@50", "start:b@50", "start:c@50"]);
     await vi.advanceTimersByTimeAsync(200);
     await run;
     expect(engine.log.filter((l) => l.startsWith("mounted"))).toEqual([
       "mounted:a@50",
-      "mounted:b@100",
-      "mounted:c@200"
+      "mounted:b@150",
+      "mounted:c@250"
     ]);
+  });
+
+  it("times later waits and sounds from when a slow effect has loaded", async () => {
+    const engine = createTimedEngine({ loadMs: 400 });
+    const playSound = vi.fn(async () => engine.log.push(`sound@${Date.now()}`));
+    const seq = createSequence(
+      [fx("a"), { type: "wait", ms: 300 }, fx("b", { file: "g" }), { type: "sound", file: "s.ogg" }],
+      { sceneId: "scene1" }
+    );
+    const run = runSequence(seq, deps(engine, { playSound }));
+    await vi.advanceTimersByTimeAsync(2000);
+    await run;
+    // a shows at 400; b starts 300 ms later and its (new) file loads by 1100, then the sound plays.
+    expect(engine.log).toEqual(["start:a@0", "mounted:a@400", "start:b@700", "mounted:b@1100", "sound@1100"]);
   });
 
   it("waitUntilFinished still blocks the next step", async () => {

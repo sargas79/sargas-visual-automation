@@ -15,11 +15,12 @@ export function directFile(file) {
 /**
  * @param {object} api            Module api (only `api.db` is used).
  * @param {string} file           Database path or URL.
- * @param {{distance?: number, seed?: string}} [options]  Distance in scene units, for stretched effects; `seed`
- *   (the effect id) makes random variant picks identical on every client.
+ * @param {{distance?: number, seed?: string, variantSeed?: string}} [options]  Distance in scene units, for
+ *   stretched effects; `seed` (the effect id) makes random file picks identical on every client; `variantSeed`
+ *   (the animation path) does the same for the variant (colour) picked below a branch path.
  * @returns {Promise<object|null>} ResolvedFile or null when it cannot be resolved.
  */
-export async function resolveFile(api, file, { distance, seed } = {}) {
+export async function resolveFile(api, file, { distance, seed, variantSeed } = {}) {
   if (!file || typeof file !== "string") return null;
   if (isDirectFile(file)) return directFile(file);
   const db = api?.db;
@@ -27,6 +28,7 @@ export async function resolveFile(api, file, { distance, seed } = {}) {
   if (db.ready && typeof db.ready.then === "function") await db.ready;
   const options = Number.isFinite(distance) ? { distance } : {};
   if (seed !== undefined && seed !== null) options.seed = seed;
+  if (variantSeed !== undefined && variantSeed !== null) options.variantSeed = variantSeed;
   return db.resolve(file, options) ?? null;
 }
 

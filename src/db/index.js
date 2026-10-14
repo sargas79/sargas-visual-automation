@@ -66,8 +66,8 @@ export function createDb(options = {}) {
       return provider;
     },
 
-    resolve(path, { distance, gridDistance = sceneGridDistance(), seed } = {}) {
-      return catalog?.resolve(path, { distance, gridDistance, seed }) ?? null;
+    resolve(path, { distance, gridDistance = sceneGridDistance(), seed, variantSeed } = {}) {
+      return catalog?.resolve(path, { distance, gridDistance, seed, variantSeed }) ?? null;
     },
     has(path) {
       return catalog?.has(path) ?? false;

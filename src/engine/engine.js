@@ -181,8 +181,13 @@ export class EffectEngine {
       const from = descriptor.atLocation ?? { tokenId: descriptor.attachTo?.tokenId };
       distance = this.env.measure?.(from, descriptor.stretchTo) ?? undefined;
     }
-    // Seeded by the effect id (shared by every client and persisted), so a branch path picks the same variant everywhere.
-    const resolved = await resolveFile(this.api, descriptor.file, { distance, seed: descriptor.id });
+    // The variant (colour) below a branch path is seeded by the path, so every effect playing it looks the same (e.g.
+    // the Bless aura on each blessed token); the file inside a variant by the effect id, shared by every client.
+    const resolved = await resolveFile(this.api, descriptor.file, {
+      distance,
+      seed: descriptor.id,
+      variantSeed: descriptor.file
+    });
     if (!resolved?.file) throw new Error(`Unknown animation "${descriptor.file}"`);
     const instance = await this.textures.acquire(resolved.file);
     return { resolved, instance };

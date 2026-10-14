@@ -552,7 +552,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.bless.400px.loop",
+        "animation": "jb2a.bless.400px.loop.yellow",
         "options": {},
         "triggers": ["cast"]
       }
@@ -1218,7 +1218,7 @@
       "recipe": {
         "version": 1,
         "preset": "area",
-        "animation": "jb2a.template_circle.aura.01",
+        "animation": "jb2a.template_circle.aura.01.loop.large.bluepurple",
         "options": {},
         "triggers": ["areaPlaced"]
       }
@@ -1341,7 +1341,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.bless.400px.loop",
+        "animation": "jb2a.bless.400px.loop.yellow",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1358,7 +1358,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.shield.01.loop",
+        "animation": "jb2a.shield.01.loop.blue",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1375,7 +1375,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.shield_themed.below.ice",
+        "animation": "jb2a.shield_themed.below.ice.01.blue",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1392,7 +1392,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.token_border",
+        "animation": "jb2a.token_border.circle.spinning.orange.001",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1409,7 +1409,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.ward.star.yellow",
+        "animation": "jb2a.ward.star.yellow.01",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1443,7 +1443,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.wind_lines",
+        "animation": "jb2a.wind_lines.01.01.white",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1460,7 +1460,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.token_border",
+        "animation": "jb2a.token_border.circle.static.dark_red.001",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1477,7 +1477,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.fear.dark_purple",
+        "animation": "jb2a.markers.fear.dark_purple.01",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1528,7 +1528,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.chain.standard",
+        "animation": "jb2a.markers.chain.standard.loop.01.grey",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1545,7 +1545,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.chain.spike",
+        "animation": "jb2a.markers.chain.spike.loop.01.grey",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -1562,7 +1562,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.drop.red",
+        "animation": "jb2a.markers.drop.red.01",
         "options": {},
         "triggers": ["effectApplied"]
       }

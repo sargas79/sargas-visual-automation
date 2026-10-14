@@ -132,7 +132,11 @@ describe("engine distance variants", () => {
       atLocation: { tokenId: "a" },
       stretchTo: { tokenId: "b" }
     });
-    expect(db.resolve).toHaveBeenCalledWith("jb2a.fire_bolt.orange", { distance: 42, seed: "fx1" });
+    expect(db.resolve).toHaveBeenCalledWith("jb2a.fire_bolt.orange", {
+      distance: 42,
+      seed: "fx1",
+      variantSeed: "jb2a.fire_bolt.orange"
+    });
     expect(env.sprites[0].params.resolved.distance).toBe("30ft");
   });
 });

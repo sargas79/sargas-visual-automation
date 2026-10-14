@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- An aura on several tokens (for example Bless on every blessed character) showed a different colour on each token when its animation path leaves the colour open. The colour is now picked from the animation path, so every effect playing the same path shows the same variant, on every client.
+
+### Changed
+
+- Auras and conditions in the default rule packs now name a fixed colour and variant instead of a random one:
+  - **PF2e:** Bless yellow, Shield blue, Mystic Armor blue ice, Heroism orange border, Rage red border, Protection yellow ward, Fly white wind, Calm blue-purple. Frightened, Grabbed and Restrained (grey chains) and Persistent Damage each use a single marker.
+  - **D&D 5e:** Bless yellow, Imperceptible Barrier and Shimmering Field blue, Mage Armor blue ice, Hunter's Mark green, Warded yellow. Bravery, Rage, and the Frightened, Charmed, Poisoned, Restrained, Grappled (grey chains), Paralyzed and Deafened markers each use a single variant.
+
+  A rule or item can still name another colour.
+
 ## 0.6.2 - 2026-10-09
 
 ### Fixed

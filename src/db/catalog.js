@@ -179,13 +179,14 @@ export class Catalog {
    * - distance group: closest variant to `distance` (scene units)
    * - array leaf: random file; `path.N` picks element N
    * A `seed` (e.g. the effect id) makes the random picks deterministic, so every client resolves the same
-   * effect to the same variant (colour) instead of rolling its own.
+   * effect to the same file instead of rolling its own. A `variantSeed` (e.g. the animation path) seeds only the
+   * branch pick, so every effect playing that path shows the same variant (colour); it defaults to `seed`.
    * @param {string} path
-   * @param {{distance?: number, gridDistance?: number, seed?: string|number}} [options]
+   * @param {{distance?: number, gridDistance?: number, seed?: string|number, variantSeed?: string|number}} [options]
    * @returns {ResolvedFile|null}
    */
-  resolve(path, { distance, gridDistance, seed } = {}) {
-    const random = seed === undefined || seed === null || seed === "" ? this.random : seededRandom(String(seed));
+  resolve(path, { distance, gridDistance, seed, variantSeed = seed } = {}) {
+    const random = this.#randomFor(seed);
     let node = this.node(path);
     let index = null;
     if (!node) {
@@ -201,7 +202,7 @@ export class Catalog {
     if (!node.isLeaf && !node.isUnit) {
       const units = this.#unitsBelow(node);
       if (!units.length) return null;
-      node = units[Math.floor(random() * units.length) % units.length];
+      node = units[Math.floor(this.#randomFor(variantSeed)() * units.length) % units.length];
     }
     let reportPath = node.path;
     if (node.isDistanceGroup) {
@@ -228,6 +229,10 @@ export class Catalog {
   thumbnailFor(file) {
     const found = this.thumbnailLookup?.(file);
     return found === undefined ? guessThumbnail(file) : found;
+  }
+
+  #randomFor(seed) {
+    return seed === undefined || seed === null || seed === "" ? this.random : seededRandom(String(seed));
   }
 
   #unitsBelow(node) {

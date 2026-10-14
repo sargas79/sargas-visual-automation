@@ -105,6 +105,21 @@ describe("resolve", () => {
     expect(paths.size).toBeGreaterThan(1);
   });
 
+  it("picks the same variant for every effect sharing a variant seed", () => {
+    const catalog = new Catalog(loadFixture());
+    const paths = new Set();
+    for (let i = 0; i < 40; i++) {
+      paths.add(
+        catalog.resolve("jb2a.fire_bolt", { distance: 30, seed: `id${i}`, variantSeed: "jb2a.fire_bolt" }).path
+      );
+    }
+    expect(paths.size).toBe(1);
+    const variants = new Set();
+    for (let i = 0; i < 40; i++)
+      variants.add(catalog.resolve("jb2a.fire_bolt", { distance: 30, variantSeed: `v${i}` }).path);
+    expect(variants.size).toBeGreaterThan(1);
+  });
+
   it("only ever returns valid leaves for partial paths", () => {
     const catalog = new Catalog(loadFixture());
     for (let i = 0; i < 50; i++) {

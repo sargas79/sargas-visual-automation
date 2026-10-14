@@ -727,7 +727,7 @@
       "recipe": {
         "version": 1,
         "preset": "onToken",
-        "animation": "jb2a.hunters_mark.pulse.01",
+        "animation": "jb2a.hunters_mark.pulse.01.green",
         "options": {},
         "triggers": ["cast"]
       }
@@ -1117,7 +1117,7 @@
       "recipe": {
         "version": 1,
         "preset": "onToken",
-        "animation": "jb2a.bless.200px.intro",
+        "animation": "jb2a.bless.200px.intro.yellow",
         "options": {},
         "triggers": ["cast"]
       }
@@ -4395,7 +4395,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.bless.200px.loop",
+        "animation": "jb2a.bless.200px.loop.yellow",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4412,7 +4412,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.shield.01.loop",
+        "animation": "jb2a.shield.01.loop.blue",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4429,7 +4429,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.shield.02.loop",
+        "animation": "jb2a.shield.02.loop.blue",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4446,7 +4446,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.shield_themed.below.ice",
+        "animation": "jb2a.shield_themed.below.ice.01.blue",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4497,7 +4497,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.hunters_mark.loop.01",
+        "animation": "jb2a.hunters_mark.loop.01.green",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4514,7 +4514,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.ward.rune.yellow",
+        "animation": "jb2a.ward.rune.yellow.01",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4531,7 +4531,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.token_border.circle.spinning.orange",
+        "animation": "jb2a.token_border.circle.spinning.orange.001",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4582,7 +4582,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.token_border.circle.static.dark_red",
+        "animation": "jb2a.token_border.circle.static.dark_red.001",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4599,7 +4599,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.fear.dark_purple",
+        "animation": "jb2a.markers.fear.dark_purple.01",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4616,7 +4616,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.heart.pink",
+        "animation": "jb2a.markers.heart.pink.01",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4650,7 +4650,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.poison.dark_green",
+        "animation": "jb2a.markers.poison.dark_green.01",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4667,7 +4667,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.chain.spike.loop",
+        "animation": "jb2a.markers.chain.spike.loop.01.grey",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4684,7 +4684,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.chain.standard.loop",
+        "animation": "jb2a.markers.chain.standard.loop.01.grey",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4701,7 +4701,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.chain.spectral_standard.loop",
+        "animation": "jb2a.markers.chain.spectral_standard.loop.02.blue",
         "options": {},
         "triggers": ["effectApplied"]
       }
@@ -4735,7 +4735,7 @@
       "recipe": {
         "version": 1,
         "preset": "aura",
-        "animation": "jb2a.markers.mute.blue",
+        "animation": "jb2a.markers.mute.blue.01",
         "options": {},
         "triggers": ["effectApplied"]
       }
